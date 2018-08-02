@@ -41,11 +41,11 @@ public:
     value = 0;
   }
 
-  PHNode(float key, uint32_t val) {
+  PHNode(float k, uint32_t val) {
     left = NULL;
     right = NULL;
     parent = NULL;
-    key = key;
+    key = k;
     value = val;
   }
 
@@ -129,7 +129,7 @@ public:
 
   MinPairingHeap() {}
 
-  MinPairingHeap (float key, uint32_t val) {
+  MinPairingHeap (float key, const uint32_t val) {
     root = new PHNode(key, val);
   }
 
@@ -197,6 +197,10 @@ public:
 
   // O(log n) amortized?
   void delete_min () {
+    if (!root) {
+      return;
+    }
+
     root = delmin(root);
   }
 
