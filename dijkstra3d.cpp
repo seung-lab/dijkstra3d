@@ -1,3 +1,18 @@
+/*
+ * An implementation of a Edgar Dijkstra's Shortest Path Algorithm.
+ * An absolute classic.
+ * 
+ * E. W. Dijkstra.
+ * "A Note on Two Problems in Connexion with Graphs"
+ * Numerische Mathematik 1. pp. 269-271. (1959)
+ *
+ * Of course, I use a priority queue.
+ *
+ * Author: William Silversmith
+ * Affiliation: Seung Lab, Princeton University
+ * Date: August 2018
+ */
+
 #include <cmath>
 #include <vector>
 #include <queue> // probably a binomial queue
