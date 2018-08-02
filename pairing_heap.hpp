@@ -57,7 +57,7 @@ public:
     value = val;
   }
 
-  PHNode (PHNode p) {
+  PHNode (const PHNode &p) {
     left = p.left;
     right = p.right;
     parent = p.parent;
@@ -66,13 +66,13 @@ public:
   }
 
   ~PHNode () {}
-}
+};
 
 // O(1)
 PHNode* meld(PHNode* h1, PHNode *h2) {
   if (h1->key <= h2->key) {
     h2->right = h1->left;
-    h1->left = h2
+    h1->left = h2;
     h2->parent = h1;
     return h1;
   }
@@ -95,7 +95,7 @@ PHNode* delmin (PHNode* root) {
     return NULL;
   }
 
-  vector<PHNode*> forest;
+  std::vector<PHNode*> forest;
   while (subtree->right) {
     forest.push_back(subtree->right);
     // subtree->parent = NULL; // probably not necessary
@@ -157,7 +157,7 @@ public:
   PHNode* insert(PHNode* I) {
     if (root->key <= I->key) {
       I->right = root->left;
-      root->left = I
+      root->left = I;
       I->parent = root;
     }
     else {
@@ -200,7 +200,7 @@ public:
     root = delmin(root);
   }
 
-  void del (PHNode *x) {
+  void delete_node (PHNode *x) {
     if (x == root) {
       root = delmin(root);
       return;
@@ -236,8 +236,7 @@ private:
       recursive_delete(n->right);
     }
   }
-
-}
+};
 
 
 #endif
