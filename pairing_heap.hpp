@@ -1,7 +1,9 @@
 /*
- * An implementation of a pairing heap.
+ * An implementation of a minimum pairing heap for use with
+ * 3D djikstra. Can be easily generalized.
  *
- * Michael L. FredmanRobert SedgewickDaniel D. SleatorRobert E. Tarjan
+ * Michael L. Fredman, Robert Sedgewick, Daniel D. Sleator, 
+ * and Robert E. Tarjan
  * "The pairing heap: A new form of self-adjusting heap."
  * Algorithmica. Nov. 1986, Vol. 1, Iss. 1-4, pp. 111-129
  * doi: 10.1007/BF01840439
