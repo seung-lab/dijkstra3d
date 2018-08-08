@@ -1,4 +1,4 @@
 test: FORCE
-	g++ -g test.cpp -o test
+	g++ -std=c++11 -g test.cpp -o test
 
 FORCE: 
