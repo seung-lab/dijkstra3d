@@ -283,7 +283,9 @@ public:
   }
 
   void print_keys () {
-    really_print_keys(root, 0);
+    if (root) {
+      really_print_keys(root, 0);
+    }
   }
 
 private:
