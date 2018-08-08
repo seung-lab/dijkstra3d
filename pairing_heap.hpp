@@ -210,6 +210,11 @@ public:
 
   // O(1)
   PHNode* insert(PHNode* I) {
+    if (!root) {
+      root = I;
+      return I;
+    }
+
     if (root->key <= I->key) {
       I->right = root->left;
       root->left = I;

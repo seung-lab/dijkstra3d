@@ -18,6 +18,8 @@
 #include <queue> // probably a binomial queue
 #include <cstdio>
 
+#include "pairing_heap.hpp"
+
 #ifndef DIJKSTRA3D_HPP
 #define DIJKSTRA3D_HPP
 
@@ -46,67 +48,11 @@ void print(float* dest, int x, int y, int z) {
 }
 
 
-
-inline float* fill(float *arr, const size_t size, const float value) {
+inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
     arr[i] = value;
   }
   return arr;
-}
-
-float search3d(
-    float* field, float* dist, 
-  //  std::priority_queue<size_t, std::std::vector<size_t>, std::greater> &pq,
-    const size_t sx, const size_t sxy, const size_t voxels,
-    const size_t loc, const size_t target
-  ) {
-
-  if (loc == target) {
-    return dist[loc];
-  }
-
-  // Lets start with a 6-neighborhood. Move to a 26-hood when 
-  // this is working.
-  const int neighborhood[NHOOD_SIZE] = { -1, 1, sx, -sx, sxy, -sxy };
-
-  float delta;
-  size_t neighboridx;
-  for (int i = 0; i < NHOOD_SIZE; i++) {
-    neighboridx = loc + neighborhood[i];
-    delta = field[neighboridx];
-
-    if (neighboridx < 0 || neighboridx >= voxels) {
-      continue;
-    }
-    // visited nodes are marked as negative
-    // in the distance field
-    else if (std::signbit(delta)) {
-      continue;
-    }
-    else if (dist[loc] + delta < dist[neighboridx]) {
-      dist[neighboridx] = dist[loc] + delta;
-    }
-  }
-
-  field[loc] *= -1;
-
-  // O(V^2) version
-  // replace with heap when you have it
-  float min_val = +INFINITY;
-  size_t next_loc = loc + 1;
-  for (int i = 0; i < voxels; i++) {
-    if (std::signbit(field[i])) {
-      continue;
-    }
-    else if (dist[i] < min_val) {
-      min_val = dist[i];
-      next_loc = i;
-    }
-  }
-  
-  // printf("next loc: %d\n", next_loc);
-
-  return search3d(field, dist, sx, sxy, voxels, next_loc, target);
 }
 
 // works for non-negative weights
@@ -116,58 +62,72 @@ float search3d(
 // t = index of target
 // field is a 3D field
 float dijkstra3d(
-  float* field, 
-  const size_t sx, const size_t sy, const size_t sz, 
-  const size_t source, const size_t target) {
+    float* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target
+  ) {
 
   const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
 
-  float* dist = new float[voxels](); 
-  fill(dist, voxels, +INFINITY);
-  dist[source] = 0;
+  float *dist = new float[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
 
-  // printf("FIELD\n");
-  // print(field, sx, sy, sz);
+  // Lets start with a 6-neighborhood. Move to a 26-hood when 
+  // this is working.
+  const int neighborhood[NHOOD_SIZE] = { -1, 1, sx, -sx, sxy, -sxy };
 
-  // printf("DIST\n");
-  // print(dist, sx, sy, sz);
+  auto *heap = new MinPairingHeap();
+  heap->insert(0.0, source);
 
-  // std::priority_queue<size_t, std::vector<size_t>, std::greater<size_t> priority_queue;
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+  while (!heap->empty()) {
+    loc = heap->root->value;
+    heap->delete_min();
 
-  float shortest_distance = search3d(
-    field, dist, //priority_queue,
-    sx, sx * sy, voxels, 
-    source, target
-  );
+    if (loc == target) {
+      break;
+    }
 
-  // printf("FIELD\n");
-  // print(field, sx, sy, sz);
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      neighboridx = loc + neighborhood[i];
+      delta = field[neighboridx];
 
-  // mark all nodes unvisited 
-  // i.e. restore to previous state
-  // so our negative number trick is invisible
-  // lol so not threadsafe
-  for (int i = 0; i < voxels; i++) {
-    field[i] = fabs(field[i]);
+      if (neighboridx < 0 || neighboridx >= voxels) {
+        continue;
+      }
+      // visited nodes are marked as negative
+      // in the distance field
+      else if (std::signbit(dist[neighboridx])) {
+        continue;
+      }
+      else if (dist[loc] + delta < dist[neighboridx]) {
+        dist[neighboridx] = dist[loc] + delta;
+        heap->insert(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
   }
 
-  // printf("DIST\n");
-  // print(dist, sx, sy, sz);
-
   delete []dist;
+  delete heap;
 
-  return shortest_distance;
+  return dist[target];
 }
 
 
 int main () {
-  const size_t sx = 32;
-  const size_t sy = 32;
-  const size_t sz = 32;
+  const size_t sx = 128;
+  const size_t sy = 128;
+  const size_t sz = 128;
   const size_t voxels = sx * sy * sz;
 
   float* field = new float[voxels]();
-  fill(field, voxels, 1.0);
+  fill(field, 1.0, voxels);
 
   float min = dijkstra3d(field, sx, sy, sz, 0, voxels - 1);
 
