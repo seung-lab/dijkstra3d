@@ -175,6 +175,7 @@ public:
   // O(n)
   ~MinPairingHeap() {
     recursive_delete(root);
+    root = NULL;
   }
 
   bool empty () {
@@ -294,12 +295,9 @@ public:
   }
 
 private:
-  void recursive_delete (const PHNode *n) {
+  void recursive_delete (PHNode *n) {
     if (n == NULL) {
       return;
-    }
-    else if (n->left == NULL && n->right == NULL) {
-      delete n;
     }
 
     if (n->left != NULL) {
@@ -309,6 +307,17 @@ private:
     if (n->right != NULL) {
       recursive_delete(n->right);
     }
+
+    if (n->parent) {
+      if (n->parent->left == n) {
+        n->parent->left = NULL;
+      }
+      else if (n->parent->right == n) {
+        n->parent->right = NULL;
+      }
+    }
+
+    delete n;
   }
 };
 
