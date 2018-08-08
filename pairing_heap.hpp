@@ -70,7 +70,7 @@ public:
 
   ~PHNode () {}
 
-  void prt () {
+  void print () {
     printf("PHNode[%p](%.1f, %d, %p, %p, %p)\n", this, key, value, left, right, parent);
   }
 };

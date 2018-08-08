@@ -113,10 +113,12 @@ float dijkstra3d(
     dist[loc] *= -1;
   }
 
+  float result = dist[target];
+
   delete []dist;
   delete heap;
 
-  return dist[target];
+  return result;
 }
 
 
