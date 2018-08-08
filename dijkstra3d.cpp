@@ -30,6 +30,15 @@ void print(float *f, int n) {
   for (int i = 0; i < n; i++) {
     printf("%.1f, ", f[i]);
   }
+  printf("\n");
+}
+
+
+void print(int *f, int n) {
+  for (int i = 0; i < n; i++) {
+    printf("%d, ", f[i]);
+  }
+  printf("\n");
 }
 
 void print(float* dest, int x, int y, int z) {
@@ -55,6 +64,36 @@ inline float* fill(float *arr, const float value, const size_t size) {
   return arr;
 }
 
+inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_t sy, size_t sz) {
+  for (int i = 0; i < NHOOD_SIZE; i++) {
+    neighborhood[i] = 0;
+  }
+
+  const int sxy = sx * sy;
+  const int x = loc % sx;
+  const int y = (int)(loc / sx);
+  const int z = (int)(loc / sxy);
+
+  if (x > 0) {
+    neighborhood[0] = -1;
+  }
+  if (x < sx - 1) {
+    neighborhood[1] = 1;
+  }
+  if (y > 0) {
+    neighborhood[2] = -(int)sx;
+  }
+  if (y < sy - 1) {
+    neighborhood[3] = (int)sx;
+  }
+  if (z > 0) {
+    neighborhood[4] = -sxy;
+  }
+  if (z < sz - 1) {
+    neighborhood[5] = sxy;
+  }
+}
+
 // works for non-negative weights
 // Shortest ST path
 // sx, sy, sz are the dimensions of the graph
@@ -76,7 +115,7 @@ float dijkstra3d(
 
   // Lets start with a 6-neighborhood. Move to a 26-hood when 
   // this is working.
-  const int neighborhood[NHOOD_SIZE] = { -1, 1, (int)sx, -(int)sx, (int)sxy, -(int)sxy };
+  int *neighborhood = new int[NHOOD_SIZE]();
 
   auto *heap = new MinPairingHeap();
   heap->insert(0.0, source);
@@ -88,24 +127,28 @@ float dijkstra3d(
     loc = heap->root->value;
     heap->delete_min();
 
-    if (loc == target) {
-      break;
-    }
+    compute_neighborhood(neighborhood, loc, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
       neighboridx = loc + neighborhood[i];
       delta = field[neighboridx];
 
-      if (neighboridx < 0 || neighboridx >= voxels) {
-        continue;
-      }
       // visited nodes are marked as negative
       // in the distance field
-      else if (std::signbit(dist[neighboridx])) {
+      if (std::signbit(dist[neighboridx])) {
         continue;
       }
       else if (dist[loc] + delta < dist[neighboridx]) {
         dist[neighboridx] = dist[loc] + delta;
+
+        if (neighboridx == target) {
+          break;
+        }
+
         heap->insert(dist[neighboridx], neighboridx);
       }
     }
@@ -116,6 +159,7 @@ float dijkstra3d(
   float result = dist[target];
 
   delete []dist;
+  delete []neighborhood;
   delete heap;
 
   return result;
@@ -123,9 +167,9 @@ float dijkstra3d(
 
 
 int main () {
-  const size_t sx = 128;
-  const size_t sy = 128;
-  const size_t sz = 128;
+  const size_t sx = 512;
+  const size_t sy = 512;
+  const size_t sz = 512;
   const size_t voxels = sx * sy * sz;
 
   float* field = new float[voxels]();
