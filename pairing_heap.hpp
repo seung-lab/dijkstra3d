@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <stdio.h>
 #include <vector>
+#include <unistd.h>
 
 #ifndef PAIRING_HEAP_HPP
 #define PAIRING_HEAP_HPP
@@ -68,7 +69,29 @@ public:
   }
 
   ~PHNode () {}
+
+  void prt () {
+    printf("PHNode[%p](%.1f, %d, %p, %p, %p)\n", this, key, value, left, right, parent);
+  }
 };
+
+void really_print_keys(PHNode *n, const int depth) {
+  printf("(%d) %1.f \n", depth, n->key);
+
+  if (depth > 20) {
+    return;
+  }
+
+  if (n->left != NULL) {
+    printf("L");
+    really_print_keys(n->left, depth+1);
+  }
+
+  if (n->right != NULL) {
+    printf("R");
+    really_print_keys(n->right, depth+1);
+  }    
+}
 
 // O(1)
 PHNode* meld(PHNode* h1, PHNode *h2) {
@@ -79,30 +102,39 @@ PHNode* meld(PHNode* h1, PHNode *h2) {
     return h1;
   }
   
+  h1->right = h2->left;
   h2->left = h1;
-  h2->parent = NULL;
-  h1->right = h1->left;
-  h1->left = NULL;
   h1->parent = h2;
-
-  return h1;
+  
+  return h2;
 }
 
 // O(log n) amortized?
 PHNode* delmin (PHNode* root) {
   PHNode *subtree = root->left;
-  delete root;
-
+  
   if (!subtree) {
+    delete root;
     return NULL;
   }
 
   std::vector<PHNode*> forest;
-  while (subtree->right) {
-    forest.push_back(subtree->right);
-    // subtree->parent = NULL; // probably not necessary
+  while (subtree) {
+    forest.push_back(subtree);
     subtree = subtree->right;
   }
+
+  for (int i = 0; i < forest.size(); i++) {
+    forest[i]->parent = NULL;
+    forest[i]->right = NULL;
+  }
+
+  if (forest.size() == 1) {
+    delete root;
+    return forest[0];
+  }
+
+  // need to deal with lone subtrees?
 
   // forward pass
   size_t last = (forest.size() >> 1) << 1; // if odd, size - 1
@@ -111,16 +143,17 @@ PHNode* delmin (PHNode* root) {
   }
   last >>= 1;
 
-  if (forest.size() & 0x1) {
+  if (forest.size() & 0x1) { // if odd
     last++;
     forest[last] = forest[forest.size() - 1];
   }
 
   // backward pass
-  for (size_t i = last; i > 0; i--) {
+  for (size_t i = last - 1; i > 0; i--) {
     forest[i-1] = meld(forest[i], forest[i - 1]);
   }
 
+  delete root;
   return forest[0];
 }
 
@@ -144,6 +177,22 @@ public:
     return root == NULL;
   }
 
+  float min_key () {
+    if (root) {
+      return root->key;
+    }
+
+    return std::nanf("0");
+  }
+
+  uint32_t min_value () {
+    if (root) {
+      return root->value;
+    }
+
+    return std::nanl("0");
+  }
+
   // O(1)
   PHNode* find_min () {
     return root;
@@ -163,15 +212,19 @@ public:
       I->parent = root;
     }
     else {
+      root->right = I->left;
       I->left = root;
-      I->parent = NULL;
-      root->right = root->left;
-      root->left = NULL;
       root->parent = I;
       root = I;
     }
 
     return I;
+  }
+
+  void decrease_key (float delta) {
+    if (root) {
+      root->key -= delta;
+    }
   }
 
   // O(1)
@@ -223,6 +276,10 @@ public:
     x->parent = NULL;
 
     insert(delmin(x));
+  }
+
+  void print_keys () {
+    really_print_keys(root, 0);
   }
 
 private:
