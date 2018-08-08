@@ -119,6 +119,7 @@ PHNode* delmin (PHNode* root) {
   }
 
   std::vector<PHNode*> forest;
+  forest.reserve(64);
   while (subtree) {
     forest.push_back(subtree);
     subtree = subtree->right;
