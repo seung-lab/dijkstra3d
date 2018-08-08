@@ -124,12 +124,14 @@ PHNode* delmin (PHNode* root) {
     subtree = subtree->right;
   }
 
-  for (int i = 0; i < forest.size(); i++) {
+  const size_t forest_size = forest.size();
+
+  for (int i = 0; i < forest_size; i++) {
     forest[i]->parent = NULL;
     forest[i]->right = NULL;
   }
 
-  if (forest.size() == 1) {
+  if (forest_size == 1) {
     delete root;
     return forest[0];
   }
@@ -137,14 +139,14 @@ PHNode* delmin (PHNode* root) {
   // need to deal with lone subtrees?
 
   // forward pass
-  size_t last = (forest.size() >> 1) << 1; // if odd, size - 1
+  size_t last = (forest_size >> 1) << 1; // if odd, size - 1
   for (size_t i = 0; i < last; i += 2) {
     forest[i >> 1] = meld(forest[i], forest[i + 1]); 
   }
   last >>= 1;
 
-  if (forest.size() & 0x1) { // if odd
-    forest[last] = forest[forest.size() - 1];
+  if (forest_size & 0x1) { // if odd
+    forest[last] = forest[forest_size - 1];
   }
   else {
     last--;
