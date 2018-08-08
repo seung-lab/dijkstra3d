@@ -144,12 +144,14 @@ PHNode* delmin (PHNode* root) {
   last >>= 1;
 
   if (forest.size() & 0x1) { // if odd
-    last++;
     forest[last] = forest[forest.size() - 1];
+  }
+  else {
+    last--;
   }
 
   // backward pass
-  for (size_t i = last - 1; i > 0; i--) {
+  for (size_t i = last; i > 0; i--) {
     forest[i-1] = meld(forest[i], forest[i - 1]);
   }
 
