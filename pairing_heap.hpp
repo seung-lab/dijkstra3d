@@ -139,7 +139,7 @@ PHNode* delmin (PHNode* root) {
   // need to deal with lone subtrees?
 
   // forward pass
-  size_t last = (forest_size >> 1) << 1; // if odd, size - 1
+  size_t last = forest_size & 0xfffffffe; // if odd, size - 1
   for (size_t i = 0; i < last; i += 2) {
     forest[i >> 1] = meld(forest[i], forest[i + 1]); 
   }
