@@ -187,7 +187,7 @@ public:
       return root->key;
     }
 
-    return std::nanf("0");
+    throw "No min key.";
   }
 
   uint32_t min_value () {
@@ -195,7 +195,7 @@ public:
       return root->value;
     }
 
-    return std::nanl("0");
+    throw "No min value.";
   }
 
   // O(1)

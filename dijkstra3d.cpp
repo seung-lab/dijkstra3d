@@ -37,8 +37,8 @@ void print(float* dest, int x, int y, int z) {
     if (i % x == 0 && i > 0) {
       printf("\n");
     }
-    else if ((i % x*y) == 0 && i > 0) {
-      printf("\n\n");
+    if ((i % (x*y)) == 0 && i > 0) {
+      printf("\n");
     }
 
     printf("%.1f, ", dest[i]);
@@ -76,7 +76,7 @@ float dijkstra3d(
 
   // Lets start with a 6-neighborhood. Move to a 26-hood when 
   // this is working.
-  const int neighborhood[NHOOD_SIZE] = { -1, 1, sx, -sx, sxy, -sxy };
+  const int neighborhood[NHOOD_SIZE] = { -1, 1, (int)sx, -(int)sx, (int)sxy, -(int)sxy };
 
   auto *heap = new MinPairingHeap();
   heap->insert(0.0, source);
