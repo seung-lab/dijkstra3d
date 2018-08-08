@@ -16,6 +16,7 @@
 
 #include <cmath>
 #include <cstdint>
+#include <cstdlib>
 #include <stdio.h>
 #include <vector>
 #include <unistd.h>
@@ -118,14 +119,15 @@ PHNode* delmin (PHNode* root) {
     return NULL;
   }
 
-  std::vector<PHNode*> forest;
-  forest.reserve(64);
+  PHNode* forest[512];
+  int j = 0;
   while (subtree) {
-    forest.push_back(subtree);
+    forest[j] = subtree;
     subtree = subtree->right;
+    j++;
   }
 
-  const size_t forest_size = forest.size();
+  const size_t forest_size = j;
 
   for (int i = 0; i < forest_size; i++) {
     forest[i]->parent = NULL;
