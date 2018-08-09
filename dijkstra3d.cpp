@@ -146,7 +146,7 @@ float dijkstra3d(
         dist[neighboridx] = dist[loc] + delta;
 
         if (neighboridx == target) {
-          break;
+          goto OUTSIDE;
         }
 
         heap->insert(dist[neighboridx], neighboridx);
@@ -156,7 +156,7 @@ float dijkstra3d(
     dist[loc] *= -1;
   }
 
-  float result = dist[target];
+  OUTSIDE: float result = dist[target];
 
   delete []dist;
   delete []neighborhood;
