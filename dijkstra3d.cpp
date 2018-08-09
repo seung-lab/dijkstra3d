@@ -56,6 +56,20 @@ void print(float* dest, int x, int y, int z) {
   printf("\n\n");
 }
 
+void print(uint32_t* dest, int x, int y, int z) {
+  for (int i = 0; i < x*y*z; i++) {
+    if (i % x == 0 && i > 0) {
+      printf("\n");
+    }
+    if ((i % (x*y)) == 0 && i > 0) {
+      printf("\n");
+    }
+
+    printf("%d, ", dest[i]);
+  }
+
+  printf("\n\n");
+}
 
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
@@ -71,7 +85,7 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
 
   const int sxy = sx * sy;
   const int x = loc % sx;
-  const int y = (int)(loc / sx);
+  const int y = (int)((loc % sxy) / sx);
   const int z = (int)(loc / sxy);
 
   if (x > 0) {
@@ -118,7 +132,7 @@ std::vector<uint32_t> dijkstra3d(
   // this is working.
   int *neighborhood = new int[NHOOD_SIZE]();
 
-  auto *heap = new MinPairingHeap();
+  MinPairingHeap *heap = new MinPairingHeap();
   heap->insert(0.0, source);
 
   size_t loc;
@@ -158,7 +172,7 @@ std::vector<uint32_t> dijkstra3d(
     dist[loc] *= -1;
   }
 
-  OUTSIDE: 
+  OUTSIDE:
   delete []dist;
   delete []neighborhood;
   delete heap;
@@ -178,22 +192,22 @@ std::vector<uint32_t> dijkstra3d(
 
 
 int main () {
-  const size_t sx = 512;
-  const size_t sy = 512;
-  const size_t sz = 512;
+  const size_t sx = 10;
+  const size_t sy = 10;
+  const size_t sz = 10;
   const size_t voxels = sx * sy * sz;
 
   float* field = new float[voxels]();
   fill(field, 1.0, voxels);
 
-  std::vector<uint32_t> path = dijkstra3d(field, sx, sy, sz, 1, voxels - 1);
+  std::vector<uint32_t> path = dijkstra3d(field, sx, sy, sz, 0, voxels - 1);
 
   printf("min: %d\n", path.size());
   int loc;
   for (int i = 0; i < path.size(); i++) {
     loc = path[i];
 
-    printf("(%d, %d, %d)\n", loc % sx, (int)(loc / sx), (int)(loc / sx / sy));
+    printf("(%d, %d, %d)\n", loc % sx, (int)((loc % (sx *sy)) / sx), (int)(loc / sx / sy));
   }
 
 
