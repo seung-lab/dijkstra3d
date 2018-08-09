@@ -13,10 +13,10 @@
  * Date: August 2018
  */
 
+#include <algorithm>
 #include <cmath>
-#include <vector>
-#include <queue> // probably a binomial queue
 #include <cstdio>
+#include <vector>
 
 #include "pairing_heap.hpp"
 
@@ -100,7 +100,7 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
 // s = index of source
 // t = index of target
 // field is a 3D field
-float dijkstra3d(
+std::vector<uint32_t> dijkstra3d(
     float* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target
@@ -110,6 +110,7 @@ float dijkstra3d(
   const size_t sxy = sx * sy;
 
   float *dist = new float[voxels]();
+  uint32_t *parents = new uint32_t[voxels]();
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
@@ -144,6 +145,7 @@ float dijkstra3d(
       }
       else if (dist[loc] + delta < dist[neighboridx]) {
         dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
         if (neighboridx == target) {
           goto OUTSIDE;
@@ -156,13 +158,22 @@ float dijkstra3d(
     dist[loc] *= -1;
   }
 
-  OUTSIDE: float result = dist[target];
-
+  OUTSIDE: 
   delete []dist;
   delete []neighborhood;
   delete heap;
 
-  return result;
+  std::vector<uint32_t> path;
+  loc = target;
+  while (parents[loc]) {
+    path.push_back(loc);
+    loc = parents[loc] - 1; // offset by 1 to disambiguate the 0th index
+  }
+  path.push_back(loc);
+
+  delete [] parents;
+
+  return path;
 }
 
 
@@ -175,9 +186,16 @@ int main () {
   float* field = new float[voxels]();
   fill(field, 1.0, voxels);
 
-  float min = dijkstra3d(field, sx, sy, sz, 0, voxels - 1);
+  std::vector<uint32_t> path = dijkstra3d(field, sx, sy, sz, 1, voxels - 1);
 
-  printf("min: %.2f\n", min);
+  printf("min: %d\n", path.size());
+  int loc;
+  for (int i = 0; i < path.size(); i++) {
+    loc = path[i];
+
+    printf("(%d, %d, %d)\n", loc % sx, (int)(loc / sx), (int)(loc / sx / sy));
+  }
+
 
   return 0;
 }
