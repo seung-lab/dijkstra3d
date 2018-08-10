@@ -23,7 +23,7 @@
 #ifndef DIJKSTRA3D_HPP
 #define DIJKSTRA3D_HPP
 
-#define NHOOD_SIZE 6
+#define NHOOD_SIZE 18
 
 
 void print(float *f, int n) {
@@ -106,6 +106,34 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   if (z < sz - 1) {
     neighborhood[5] = sxy;
   }
+
+  // xy diagonals
+  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
+  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
+  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[1] && neighborhood[2]); // down-left
+  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[1] && neighborhood[3]); // down-right
+
+  // yz diagonals
+  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]); // up-left
+  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]); // up-right
+  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]); // down-left
+  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]); // down-right
+
+  // xz diagonals
+  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[0] && neighborhood[4]); // up-left
+  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
+  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
+  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
+
+  // Now the eight corners of the cube
+  // neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[0] && neighborhood[2] && neighborhood[4]);
+  // neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[1] && neighborhood[2] && neighborhood[4]);
+  // neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[0] && neighborhood[3] && neighborhood[4]);
+  // neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[0] && neighborhood[2] && neighborhood[5]);
+  // neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[1] && neighborhood[3] && neighborhood[4]);
+  // neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[1] && neighborhood[2] && neighborhood[5]);
+  // neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[0] && neighborhood[3] && neighborhood[5]);
+  // neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[1] && neighborhood[3] && neighborhood[5]);
 }
 
 // works for non-negative weights
@@ -132,15 +160,15 @@ std::vector<uint32_t> dijkstra3d(
   // this is working.
   int neighborhood[NHOOD_SIZE];
 
-  MinPairingHeap heap;
-  heap.insert(0.0, source);
+  MinPairingHeap *heap = new MinPairingHeap();
+  heap->insert(0.0, source);
 
   size_t loc;
   float delta;
   size_t neighboridx;
-  while (!heap.empty()) {
-    loc = heap.root->value;
-    heap.delete_min();
+  while (!heap->empty()) {
+    loc = heap->root->value;
+    heap->delete_min();
 
     compute_neighborhood(neighborhood, loc, sx, sy, sz);
 
@@ -165,7 +193,7 @@ std::vector<uint32_t> dijkstra3d(
           goto OUTSIDE;
         }
 
-        heap.insert(dist[neighboridx], neighboridx);
+        heap->insert(dist[neighboridx], neighboridx);
       }
     }
 
@@ -174,6 +202,7 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
+  delete heap;
 
   std::vector<uint32_t> path;
   loc = target;
