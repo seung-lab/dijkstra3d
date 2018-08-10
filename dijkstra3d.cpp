@@ -130,7 +130,7 @@ std::vector<uint32_t> dijkstra3d(
 
   // Lets start with a 6-neighborhood. Move to a 26-hood when 
   // this is working.
-  int *neighborhood = new int[NHOOD_SIZE]();
+  int neighborhood[NHOOD_SIZE];
 
   MinPairingHeap *heap = new MinPairingHeap();
   heap->insert(0.0, source);
@@ -174,7 +174,6 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
-  delete []neighborhood;
   delete heap;
 
   std::vector<uint32_t> path;
