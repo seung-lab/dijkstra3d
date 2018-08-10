@@ -166,12 +166,10 @@ std::vector<uint32_t> dijkstra3d(
       neighboridx = loc + neighborhood[i];
       delta = field[neighboridx];
 
-      // visited nodes are marked as negative
-      // in the distance field
-      if (std::signbit(dist[neighboridx])) {
-        continue;
-      }
-      else if (dist[loc] + delta < dist[neighboridx]) {
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { 
         dist[neighboridx] = dist[loc] + delta;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
@@ -204,9 +202,9 @@ std::vector<uint32_t> dijkstra3d(
 
 
 int main () {
-  const size_t sx = 256;
-  const size_t sy = 256;
-  const size_t sz = 256;
+  const size_t sx = 512;
+  const size_t sy = 512;
+  const size_t sz = 512;
   const size_t voxels = sx * sy * sz;
 
   float* field = new float[voxels]();
