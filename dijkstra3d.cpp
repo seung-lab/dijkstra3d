@@ -16,15 +16,13 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <queue>
 #include <vector>
-
-#include "pairing_heap.hpp"
 
 #ifndef DIJKSTRA3D_HPP
 #define DIJKSTRA3D_HPP
 
 #define NHOOD_SIZE 26
-
 
 void print(float *f, int n) {
   for (int i = 0; i < n; i++) {
@@ -33,13 +31,6 @@ void print(float *f, int n) {
   printf("\n");
 }
 
-
-void print(int *f, int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%d, ", f[i]);
-  }
-  printf("\n");
-}
 
 void print(float* dest, int x, int y, int z) {
   for (int i = 0; i < x*y*z; i++) {
@@ -88,6 +79,8 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   const int y = (int)((loc % sxy) / sx);
   const int z = (int)(loc / sxy);
 
+  // 6-hood
+
   if (x > 0) {
     neighborhood[0] = -1;
   }
@@ -107,6 +100,8 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
     neighborhood[5] = sxy;
   }
 
+  // 18-hood
+
   // xy diagonals
   neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
   neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
@@ -125,6 +120,8 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
   neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
 
+  // 26-hood
+
   // Now the eight corners of the cube
   neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[0] && neighborhood[2] && neighborhood[4]);
   neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[1] && neighborhood[2] && neighborhood[4]);
@@ -135,6 +132,34 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[0] && neighborhood[3] && neighborhood[5]);
   neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[1] && neighborhood[3] && neighborhood[5]);
 }
+
+
+class HeapNode {
+public:
+  float key; 
+  uint32_t value;
+
+  HeapNode() {
+    key = 0;
+    value = 0;
+  }
+
+  HeapNode(float k, uint32_t val) {
+    key = k;
+    value = val;
+  }
+
+  HeapNode (const HeapNode &h) {
+    key = h.key;
+    value = h.value;
+  }
+};
+
+struct HeapNodeCompare {
+  bool operator()(const HeapNode &t1, const HeapNode &t2) const {
+    return t1.key >= t2.key;
+  }
+};
 
 // works for non-negative weights
 // Shortest ST path
@@ -156,19 +181,17 @@ std::vector<uint32_t> dijkstra3d(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
-  // Lets start with a 6-neighborhood. Move to a 26-hood when 
-  // this is working.
   int neighborhood[NHOOD_SIZE];
 
-  MinPairingHeap *heap = new MinPairingHeap();
-  heap->insert(0.0, source);
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
 
   size_t loc;
   float delta;
   size_t neighboridx;
-  while (!heap->empty()) {
-    loc = heap->root->value;
-    heap->delete_min();
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
 
     compute_neighborhood(neighborhood, loc, sx, sy, sz);
 
@@ -193,7 +216,7 @@ std::vector<uint32_t> dijkstra3d(
           goto OUTSIDE;
         }
 
-        heap->insert(dist[neighboridx], neighboridx);
+        queue.emplace(dist[neighboridx], neighboridx);
       }
     }
 
@@ -202,7 +225,6 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
-  delete heap;
 
   std::vector<uint32_t> path;
   loc = target;
@@ -229,13 +251,13 @@ int main () {
 
   std::vector<uint32_t> path = dijkstra3d(field, sx, sy, sz, 0, voxels - 1);
 
-  printf("min: %d\n", path.size());
-  int loc;
-  for (int i = 0; i < path.size(); i++) {
-    loc = path[i];
+  printf("min: %lu\n", path.size());
+  // int loc;
+  // for (int i = 0; i < path.size(); i++) {
+  //   loc = path[i];
 
-    printf("(%d, %d, %d)\n", loc % sx, (int)((loc % (sx *sy)) / sx), (int)(loc / sx / sy));
-  }
+  //   printf("(%d, %d, %d)\n", loc % sx, (int)((loc % (sx *sy)) / sx), (int)(loc / sx / sy));
+  // }
 
 
   return 0;
