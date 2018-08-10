@@ -25,6 +25,8 @@
 
 #define NHOOD_SIZE 26
 
+namespace dijkstra {
+
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
     arr[i] = value;
@@ -124,14 +126,33 @@ struct HeapNodeCompare {
   }
 };
 
-// works for non-negative weights
-// Shortest ST path
-// sx, sy, sz are the dimensions of the graph
-// s = index of source
-// t = index of target
-// field is a 3D field
+/* Perform dijkstra's shortest path algorithm
+ * on a 3D image grid. Vertices are voxels and
+ * edges are the 26 nearest neighbors (except
+ * for the edges of the image where the number
+ * of edges is reduced).
+ *
+ * For given input voxels A and B, the edge
+ * weight from A to B is B and from B to A is
+ * A. All weights must be non-negative (incl. 
+ * negative zero).
+ *
+ * I take advantage of negative weights to mean
+ * "visited".
+ *
+ * Parameters:
+ *  T* field: Input weights. T can be be a floating or 
+ *     signed integer type, but not an unsigned int.
+ *  sx, sy, sz: size of the volume along x,y,z axes in voxels.
+ *  source: 1D index of starting voxel
+ *  target: 1D index of target voxel
+ *
+ * Returns: vector containing 1D indices of the path from
+ *   source to target including source and target.
+ */
+template <typename T>
 std::vector<uint32_t> dijkstra3d(
-    float* field, 
+    T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target
   ) {
@@ -143,7 +164,7 @@ std::vector<uint32_t> dijkstra3d(
   const int xshift = log(sx) / log(2);
   const int yshift = log(sy) / log(2);
 
-  float *dist = new float[voxels]();
+  T *dist = new T[voxels]();
   uint32_t *parents = new uint32_t[voxels]();
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
@@ -154,7 +175,7 @@ std::vector<uint32_t> dijkstra3d(
   queue.emplace(0.0, source);
 
   size_t loc;
-  float delta;
+  T delta;
   size_t neighboridx;
 
   int x, y, z;
@@ -218,29 +239,16 @@ std::vector<uint32_t> dijkstra3d(
   return path;
 }
 
+template <typename T>
+std::vector<uint32_t> dijkstra2d(
+    T* field, 
+    const size_t sx, const size_t sy, 
+    const size_t source, const size_t target
+  ) {
 
-int main () {
-  const size_t sx = 512;
-  const size_t sy = 512;
-  const size_t sz = 512;
-  const size_t voxels = sx * sy * sz;
-
-  float* field = new float[voxels]();
-  fill(field, 1.0, voxels);
-
-  std::vector<uint32_t> path = dijkstra3d(field, sx, sy, sz, 0, voxels - 1);
-
-  printf("min: %lu\n", path.size());
-  // int loc;
-  // for (int i = 0; i < path.size(); i++) {
-  //   loc = path[i];
-
-  //   printf("(%d, %d, %d)\n", loc % sx, (int)((loc % (sx *sy)) / sx), (int)(loc / sx / sy));
-  // }
-
-
-  return 0;
+  return dijkstra3d<T>(field, sx, sy, 1, source, target);
 }
 
+}; // namespace dijkstra3d
 
 #endif
