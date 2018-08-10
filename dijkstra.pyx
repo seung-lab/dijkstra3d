@@ -30,7 +30,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int source, int target
   )
 
-def dijkstra(data, int source, int target):
+def dijkstra(data, source, target):
   """
   Perform dijkstra's shortest path algorithm
   on a 3D image grid. Vertices are voxels and
@@ -45,8 +45,8 @@ def dijkstra(data, int source, int target):
   
   Parameters:
    Data: Input weights in a 2D or 3D numpy array. 
-   source: 1D index of starting voxel
-   target: 1D index of target voxel
+   source: (x,y,z) coordinate of starting voxel
+   target: (x,y,z) coordinate of target voxel
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
@@ -73,51 +73,54 @@ def dijkstra(data, int source, int target):
 
   cdef vector[uint32_t] output
 
-  cdef int depth = data.shape[0]
+  cdef int cols = data.shape[0]
   cdef int rows = data.shape[1]
-  cdef int cols = data.shape[2]
+  cdef int depth = data.shape[2]
+
+  cdef int src = source[0] + cols * (source[1] + rows * source[2])
+  cdef int sink = target[0] + cols * (target[1] + rows * target[2])
 
   if dtype == np.float32:
     arr_memviewfloat = data
     output = dijkstra3d[float](
       &arr_memviewfloat[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     output = dijkstra3d[double](
       &arr_memviewdouble[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   elif dtype == np.int64:
     arr_memview64 = data
     output = dijkstra3d[int64_t](
       &arr_memview64[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   elif dtype == np.int32:
     arr_memview32 = data
     output = dijkstra3d[int32_t](
       &arr_memview32[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   elif dtype == np.int16:
     arr_memview16 = data
     output = dijkstra3d[int16_t](
       &arr_memview16[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   elif dtype == np.int8:
     arr_memview8 = data
     output = dijkstra3d[int8_t](
       &arr_memview8[0,0,0],
       cols, rows, depth,
-      source, target
+      src, sink
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -128,4 +131,15 @@ def dijkstra(data, int source, int target):
   # This construct is required by python 2.
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(vec_view[:])
-  return np.frombuffer(buf, dtype=np.uint32)
+  path = np.frombuffer(buf, dtype=np.uint32)
+  path = path[::-1]
+
+  cdef int sxy = rows * cols
+
+  ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+  for i, pt in enumerate(path):
+    ptlist[ i, 0 ] = pt % cols
+    ptlist[ i, 1 ] = (pt % sxy) / cols
+    ptlist[ i, 2 ] = pt / sxy
+
+  return ptlist

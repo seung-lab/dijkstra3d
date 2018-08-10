@@ -50,19 +50,19 @@ inline void compute_neighborhood(
   if (x > 0) {
     neighborhood[0] = -1;
   }
-  if (x < sx - 1) {
+  if (x < (int)sx - 1) {
     neighborhood[1] = 1;
   }
   if (y > 0) {
     neighborhood[2] = -(int)sx;
   }
-  if (y < sy - 1) {
+  if (y < (int)sy - 1) {
     neighborhood[3] = (int)sx;
   }
   if (z > 0) {
     neighborhood[4] = -sxy;
   }
-  if (z < sz - 1) {
+  if (z < (int)sz - 1) {
     neighborhood[5] = sxy;
   }
 
