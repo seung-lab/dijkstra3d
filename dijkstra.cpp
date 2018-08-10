@@ -2670,7 +2670,7 @@ static PyObject *__pyx_n_s_vec_view;
 static PyObject *__pyx_n_s_version_info;
 static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data, PyObject *__pyx_v_source, PyObject *__pyx_v_target); /* proto */
-static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_path, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols); /* proto */
+static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_path, PyObject *__pyx_v_dims, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols); /* proto */
 static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_data, PyObject *__pyx_v_source, PyObject *__pyx_v_target); /* proto */
 static int __pyx_pf_7cpython_5array_5array___getbuffer__(arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info, CYTHON_UNUSED int __pyx_v_flags); /* proto */
 static void __pyx_pf_7cpython_5array_5array_2__releasebuffer__(CYTHON_UNUSED arrayobject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
@@ -2878,6 +2878,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
   PyObject *__pyx_t_8 = NULL;
   int __pyx_t_9;
   PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
   __Pyx_RefNannySetupContext("dijkstra", 0);
   __Pyx_INCREF(__pyx_v_data);
   __Pyx_INCREF(__pyx_v_source);
@@ -3687,7 +3688,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
  *     raise IndexError("Selected target voxel {} was not located inside the array.".format(target))
  * 
  *   path = _execute_dijkstra(data, source, target)             # <<<<<<<<<<<<<<
- *   return _path_to_point_cloud(path, rows, cols)
+ *   return _path_to_point_cloud(path, dims, rows, cols)
  * 
  */
   __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_execute_dijkstra); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 91, __pyx_L1_error)
@@ -3746,24 +3747,26 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
   /* "dijkstra.pyx":92
  * 
  *   path = _execute_dijkstra(data, source, target)
- *   return _path_to_point_cloud(path, rows, cols)             # <<<<<<<<<<<<<<
+ *   return _path_to_point_cloud(path, dims, rows, cols)             # <<<<<<<<<<<<<<
  * 
- * def _path_to_point_cloud(path, rows, cols):
+ * def _path_to_point_cloud(path, dims, rows, cols):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_path_to_point_cloud); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_dims); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 92, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = NULL;
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 92, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_10 = NULL;
   __pyx_t_7 = 0;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
-    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_6);
-    if (likely(__pyx_t_5)) {
+    __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_6);
+    if (likely(__pyx_t_10)) {
       PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
-      __Pyx_INCREF(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_10);
       __Pyx_INCREF(function);
       __Pyx_DECREF_SET(__pyx_t_6, function);
       __pyx_t_7 = 1;
@@ -3771,42 +3774,47 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
   }
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_6)) {
-    PyObject *__pyx_temp[4] = {__pyx_t_5, __pyx_v_path, __pyx_t_1, __pyx_t_4};
-    __pyx_t_8 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    PyObject *__pyx_temp[5] = {__pyx_t_10, __pyx_v_path, __pyx_t_1, __pyx_t_4, __pyx_t_5};
+    __pyx_t_8 = __Pyx_PyFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   } else
   #endif
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_6)) {
-    PyObject *__pyx_temp[4] = {__pyx_t_5, __pyx_v_path, __pyx_t_1, __pyx_t_4};
-    __pyx_t_8 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_7, 3+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
-    __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
+    PyObject *__pyx_temp[5] = {__pyx_t_10, __pyx_v_path, __pyx_t_1, __pyx_t_4, __pyx_t_5};
+    __pyx_t_8 = __Pyx_PyCFunction_FastCall(__pyx_t_6, __pyx_temp+1-__pyx_t_7, 4+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   } else
   #endif
   {
-    __pyx_t_10 = PyTuple_New(3+__pyx_t_7); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 92, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    if (__pyx_t_5) {
-      __Pyx_GIVEREF(__pyx_t_5); PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_5); __pyx_t_5 = NULL;
+    __pyx_t_11 = PyTuple_New(4+__pyx_t_7); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    if (__pyx_t_10) {
+      __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_10); __pyx_t_10 = NULL;
     }
     __Pyx_INCREF(__pyx_v_path);
     __Pyx_GIVEREF(__pyx_v_path);
-    PyTuple_SET_ITEM(__pyx_t_10, 0+__pyx_t_7, __pyx_v_path);
+    PyTuple_SET_ITEM(__pyx_t_11, 0+__pyx_t_7, __pyx_v_path);
     __Pyx_GIVEREF(__pyx_t_1);
-    PyTuple_SET_ITEM(__pyx_t_10, 1+__pyx_t_7, __pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_11, 1+__pyx_t_7, __pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_10, 2+__pyx_t_7, __pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_11, 2+__pyx_t_7, __pyx_t_4);
+    __Pyx_GIVEREF(__pyx_t_5);
+    PyTuple_SET_ITEM(__pyx_t_11, 3+__pyx_t_7, __pyx_t_5);
     __pyx_t_1 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_10, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
+    __pyx_t_5 = 0;
+    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_11, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 92, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_r = __pyx_t_8;
@@ -3829,6 +3837,7 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
   __Pyx_XDECREF(__pyx_t_6);
   __Pyx_XDECREF(__pyx_t_8);
   __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
   __Pyx_AddTraceback("dijkstra.dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -3843,11 +3852,11 @@ static PyObject *__pyx_pf_8dijkstra_dijkstra(CYTHON_UNUSED PyObject *__pyx_self,
 }
 
 /* "dijkstra.pyx":94
- *   return _path_to_point_cloud(path, rows, cols)
+ *   return _path_to_point_cloud(path, dims, rows, cols)
  * 
- * def _path_to_point_cloud(path, rows, cols):             # <<<<<<<<<<<<<<
+ * def _path_to_point_cloud(path, dims, rows, cols):             # <<<<<<<<<<<<<<
  *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
  */
 
 /* Python wrapper */
@@ -3855,18 +3864,21 @@ static PyObject *__pyx_pw_8dijkstra_3_path_to_point_cloud(PyObject *__pyx_self, 
 static PyMethodDef __pyx_mdef_8dijkstra_3_path_to_point_cloud = {"_path_to_point_cloud", (PyCFunction)__pyx_pw_8dijkstra_3_path_to_point_cloud, METH_VARARGS|METH_KEYWORDS, 0};
 static PyObject *__pyx_pw_8dijkstra_3_path_to_point_cloud(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_path = 0;
+  PyObject *__pyx_v_dims = 0;
   PyObject *__pyx_v_rows = 0;
   PyObject *__pyx_v_cols = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_path_to_point_cloud (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_path,&__pyx_n_s_rows,&__pyx_n_s_cols,0};
-    PyObject* values[3] = {0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_path,&__pyx_n_s_dims,&__pyx_n_s_rows,&__pyx_n_s_cols,0};
+    PyObject* values[4] = {0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -3883,47 +3895,55 @@ static PyObject *__pyx_pw_8dijkstra_3_path_to_point_cloud(PyObject *__pyx_self, 
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rows)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_dims)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 3, 3, 1); __PYX_ERR(0, 94, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 4, 4, 1); __PYX_ERR(0, 94, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cols)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rows)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 3, 3, 2); __PYX_ERR(0, 94, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 4, 4, 2); __PYX_ERR(0, 94, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_cols)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 4, 4, 3); __PYX_ERR(0, 94, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
         if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_path_to_point_cloud") < 0)) __PYX_ERR(0, 94, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
     }
     __pyx_v_path = values[0];
-    __pyx_v_rows = values[1];
-    __pyx_v_cols = values[2];
+    __pyx_v_dims = values[1];
+    __pyx_v_rows = values[2];
+    __pyx_v_cols = values[3];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 94, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_path_to_point_cloud", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 94, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("dijkstra._path_to_point_cloud", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8dijkstra_2_path_to_point_cloud(__pyx_self, __pyx_v_path, __pyx_v_rows, __pyx_v_cols);
+  __pyx_r = __pyx_pf_8dijkstra_2_path_to_point_cloud(__pyx_self, __pyx_v_path, __pyx_v_dims, __pyx_v_rows, __pyx_v_cols);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_path, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols) {
+static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_path, PyObject *__pyx_v_dims, PyObject *__pyx_v_rows, PyObject *__pyx_v_cols) {
   int __pyx_v_sxy;
   PyObject *__pyx_v_ptlist = NULL;
   PyObject *__pyx_v_i = NULL;
@@ -3936,16 +3956,17 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   PyObject *__pyx_t_4 = NULL;
   PyObject *__pyx_t_5 = NULL;
   PyObject *__pyx_t_6 = NULL;
-  Py_ssize_t __pyx_t_7;
-  PyObject *(*__pyx_t_8)(PyObject *);
+  int __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  PyObject *(*__pyx_t_9)(PyObject *);
   __Pyx_RefNannySetupContext("_path_to_point_cloud", 0);
 
   /* "dijkstra.pyx":95
  * 
- * def _path_to_point_cloud(path, rows, cols):
+ * def _path_to_point_cloud(path, dims, rows, cols):
  *   cdef int sxy = rows * cols             # <<<<<<<<<<<<<<
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
- *   for i, pt in enumerate(path):
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
+ * 
  */
   __pyx_t_1 = PyNumber_Multiply(__pyx_v_rows, __pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 95, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3954,11 +3975,11 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   __pyx_v_sxy = __pyx_t_2;
 
   /* "dijkstra.pyx":96
- * def _path_to_point_cloud(path, rows, cols):
+ * def _path_to_point_cloud(path, dims, rows, cols):
  *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)             # <<<<<<<<<<<<<<
- *   for i, pt in enumerate(path):
- *     ptlist[ i, 0 ] = pt % cols
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)             # <<<<<<<<<<<<<<
+ * 
+ *   if dims == 3:
  */
   __pyx_t_1 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -3974,9 +3995,9 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_4);
-  __Pyx_INCREF(__pyx_int_3);
-  __Pyx_GIVEREF(__pyx_int_3);
-  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_int_3);
+  __Pyx_INCREF(__pyx_v_dims);
+  __Pyx_GIVEREF(__pyx_v_dims);
+  PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_v_dims);
   __pyx_t_4 = 0;
   __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 96, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -4000,150 +4021,293 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   __pyx_v_ptlist = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "dijkstra.pyx":97
- *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
- *   for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
- *     ptlist[ i, 0 ] = pt % cols
- *     ptlist[ i, 1 ] = (pt % sxy) / cols
+  /* "dijkstra.pyx":98
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
+ * 
+ *   if dims == 3:             # <<<<<<<<<<<<<<
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols
  */
-  __Pyx_INCREF(__pyx_int_0);
-  __pyx_t_6 = __pyx_int_0;
-  if (likely(PyList_CheckExact(__pyx_v_path)) || PyTuple_CheckExact(__pyx_v_path)) {
-    __pyx_t_1 = __pyx_v_path; __Pyx_INCREF(__pyx_t_1); __pyx_t_7 = 0;
-    __pyx_t_8 = NULL;
-  } else {
-    __pyx_t_7 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_path); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_8 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 97, __pyx_L1_error)
-  }
-  for (;;) {
-    if (likely(!__pyx_t_8)) {
-      if (likely(PyList_CheckExact(__pyx_t_1))) {
-        if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
-        #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        #endif
-      } else {
-        if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
-        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 97, __pyx_L1_error)
-        #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
-        __Pyx_GOTREF(__pyx_t_4);
-        #endif
-      }
-    } else {
-      __pyx_t_4 = __pyx_t_8(__pyx_t_1);
-      if (unlikely(!__pyx_t_4)) {
-        PyObject* exc_type = PyErr_Occurred();
-        if (exc_type) {
-          if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 97, __pyx_L1_error)
-        }
-        break;
-      }
-      __Pyx_GOTREF(__pyx_t_4);
-    }
-    __Pyx_XDECREF_SET(__pyx_v_pt, __pyx_t_4);
-    __pyx_t_4 = 0;
-    __Pyx_INCREF(__pyx_t_6);
-    __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_6);
-    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 97, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_6);
-    __pyx_t_6 = __pyx_t_4;
-    __pyx_t_4 = 0;
-
-    /* "dijkstra.pyx":98
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
- *   for i, pt in enumerate(path):
- *     ptlist[ i, 0 ] = pt % cols             # <<<<<<<<<<<<<<
- *     ptlist[ i, 1 ] = (pt % sxy) / cols
- *     ptlist[ i, 2 ] = pt / sxy
- */
-    __pyx_t_4 = PyNumber_Remainder(__pyx_v_pt, __pyx_v_cols); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 98, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 98, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_v_i);
-    __Pyx_GIVEREF(__pyx_v_i);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_i);
-    __Pyx_INCREF(__pyx_int_0);
-    __Pyx_GIVEREF(__pyx_int_0);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_0);
-    if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_3, __pyx_t_4) < 0)) __PYX_ERR(0, 98, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_6 = __Pyx_PyInt_EqObjC(__pyx_v_dims, __pyx_int_3, 3, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 98, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  if (__pyx_t_7) {
 
     /* "dijkstra.pyx":99
- *   for i, pt in enumerate(path):
- *     ptlist[ i, 0 ] = pt % cols
- *     ptlist[ i, 1 ] = (pt % sxy) / cols             # <<<<<<<<<<<<<<
- *     ptlist[ i, 2 ] = pt / sxy
- *   return ptlist
+ * 
+ *   if dims == 3:
+ *     for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_sxy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyNumber_Remainder(__pyx_v_pt, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_v_cols); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_INCREF(__pyx_v_i);
-    __Pyx_GIVEREF(__pyx_v_i);
-    PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_i);
-    __Pyx_INCREF(__pyx_int_1);
-    __Pyx_GIVEREF(__pyx_int_1);
-    PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_1);
-    if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_3, __pyx_t_4) < 0)) __PYX_ERR(0, 99, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_INCREF(__pyx_int_0);
+    __pyx_t_6 = __pyx_int_0;
+    if (likely(PyList_CheckExact(__pyx_v_path)) || PyTuple_CheckExact(__pyx_v_path)) {
+      __pyx_t_1 = __pyx_v_path; __Pyx_INCREF(__pyx_t_1); __pyx_t_8 = 0;
+      __pyx_t_9 = NULL;
+    } else {
+      __pyx_t_8 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_path); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 99, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_9 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 99, __pyx_L1_error)
+    }
+    for (;;) {
+      if (likely(!__pyx_t_9)) {
+        if (likely(PyList_CheckExact(__pyx_t_1))) {
+          if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 99, __pyx_L1_error)
+          #else
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          #endif
+        } else {
+          if (__pyx_t_8 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_4); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 99, __pyx_L1_error)
+          #else
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_4);
+          #endif
+        }
+      } else {
+        __pyx_t_4 = __pyx_t_9(__pyx_t_1);
+        if (unlikely(!__pyx_t_4)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 99, __pyx_L1_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_4);
+      }
+      __Pyx_XDECREF_SET(__pyx_v_pt, __pyx_t_4);
+      __pyx_t_4 = 0;
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_6);
+      __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 99, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_6);
+      __pyx_t_6 = __pyx_t_4;
+      __pyx_t_4 = 0;
 
-    /* "dijkstra.pyx":100
- *     ptlist[ i, 0 ] = pt % cols
- *     ptlist[ i, 1 ] = (pt % sxy) / cols
- *     ptlist[ i, 2 ] = pt / sxy             # <<<<<<<<<<<<<<
- *   return ptlist
+      /* "dijkstra.pyx":100
+ *   if dims == 3:
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ *       ptlist[ i, 2 ] = pt / sxy
+ */
+      __pyx_t_4 = PyNumber_Remainder(__pyx_v_pt, __pyx_v_cols); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_INCREF(__pyx_v_i);
+      __Pyx_GIVEREF(__pyx_v_i);
+      PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_i);
+      __Pyx_INCREF(__pyx_int_0);
+      __Pyx_GIVEREF(__pyx_int_0);
+      PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_0);
+      if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_3, __pyx_t_4) < 0)) __PYX_ERR(0, 100, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+      /* "dijkstra.pyx":101
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 2 ] = pt / sxy
+ *   else:
+ */
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_sxy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 101, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_3 = PyNumber_Remainder(__pyx_v_pt, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_t_3, __pyx_v_cols); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 101, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 101, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_INCREF(__pyx_v_i);
+      __Pyx_GIVEREF(__pyx_v_i);
+      PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_i);
+      __Pyx_INCREF(__pyx_int_1);
+      __Pyx_GIVEREF(__pyx_int_1);
+      PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_1);
+      if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_3, __pyx_t_4) < 0)) __PYX_ERR(0, 101, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+      /* "dijkstra.pyx":102
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ *       ptlist[ i, 2 ] = pt / sxy             # <<<<<<<<<<<<<<
+ *   else:
+ *     for i, pt in enumerate(path):
+ */
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_sxy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_v_pt, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_v_i);
+      __Pyx_GIVEREF(__pyx_v_i);
+      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_i);
+      __Pyx_INCREF(__pyx_int_2);
+      __Pyx_GIVEREF(__pyx_int_2);
+      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_2);
+      if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 102, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+
+      /* "dijkstra.pyx":99
+ * 
+ *   if dims == 3:
+ *     for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ */
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "dijkstra.pyx":98
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
+ * 
+ *   if dims == 3:             # <<<<<<<<<<<<<<
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols
+ */
+    goto __pyx_L3;
+  }
+
+  /* "dijkstra.pyx":104
+ *       ptlist[ i, 2 ] = pt / sxy
+ *   else:
+ *     for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ */
+  /*else*/ {
+    __Pyx_INCREF(__pyx_int_0);
+    __pyx_t_6 = __pyx_int_0;
+    if (likely(PyList_CheckExact(__pyx_v_path)) || PyTuple_CheckExact(__pyx_v_path)) {
+      __pyx_t_1 = __pyx_v_path; __Pyx_INCREF(__pyx_t_1); __pyx_t_8 = 0;
+      __pyx_t_9 = NULL;
+    } else {
+      __pyx_t_8 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_path); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_1);
+      __pyx_t_9 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 104, __pyx_L1_error)
+    }
+    for (;;) {
+      if (likely(!__pyx_t_9)) {
+        if (likely(PyList_CheckExact(__pyx_t_1))) {
+          if (__pyx_t_8 >= PyList_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 104, __pyx_L1_error)
+          #else
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          #endif
+        } else {
+          if (__pyx_t_8 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
+          #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+          __pyx_t_3 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_8); __Pyx_INCREF(__pyx_t_3); __pyx_t_8++; if (unlikely(0 < 0)) __PYX_ERR(0, 104, __pyx_L1_error)
+          #else
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_1, __pyx_t_8); __pyx_t_8++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+          __Pyx_GOTREF(__pyx_t_3);
+          #endif
+        }
+      } else {
+        __pyx_t_3 = __pyx_t_9(__pyx_t_1);
+        if (unlikely(!__pyx_t_3)) {
+          PyObject* exc_type = PyErr_Occurred();
+          if (exc_type) {
+            if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
+            else __PYX_ERR(0, 104, __pyx_L1_error)
+          }
+          break;
+        }
+        __Pyx_GOTREF(__pyx_t_3);
+      }
+      __Pyx_XDECREF_SET(__pyx_v_pt, __pyx_t_3);
+      __pyx_t_3 = 0;
+      __Pyx_INCREF(__pyx_t_6);
+      __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_6);
+      __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_t_6, __pyx_int_1, 1, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 104, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_6);
+      __pyx_t_6 = __pyx_t_3;
+      __pyx_t_3 = 0;
+
+      /* "dijkstra.pyx":105
+ *   else:
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
  * 
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_sxy); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_v_pt, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 100, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 100, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_INCREF(__pyx_v_i);
-    __Pyx_GIVEREF(__pyx_v_i);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_i);
-    __Pyx_INCREF(__pyx_int_2);
-    __Pyx_GIVEREF(__pyx_int_2);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_2);
-    if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 100, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_3 = PyNumber_Remainder(__pyx_v_pt, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_v_i);
+      __Pyx_GIVEREF(__pyx_v_i);
+      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_i);
+      __Pyx_INCREF(__pyx_int_0);
+      __Pyx_GIVEREF(__pyx_int_0);
+      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_0);
+      if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 105, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "dijkstra.pyx":97
- *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
- *   for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
- *     ptlist[ i, 0 ] = pt % cols
- *     ptlist[ i, 1 ] = (pt % sxy) / cols
+      /* "dijkstra.pyx":106
+ *     for i, pt in enumerate(path):
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols             # <<<<<<<<<<<<<<
+ * 
+ *   return ptlist
  */
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_sxy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __pyx_t_4 = PyNumber_Remainder(__pyx_v_pt, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+      __pyx_t_3 = __Pyx_PyNumber_Divide(__pyx_t_4, __pyx_v_cols); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_3);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_v_i);
+      __Pyx_GIVEREF(__pyx_v_i);
+      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_i);
+      __Pyx_INCREF(__pyx_int_1);
+      __Pyx_GIVEREF(__pyx_int_1);
+      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_int_1);
+      if (unlikely(PyObject_SetItem(__pyx_v_ptlist, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 106, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-  /* "dijkstra.pyx":101
- *     ptlist[ i, 1 ] = (pt % sxy) / cols
- *     ptlist[ i, 2 ] = pt / sxy
+      /* "dijkstra.pyx":104
+ *       ptlist[ i, 2 ] = pt / sxy
+ *   else:
+ *     for i, pt in enumerate(path):             # <<<<<<<<<<<<<<
+ *       ptlist[ i, 0 ] = pt % cols
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ */
+    }
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  }
+  __pyx_L3:;
+
+  /* "dijkstra.pyx":108
+ *       ptlist[ i, 1 ] = (pt % sxy) / cols
+ * 
  *   return ptlist             # <<<<<<<<<<<<<<
  * 
  * 
@@ -4154,11 +4318,11 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   goto __pyx_L0;
 
   /* "dijkstra.pyx":94
- *   return _path_to_point_cloud(path, rows, cols)
+ *   return _path_to_point_cloud(path, dims, rows, cols)
  * 
- * def _path_to_point_cloud(path, rows, cols):             # <<<<<<<<<<<<<<
+ * def _path_to_point_cloud(path, dims, rows, cols):             # <<<<<<<<<<<<<<
  *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
  */
 
   /* function exit code */
@@ -4179,7 +4343,7 @@ static PyObject *__pyx_pf_8dijkstra_2_path_to_point_cloud(CYTHON_UNUSED PyObject
   return __pyx_r;
 }
 
-/* "dijkstra.pyx":104
+/* "dijkstra.pyx":111
  * 
  * 
  * def _execute_dijkstra(data, source, target):             # <<<<<<<<<<<<<<
@@ -4222,17 +4386,17 @@ static PyObject *__pyx_pw_8dijkstra_5_execute_dijkstra(PyObject *__pyx_self, PyO
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_source)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, 1); __PYX_ERR(0, 104, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, 1); __PYX_ERR(0, 111, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_target)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, 2); __PYX_ERR(0, 104, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, 2); __PYX_ERR(0, 111, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_execute_dijkstra") < 0)) __PYX_ERR(0, 104, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "_execute_dijkstra") < 0)) __PYX_ERR(0, 111, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -4247,7 +4411,7 @@ static PyObject *__pyx_pw_8dijkstra_5_execute_dijkstra(PyObject *__pyx_self, PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 104, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("_execute_dijkstra", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 111, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("dijkstra._execute_dijkstra", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4315,171 +4479,171 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
   __Pyx_memviewslice __pyx_t_34 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_RefNannySetupContext("_execute_dijkstra", 0);
 
-  /* "dijkstra.pyx":112
+  /* "dijkstra.pyx":119
  *   cdef double[:,:,:] arr_memviewdouble
  * 
  *   cdef int cols = data.shape[0]             # <<<<<<<<<<<<<<
  *   cdef int rows = data.shape[1]
  *   cdef int depth = data.shape[2]
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 119, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_cols = __pyx_t_3;
 
-  /* "dijkstra.pyx":113
+  /* "dijkstra.pyx":120
  * 
  *   cdef int cols = data.shape[0]
  *   cdef int rows = data.shape[1]             # <<<<<<<<<<<<<<
  *   cdef int depth = data.shape[2]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 120, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_rows = __pyx_t_3;
 
-  /* "dijkstra.pyx":114
+  /* "dijkstra.pyx":121
  *   cdef int cols = data.shape[0]
  *   cdef int rows = data.shape[1]
  *   cdef int depth = data.shape[2]             # <<<<<<<<<<<<<<
  * 
  *   cdef int src = source[0] + cols * (source[1] + rows * source[2])
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 121, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_depth = __pyx_t_3;
 
-  /* "dijkstra.pyx":116
+  /* "dijkstra.pyx":123
  *   cdef int depth = data.shape[2]
  * 
  *   cdef int src = source[0] + cols * (source[1] + rows * source[2])             # <<<<<<<<<<<<<<
  *   cdef int sink = target[0] + cols * (target[1] + rows * target[2])
  * 
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyNumber_Add(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Add(__pyx_t_4, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_7 = PyNumber_Multiply(__pyx_t_1, __pyx_t_6); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Add(__pyx_t_2, __pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 123, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_src = __pyx_t_3;
 
-  /* "dijkstra.pyx":117
+  /* "dijkstra.pyx":124
  * 
  *   cdef int src = source[0] + cols * (source[1] + rows * source[2])
  *   cdef int sink = target[0] + cols * (target[1] + rows * target[2])             # <<<<<<<<<<<<<<
  * 
  *   cdef vector[uint32_t] output
  */
-  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_target, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_target, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_cols); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_target, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_target, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_rows); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_target, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_target, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyNumber_Multiply(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Multiply(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_2, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_5 = PyNumber_Multiply(__pyx_t_7, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyNumber_Add(__pyx_t_6, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Add(__pyx_t_6, __pyx_t_5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_3 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 124, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_sink = __pyx_t_3;
 
-  /* "dijkstra.pyx":121
+  /* "dijkstra.pyx":128
  *   cdef vector[uint32_t] output
  * 
  *   dtype = data.dtype             # <<<<<<<<<<<<<<
  * 
  *   if dtype == np.float32:
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 121, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 128, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_v_dtype = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "dijkstra.pyx":123
+  /* "dijkstra.pyx":130
  *   dtype = data.dtype
  * 
  *   if dtype == np.float32:             # <<<<<<<<<<<<<<
  *     arr_memviewfloat = data
  *     output = dijkstra3d[float](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_8) {
 
-    /* "dijkstra.pyx":124
+    /* "dijkstra.pyx":131
  * 
  *   if dtype == np.float32:
  *     arr_memviewfloat = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[float](
  *       &arr_memviewfloat[0,0,0],
  */
-    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_9.memview)) __PYX_ERR(0, 131, __pyx_L1_error)
     __pyx_v_arr_memviewfloat = __pyx_t_9;
     __pyx_t_9.memview = NULL;
     __pyx_t_9.data = NULL;
 
-    /* "dijkstra.pyx":126
+    /* "dijkstra.pyx":133
  *     arr_memviewfloat = data
  *     output = dijkstra3d[float](
  *       &arr_memviewfloat[0,0,0],             # <<<<<<<<<<<<<<
@@ -4504,10 +4668,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_12 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 126, __pyx_L1_error)
+      __PYX_ERR(0, 133, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":125
+    /* "dijkstra.pyx":132
  *   if dtype == np.float32:
  *     arr_memviewfloat = data
  *     output = dijkstra3d[float](             # <<<<<<<<<<<<<<
@@ -4516,7 +4680,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<float>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_10 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_11 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_12 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":123
+    /* "dijkstra.pyx":130
  *   dtype = data.dtype
  * 
  *   if dtype == np.float32:             # <<<<<<<<<<<<<<
@@ -4526,37 +4690,37 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":130
+  /* "dijkstra.pyx":137
  *       src, sink
  *     )
  *   elif dtype == np.float64:             # <<<<<<<<<<<<<<
  *     arr_memviewdouble = data
  *     output = dijkstra3d[double](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float64); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_float64); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 130, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 137, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_8) {
 
-    /* "dijkstra.pyx":131
+    /* "dijkstra.pyx":138
  *     )
  *   elif dtype == np.float64:
  *     arr_memviewdouble = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[double](
  *       &arr_memviewdouble[0,0,0],
  */
-    __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 131, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_13.memview)) __PYX_ERR(0, 138, __pyx_L1_error)
     __pyx_v_arr_memviewdouble = __pyx_t_13;
     __pyx_t_13.memview = NULL;
     __pyx_t_13.data = NULL;
 
-    /* "dijkstra.pyx":133
+    /* "dijkstra.pyx":140
  *     arr_memviewdouble = data
  *     output = dijkstra3d[double](
  *       &arr_memviewdouble[0,0,0],             # <<<<<<<<<<<<<<
@@ -4581,10 +4745,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_16 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 133, __pyx_L1_error)
+      __PYX_ERR(0, 140, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":132
+    /* "dijkstra.pyx":139
  *   elif dtype == np.float64:
  *     arr_memviewdouble = data
  *     output = dijkstra3d[double](             # <<<<<<<<<<<<<<
@@ -4593,7 +4757,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<double>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_14 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_15 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_16 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":130
+    /* "dijkstra.pyx":137
  *       src, sink
  *     )
  *   elif dtype == np.float64:             # <<<<<<<<<<<<<<
@@ -4603,37 +4767,37 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":137
+  /* "dijkstra.pyx":144
  *       src, sink
  *     )
  *   elif dtype == np.int64:             # <<<<<<<<<<<<<<
  *     arr_memview64 = data
  *     output = dijkstra3d[int64_t](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int64); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int64); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 137, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_8) {
 
-    /* "dijkstra.pyx":138
+    /* "dijkstra.pyx":145
  *     )
  *   elif dtype == np.int64:
  *     arr_memview64 = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[int64_t](
  *       &arr_memview64[0,0,0],
  */
-    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int64_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 138, __pyx_L1_error)
+    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int64_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 145, __pyx_L1_error)
     __pyx_v_arr_memview64 = __pyx_t_17;
     __pyx_t_17.memview = NULL;
     __pyx_t_17.data = NULL;
 
-    /* "dijkstra.pyx":140
+    /* "dijkstra.pyx":147
  *     arr_memview64 = data
  *     output = dijkstra3d[int64_t](
  *       &arr_memview64[0,0,0],             # <<<<<<<<<<<<<<
@@ -4658,10 +4822,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 140, __pyx_L1_error)
+      __PYX_ERR(0, 147, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":139
+    /* "dijkstra.pyx":146
  *   elif dtype == np.int64:
  *     arr_memview64 = data
  *     output = dijkstra3d[int64_t](             # <<<<<<<<<<<<<<
@@ -4670,7 +4834,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<int64_t>((&(*((int64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_18 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_19 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":137
+    /* "dijkstra.pyx":144
  *       src, sink
  *     )
  *   elif dtype == np.int64:             # <<<<<<<<<<<<<<
@@ -4680,37 +4844,37 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":144
+  /* "dijkstra.pyx":151
  *       src, sink
  *     )
  *   elif dtype == np.int32:             # <<<<<<<<<<<<<<
  *     arr_memview32 = data
  *     output = dijkstra3d[int32_t](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int32); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_8) {
 
-    /* "dijkstra.pyx":145
+    /* "dijkstra.pyx":152
  *     )
  *   elif dtype == np.int32:
  *     arr_memview32 = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[int32_t](
  *       &arr_memview32[0,0,0],
  */
-    __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int32_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 145, __pyx_L1_error)
+    __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int32_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 152, __pyx_L1_error)
     __pyx_v_arr_memview32 = __pyx_t_21;
     __pyx_t_21.memview = NULL;
     __pyx_t_21.data = NULL;
 
-    /* "dijkstra.pyx":147
+    /* "dijkstra.pyx":154
  *     arr_memview32 = data
  *     output = dijkstra3d[int32_t](
  *       &arr_memview32[0,0,0],             # <<<<<<<<<<<<<<
@@ -4735,10 +4899,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_24 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 147, __pyx_L1_error)
+      __PYX_ERR(0, 154, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":146
+    /* "dijkstra.pyx":153
  *   elif dtype == np.int32:
  *     arr_memview32 = data
  *     output = dijkstra3d[int32_t](             # <<<<<<<<<<<<<<
@@ -4747,7 +4911,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<int32_t>((&(*((int32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_22 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_23 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_24 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":144
+    /* "dijkstra.pyx":151
  *       src, sink
  *     )
  *   elif dtype == np.int32:             # <<<<<<<<<<<<<<
@@ -4757,37 +4921,37 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":151
+  /* "dijkstra.pyx":158
  *       src, sink
  *     )
  *   elif dtype == np.int16:             # <<<<<<<<<<<<<<
  *     arr_memview16 = data
  *     output = dijkstra3d[int16_t](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int16); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int16); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 158, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (__pyx_t_8) {
 
-    /* "dijkstra.pyx":152
+    /* "dijkstra.pyx":159
  *     )
  *   elif dtype == np.int16:
  *     arr_memview16 = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[int16_t](
  *       &arr_memview16[0,0,0],
  */
-    __pyx_t_25 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int16_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_25.memview)) __PYX_ERR(0, 152, __pyx_L1_error)
+    __pyx_t_25 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int16_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_25.memview)) __PYX_ERR(0, 159, __pyx_L1_error)
     __pyx_v_arr_memview16 = __pyx_t_25;
     __pyx_t_25.memview = NULL;
     __pyx_t_25.data = NULL;
 
-    /* "dijkstra.pyx":154
+    /* "dijkstra.pyx":161
  *     arr_memview16 = data
  *     output = dijkstra3d[int16_t](
  *       &arr_memview16[0,0,0],             # <<<<<<<<<<<<<<
@@ -4812,10 +4976,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_28 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 154, __pyx_L1_error)
+      __PYX_ERR(0, 161, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":153
+    /* "dijkstra.pyx":160
  *   elif dtype == np.int16:
  *     arr_memview16 = data
  *     output = dijkstra3d[int16_t](             # <<<<<<<<<<<<<<
@@ -4824,7 +4988,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<int16_t>((&(*((int16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_26 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_27 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_28 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":151
+    /* "dijkstra.pyx":158
  *       src, sink
  *     )
  *   elif dtype == np.int16:             # <<<<<<<<<<<<<<
@@ -4834,37 +4998,37 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":158
+  /* "dijkstra.pyx":165
  *       src, sink
  *     )
  *   elif dtype == np.int8:             # <<<<<<<<<<<<<<
  *     arr_memview8 = data
  *     output = dijkstra3d[int8_t](
  */
-  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_int8); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_4 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_5, Py_EQ); __Pyx_XGOTREF(__pyx_t_4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_4); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 165, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (likely(__pyx_t_8)) {
 
-    /* "dijkstra.pyx":159
+    /* "dijkstra.pyx":166
  *     )
  *   elif dtype == np.int8:
  *     arr_memview8 = data             # <<<<<<<<<<<<<<
  *     output = dijkstra3d[int8_t](
  *       &arr_memview8[0,0,0],
  */
-    __pyx_t_29 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int8_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_29.memview)) __PYX_ERR(0, 159, __pyx_L1_error)
+    __pyx_t_29 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_int8_t(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_29.memview)) __PYX_ERR(0, 166, __pyx_L1_error)
     __pyx_v_arr_memview8 = __pyx_t_29;
     __pyx_t_29.memview = NULL;
     __pyx_t_29.data = NULL;
 
-    /* "dijkstra.pyx":161
+    /* "dijkstra.pyx":168
  *     arr_memview8 = data
  *     output = dijkstra3d[int8_t](
  *       &arr_memview8[0,0,0],             # <<<<<<<<<<<<<<
@@ -4889,10 +5053,10 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     } else if (unlikely(__pyx_t_32 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_3 = 2;
     if (unlikely(__pyx_t_3 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_3);
-      __PYX_ERR(0, 161, __pyx_L1_error)
+      __PYX_ERR(0, 168, __pyx_L1_error)
     }
 
-    /* "dijkstra.pyx":160
+    /* "dijkstra.pyx":167
  *   elif dtype == np.int8:
  *     arr_memview8 = data
  *     output = dijkstra3d[int8_t](             # <<<<<<<<<<<<<<
@@ -4901,7 +5065,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
     __pyx_v_output = dijkstra::dijkstra3d<int8_t>((&(*((int8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_30 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_31 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_32 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_cols, __pyx_v_rows, __pyx_v_depth, __pyx_v_src, __pyx_v_sink);
 
-    /* "dijkstra.pyx":158
+    /* "dijkstra.pyx":165
  *       src, sink
  *     )
  *   elif dtype == np.int8:             # <<<<<<<<<<<<<<
@@ -4911,7 +5075,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
     goto __pyx_L3;
   }
 
-  /* "dijkstra.pyx":166
+  /* "dijkstra.pyx":173
  *     )
  *   else:
  *     raise TypeError("Type {} not currently supported.".format(dtype))             # <<<<<<<<<<<<<<
@@ -4919,7 +5083,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  *   cdef uint32_t* output_ptr = <uint32_t*>&output[0]
  */
   /*else*/ {
-    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -4932,13 +5096,13 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
       }
     }
     if (!__pyx_t_6) {
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_dtype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 173, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
     } else {
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_dtype};
-        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 173, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
       } else
@@ -4946,34 +5110,34 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_5)) {
         PyObject *__pyx_temp[2] = {__pyx_t_6, __pyx_v_dtype};
-        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_5, __pyx_temp+1-1, 1+1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 173, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_4);
       } else
       #endif
       {
-        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_7 = PyTuple_New(1+1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 173, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_6); __pyx_t_6 = NULL;
         __Pyx_INCREF(__pyx_v_dtype);
         __Pyx_GIVEREF(__pyx_v_dtype);
         PyTuple_SET_ITEM(__pyx_t_7, 0+1, __pyx_v_dtype);
-        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 166, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_5, __pyx_t_7, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 173, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 166, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_Raise(__pyx_t_5, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-    __PYX_ERR(0, 166, __pyx_L1_error)
+    __PYX_ERR(0, 173, __pyx_L1_error)
   }
   __pyx_L3:;
 
-  /* "dijkstra.pyx":168
+  /* "dijkstra.pyx":175
  *     raise TypeError("Type {} not currently supported.".format(dtype))
  * 
  *   cdef uint32_t* output_ptr = <uint32_t*>&output[0]             # <<<<<<<<<<<<<<
@@ -4982,7 +5146,7 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
   __pyx_v_output_ptr = ((uint32_t *)(&(__pyx_v_output[0])));
 
-  /* "dijkstra.pyx":169
+  /* "dijkstra.pyx":176
  * 
  *   cdef uint32_t* output_ptr = <uint32_t*>&output[0]
  *   cdef uint32_t[:] vec_view = <uint32_t[:output.size()]>output_ptr             # <<<<<<<<<<<<<<
@@ -4991,76 +5155,76 @@ static PyObject *__pyx_pf_8dijkstra_4_execute_dijkstra(CYTHON_UNUSED PyObject *_
  */
   if (!__pyx_v_output_ptr) {
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
-    __PYX_ERR(0, 169, __pyx_L1_error)
+    __PYX_ERR(0, 176, __pyx_L1_error)
   }
   __pyx_t_4 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn_uint32_t);
   __pyx_t_5 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_output.size()));
-  if (unlikely(!__pyx_t_4 || !__pyx_t_5 || !PyBytes_AsString(__pyx_t_4))) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4 || !__pyx_t_5 || !PyBytes_AsString(__pyx_t_4))) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_33 = __pyx_array_new(__pyx_t_5, sizeof(uint32_t), PyBytes_AS_STRING(__pyx_t_4), (char *) "c", (char *) __pyx_v_output_ptr);
-  if (unlikely(!__pyx_t_33)) __PYX_ERR(0, 169, __pyx_L1_error)
+  if (unlikely(!__pyx_t_33)) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_33);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_34 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_t_33), PyBUF_WRITABLE); if (unlikely(!__pyx_t_34.memview)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_34 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_t_33), PyBUF_WRITABLE); if (unlikely(!__pyx_t_34.memview)) __PYX_ERR(0, 176, __pyx_L1_error)
   __Pyx_DECREF(((PyObject *)__pyx_t_33)); __pyx_t_33 = 0;
   __pyx_v_vec_view = __pyx_t_34;
   __pyx_t_34.memview = NULL;
   __pyx_t_34.data = NULL;
 
-  /* "dijkstra.pyx":173
+  /* "dijkstra.pyx":180
  *   # This construct is required by python 2.
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])             # <<<<<<<<<<<<<<
  *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
  */
-  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_vec_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_vec_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 173, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_4); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_buf = ((PyObject*)__pyx_t_5);
   __pyx_t_5 = 0;
 
-  /* "dijkstra.pyx":174
+  /* "dijkstra.pyx":181
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])
  *   return np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_INCREF(__pyx_v_buf);
   __Pyx_GIVEREF(__pyx_v_buf);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_v_buf);
-  __pyx_t_7 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_uint32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_uint32); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 174, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_7, __pyx_n_s_dtype, __pyx_t_2) < 0) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_slice__4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_slice__4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_r = __pyx_t_7;
   __pyx_t_7 = 0;
   goto __pyx_L0;
 
-  /* "dijkstra.pyx":104
+  /* "dijkstra.pyx":111
  * 
  * 
  * def _execute_dijkstra(data, source, target):             # <<<<<<<<<<<<<<
@@ -22330,8 +22494,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_IndexError = __Pyx_GetBuiltinName(__pyx_n_s_IndexError); if (!__pyx_builtin_IndexError) __PYX_ERR(0, 83, __pyx_L1_error)
-  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 97, __pyx_L1_error)
-  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 166, __pyx_L1_error)
+  __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(0, 99, __pyx_L1_error)
+  __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(0, 173, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(1, 109, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 229, __pyx_L1_error)
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(2, 242, __pyx_L1_error)
@@ -22373,12 +22537,12 @@ static int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
-  /* "dijkstra.pyx":174
+  /* "dijkstra.pyx":181
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])
  *   return np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
  */
-  __pyx_slice__4 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__4)) __PYX_ERR(0, 174, __pyx_L1_error)
+  __pyx_slice__4 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__4)) __PYX_ERR(0, 181, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice__4);
   __Pyx_GIVEREF(__pyx_slice__4);
 
@@ -22717,28 +22881,28 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(3, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_dijkstra, 33, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 33, __pyx_L1_error)
 
   /* "dijkstra.pyx":94
- *   return _path_to_point_cloud(path, rows, cols)
+ *   return _path_to_point_cloud(path, dims, rows, cols)
  * 
- * def _path_to_point_cloud(path, rows, cols):             # <<<<<<<<<<<<<<
+ * def _path_to_point_cloud(path, dims, rows, cols):             # <<<<<<<<<<<<<<
  *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
  */
-  __pyx_tuple__42 = PyTuple_Pack(7, __pyx_n_s_path, __pyx_n_s_rows, __pyx_n_s_cols, __pyx_n_s_sxy, __pyx_n_s_ptlist, __pyx_n_s_i, __pyx_n_s_pt); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_tuple__42 = PyTuple_Pack(8, __pyx_n_s_path, __pyx_n_s_dims, __pyx_n_s_rows, __pyx_n_s_cols, __pyx_n_s_sxy, __pyx_n_s_ptlist, __pyx_n_s_i, __pyx_n_s_pt); if (unlikely(!__pyx_tuple__42)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__42);
   __Pyx_GIVEREF(__pyx_tuple__42);
-  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(3, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_path_to_point_cloud, 94, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 94, __pyx_L1_error)
+  __pyx_codeobj__43 = (PyObject*)__Pyx_PyCode_New(4, 0, 8, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__42, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_path_to_point_cloud, 94, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__43)) __PYX_ERR(0, 94, __pyx_L1_error)
 
-  /* "dijkstra.pyx":104
+  /* "dijkstra.pyx":111
  * 
  * 
  * def _execute_dijkstra(data, source, target):             # <<<<<<<<<<<<<<
  *   cdef int8_t[:,:,:] arr_memview8
  *   cdef int16_t[:,:,:] arr_memview16
  */
-  __pyx_tuple__44 = PyTuple_Pack(19, __pyx_n_s_data, __pyx_n_s_source, __pyx_n_s_target, __pyx_n_s_arr_memview8, __pyx_n_s_arr_memview16, __pyx_n_s_arr_memview32, __pyx_n_s_arr_memview64, __pyx_n_s_arr_memviewfloat, __pyx_n_s_arr_memviewdouble, __pyx_n_s_cols, __pyx_n_s_rows, __pyx_n_s_depth, __pyx_n_s_src, __pyx_n_s_sink, __pyx_n_s_output, __pyx_n_s_dtype, __pyx_n_s_output_ptr, __pyx_n_s_vec_view, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_tuple__44 = PyTuple_Pack(19, __pyx_n_s_data, __pyx_n_s_source, __pyx_n_s_target, __pyx_n_s_arr_memview8, __pyx_n_s_arr_memview16, __pyx_n_s_arr_memview32, __pyx_n_s_arr_memview64, __pyx_n_s_arr_memviewfloat, __pyx_n_s_arr_memviewdouble, __pyx_n_s_cols, __pyx_n_s_rows, __pyx_n_s_depth, __pyx_n_s_src, __pyx_n_s_sink, __pyx_n_s_output, __pyx_n_s_dtype, __pyx_n_s_output_ptr, __pyx_n_s_vec_view, __pyx_n_s_buf); if (unlikely(!__pyx_tuple__44)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__44);
   __Pyx_GIVEREF(__pyx_tuple__44);
-  __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(3, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_execute_dijkstra, 104, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(3, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_execute_dijkstra, 111, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 111, __pyx_L1_error)
 
   /* "View.MemoryView":285
  *         return self.name
@@ -23211,27 +23375,27 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "dijkstra.pyx":94
- *   return _path_to_point_cloud(path, rows, cols)
+ *   return _path_to_point_cloud(path, dims, rows, cols)
  * 
- * def _path_to_point_cloud(path, rows, cols):             # <<<<<<<<<<<<<<
+ * def _path_to_point_cloud(path, dims, rows, cols):             # <<<<<<<<<<<<<<
  *   cdef int sxy = rows * cols
- *   ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+ *   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
  */
   __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8dijkstra_3_path_to_point_cloud, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_path_to_point_cloud, __pyx_t_2) < 0) __PYX_ERR(0, 94, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "dijkstra.pyx":104
+  /* "dijkstra.pyx":111
  * 
  * 
  * def _execute_dijkstra(data, source, target):             # <<<<<<<<<<<<<<
  *   cdef int8_t[:,:,:] arr_memview8
  *   cdef int16_t[:,:,:] arr_memview16
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8dijkstra_5_execute_dijkstra, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 104, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8dijkstra_5_execute_dijkstra, NULL, __pyx_n_s_dijkstra); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_execute_dijkstra, __pyx_t_2) < 0) __PYX_ERR(0, 104, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_execute_dijkstra, __pyx_t_2) < 0) __PYX_ERR(0, 111, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "dijkstra.pyx":1

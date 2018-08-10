@@ -89,15 +89,22 @@ def dijkstra(data, source, target):
     raise IndexError("Selected target voxel {} was not located inside the array.".format(target))
 
   path = _execute_dijkstra(data, source, target)
-  return _path_to_point_cloud(path, rows, cols)
+  return _path_to_point_cloud(path, dims, rows, cols)
 
-def _path_to_point_cloud(path, rows, cols):
+def _path_to_point_cloud(path, dims, rows, cols):
   cdef int sxy = rows * cols
-  ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
-  for i, pt in enumerate(path):
-    ptlist[ i, 0 ] = pt % cols
-    ptlist[ i, 1 ] = (pt % sxy) / cols
-    ptlist[ i, 2 ] = pt / sxy
+  ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
+
+  if dims == 3:
+    for i, pt in enumerate(path):
+      ptlist[ i, 0 ] = pt % cols
+      ptlist[ i, 1 ] = (pt % sxy) / cols
+      ptlist[ i, 2 ] = pt / sxy
+  else:
+    for i, pt in enumerate(path):
+      ptlist[ i, 0 ] = pt % cols
+      ptlist[ i, 1 ] = (pt % sxy) / cols
+      
   return ptlist
 
 
