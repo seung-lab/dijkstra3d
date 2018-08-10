@@ -132,15 +132,15 @@ std::vector<uint32_t> dijkstra3d(
   // this is working.
   int neighborhood[NHOOD_SIZE];
 
-  MinPairingHeap *heap = new MinPairingHeap();
-  heap->insert(0.0, source);
+  MinPairingHeap heap;
+  heap.insert(0.0, source);
 
   size_t loc;
   float delta;
   size_t neighboridx;
-  while (!heap->empty()) {
-    loc = heap->root->value;
-    heap->delete_min();
+  while (!heap.empty()) {
+    loc = heap.root->value;
+    heap.delete_min();
 
     compute_neighborhood(neighborhood, loc, sx, sy, sz);
 
@@ -165,7 +165,7 @@ std::vector<uint32_t> dijkstra3d(
           goto OUTSIDE;
         }
 
-        heap->insert(dist[neighboridx], neighboridx);
+        heap.insert(dist[neighboridx], neighboridx);
       }
     }
 
@@ -174,7 +174,6 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
-  delete heap;
 
   std::vector<uint32_t> path;
   loc = target;
@@ -191,9 +190,9 @@ std::vector<uint32_t> dijkstra3d(
 
 
 int main () {
-  const size_t sx = 10;
-  const size_t sy = 10;
-  const size_t sz = 10;
+  const size_t sx = 256;
+  const size_t sy = 256;
+  const size_t sz = 256;
   const size_t voxels = sx * sy * sz;
 
   float* field = new float[voxels]();
