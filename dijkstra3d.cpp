@@ -16,6 +16,7 @@
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <cstdint>
 #include <queue>
 #include <vector>
 
@@ -23,44 +24,6 @@
 #define DIJKSTRA3D_HPP
 
 #define NHOOD_SIZE 26
-
-void print(float *f, int n) {
-  for (int i = 0; i < n; i++) {
-    printf("%.1f, ", f[i]);
-  }
-  printf("\n");
-}
-
-
-void print(float* dest, int x, int y, int z) {
-  for (int i = 0; i < x*y*z; i++) {
-    if (i % x == 0 && i > 0) {
-      printf("\n");
-    }
-    if ((i % (x*y)) == 0 && i > 0) {
-      printf("\n");
-    }
-
-    printf("%.1f, ", dest[i]);
-  }
-
-  printf("\n\n");
-}
-
-void print(uint32_t* dest, int x, int y, int z) {
-  for (int i = 0; i < x*y*z; i++) {
-    if (i % x == 0 && i > 0) {
-      printf("\n");
-    }
-    if ((i % (x*y)) == 0 && i > 0) {
-      printf("\n");
-    }
-
-    printf("%d, ", dest[i]);
-  }
-
-  printf("\n\n");
-}
 
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
