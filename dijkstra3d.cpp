@@ -32,7 +32,7 @@ inline float* fill(float *arr, const float value, const size_t size) {
   return arr;
 }
 
-inline void compute_neighborhood_core(
+inline void compute_neighborhood(
   int *neighborhood, const size_t loc, 
   const int x, const int y, const int z,
   const size_t sx, const size_t sy, const size_t sz) {
@@ -97,33 +97,6 @@ inline void compute_neighborhood_core(
   neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
 }
 
-inline void compute_neighborhood_pot(
-  int *neighborhood, const size_t loc, 
-  const size_t sx, const size_t xshift, 
-  const size_t sy, const size_t yshift,
-  const size_t sz) {
-
-  // all division and mult ops can be specialized for powers of two
-  const int z = loc >> (xshift + yshift);
-  const int y = (loc - (z << (xshift + yshift))) >> xshift;
-  const int x = loc - ((y + (z << yshift)) << xshift);
-
-  compute_neighborhood_core(neighborhood, loc, x, y, z, sx, sy, sz);
-}
-
-inline void compute_neighborhood(
-  int *neighborhood, const size_t loc, 
-  const size_t sx, const size_t sy, const size_t sz) {
-
-  const int sxy = sx * sy;
-  const int z = loc / sxy;
-  const int y = (loc - (z * sxy)) / sx;
-  const int x = loc - sx * (y + z * sy);
-
-  compute_neighborhood_core(neighborhood, loc, x, y, z, sx, sy, sz);
-}
-
-
 class HeapNode {
 public:
   float key; 
@@ -183,16 +156,25 @@ std::vector<uint32_t> dijkstra3d(
   size_t loc;
   float delta;
   size_t neighboridx;
+
+  int x, y, z;
+
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
 
     if (power_of_two) {
-      compute_neighborhood_pot(neighborhood, loc, sx, xshift, sy, yshift, sz);
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
     }
     else {
-      compute_neighborhood(neighborhood, loc, sx, sy, sz);
+      z = loc / sxy;
+      y = (loc - (z * sxy)) / sx;
+      x = loc - sx * (y + z * sy);
     }
+
+    compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
