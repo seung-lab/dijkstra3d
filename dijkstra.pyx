@@ -52,7 +52,7 @@ def dijkstra(data, source, target):
     source to target including source and target.
   """
   dims = len(data.shape)
-  assert dims in (2,3)
+  assert dims in (2, 3)
 
   if dims == 2:
     data = data[:, :, np.newaxis]
@@ -64,6 +64,44 @@ def dijkstra(data, source, target):
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.uint32)
 
+  cdef int cols = data.shape[0]
+  cdef int rows = data.shape[1]
+  cdef int depth = data.shape[2]
+
+  source = list(source)
+  target = list(target)
+
+  if len(source) == 2:
+    source += [ 0 ]
+  if len(target) == 2:
+    target += [ 0 ]
+
+  if ((source[0] < 0 or source[0] >= cols)
+    or (source[1] < 0 or source[1] >= rows)
+    or (source[2] < 0 or source[2] >= depth)):
+
+    raise IndexError("Selected source voxel {} was not located inside the array.".format(source))
+
+  if ((target[0] < 0 or target[0] >= cols)
+    or (target[1] < 0 or target[1] >= rows)
+    or (target[2] < 0 or target[2] >= depth)):
+
+    raise IndexError("Selected target voxel {} was not located inside the array.".format(target))
+
+  path = _execute_dijkstra(data, source, target)
+  return _path_to_point_cloud(path, rows, cols)
+
+def _path_to_point_cloud(path, rows, cols):
+  cdef int sxy = rows * cols
+  ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
+  for i, pt in enumerate(path):
+    ptlist[ i, 0 ] = pt % cols
+    ptlist[ i, 1 ] = (pt % sxy) / cols
+    ptlist[ i, 2 ] = pt / sxy
+  return ptlist
+
+
+def _execute_dijkstra(data, source, target):
   cdef int8_t[:,:,:] arr_memview8
   cdef int16_t[:,:,:] arr_memview16
   cdef int32_t[:,:,:] arr_memview32
@@ -71,14 +109,16 @@ def dijkstra(data, source, target):
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef vector[uint32_t] output
-
   cdef int cols = data.shape[0]
   cdef int rows = data.shape[1]
   cdef int depth = data.shape[2]
 
   cdef int src = source[0] + cols * (source[1] + rows * source[2])
   cdef int sink = target[0] + cols * (target[1] + rows * target[2])
+
+  cdef vector[uint32_t] output
+
+  dtype = data.dtype
 
   if dtype == np.float32:
     arr_memviewfloat = data
@@ -131,15 +171,4 @@ def dijkstra(data, source, target):
   # This construct is required by python 2.
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(vec_view[:])
-  path = np.frombuffer(buf, dtype=np.uint32)
-  path = path[::-1]
-
-  cdef int sxy = rows * cols
-
-  ptlist = np.zeros((path.shape[0], 3), dtype=np.uint32)
-  for i, pt in enumerate(path):
-    ptlist[ i, 0 ] = pt % cols
-    ptlist[ i, 1 ] = (pt % sxy) / cols
-    ptlist[ i, 2 ] = pt / sxy
-
-  return ptlist
+  return np.frombuffer(buf, dtype=np.uint32)[::-1]
