@@ -164,7 +164,7 @@ std::vector<uint32_t> dijkstra3d(
   const int xshift = log(sx) / log(2);
   const int yshift = log(sy) / log(2);
 
-  T *dist = new T[voxels]();
+  float *dist = new float[voxels]();
   uint32_t *parents = new uint32_t[voxels]();
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
@@ -175,7 +175,7 @@ std::vector<uint32_t> dijkstra3d(
   queue.emplace(0.0, source);
 
   size_t loc;
-  T delta;
+  float delta;
   size_t neighboridx;
 
   int x, y, z;
@@ -203,7 +203,7 @@ std::vector<uint32_t> dijkstra3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = field[neighboridx];
+      delta = (float)field[neighboridx];
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
