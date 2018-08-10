@@ -32,15 +32,16 @@ inline float* fill(float *arr, const float value, const size_t size) {
   return arr;
 }
 
-inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_t sy, size_t sz) {
+inline void compute_neighborhood_core(
+  int *neighborhood, const size_t loc, 
+  const int x, const int y, const int z,
+  const size_t sx, const size_t sy, const size_t sz) {
+
   for (int i = 0; i < NHOOD_SIZE; i++) {
     neighborhood[i] = 0;
   }
 
   const int sxy = sx * sy;
-  const int x = loc % sx;
-  const int y = (int)((loc % sxy) / sx);
-  const int z = (int)(loc / sxy);
 
   // 6-hood
 
@@ -66,34 +67,60 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   // 18-hood
 
   // xy diagonals
-  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
-  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
-  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[1] && neighborhood[2]); // down-left
-  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[1] && neighborhood[3]); // down-right
+  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[2] > 0); // up-left
+  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[3] > 0); // up-right
+  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[2] > 0); // down-left
+  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[3] > 0); // down-right
 
   // yz diagonals
-  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]); // up-left
-  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]); // up-right
-  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]); // down-left
-  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]); // down-right
+  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[4] > 0); // up-left
+  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[5] > 0); // up-right
+  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[4] > 0); // down-left
+  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[5] > 0); // down-right
 
   // xz diagonals
-  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[0] && neighborhood[4]); // up-left
-  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
-  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
-  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
+  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[4] > 0); // up-left
+  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[5] > 0); // up-right
+  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[4] > 0); // down-left
+  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[5] > 0); // down-right
 
   // 26-hood
 
   // Now the eight corners of the cube
-  neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[0] && neighborhood[2] && neighborhood[4]);
-  neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[1] && neighborhood[2] && neighborhood[4]);
-  neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[0] && neighborhood[3] && neighborhood[4]);
-  neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[0] && neighborhood[2] && neighborhood[5]);
-  neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[1] && neighborhood[3] && neighborhood[4]);
-  neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[1] && neighborhood[2] && neighborhood[5]);
-  neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[0] && neighborhood[3] && neighborhood[5]);
-  neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[1] && neighborhood[3] && neighborhood[5]);
+  neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
+  neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
+  neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
+  neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
+  neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
+  neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
+  neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
+  neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
+}
+
+inline void compute_neighborhood_pot(
+  int *neighborhood, const size_t loc, 
+  const size_t sx, const size_t xshift, 
+  const size_t sy, const size_t yshift,
+  const size_t sz) {
+
+  // all division and mult ops can be specialized for powers of two
+  const int z = loc >> (xshift + yshift);
+  const int y = (loc - (z << (xshift + yshift))) >> xshift;
+  const int x = loc - ((y + (z << yshift)) << xshift);
+
+  compute_neighborhood_core(neighborhood, loc, x, y, z, sx, sy, sz);
+}
+
+inline void compute_neighborhood(
+  int *neighborhood, const size_t loc, 
+  const size_t sx, const size_t sy, const size_t sz) {
+
+  const int sxy = sx * sy;
+  const int z = loc / sxy;
+  const int y = (loc - (z * sxy)) / sx;
+  const int x = loc - sx * (y + z * sy);
+
+  compute_neighborhood_core(neighborhood, loc, x, y, z, sx, sy, sz);
 }
 
 
@@ -139,6 +166,10 @@ std::vector<uint32_t> dijkstra3d(
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
 
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = log(sx) / log(2);
+  const int yshift = log(sy) / log(2);
+
   float *dist = new float[voxels]();
   uint32_t *parents = new uint32_t[voxels]();
   fill(dist, +INFINITY, voxels);
@@ -156,7 +187,12 @@ std::vector<uint32_t> dijkstra3d(
     loc = queue.top().value;
     queue.pop();
 
-    compute_neighborhood(neighborhood, loc, sx, sy, sz);
+    if (power_of_two) {
+      compute_neighborhood_pot(neighborhood, loc, sx, xshift, sy, yshift, sz);
+    }
+    else {
+      compute_neighborhood(neighborhood, loc, sx, sy, sz);
+    }
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
