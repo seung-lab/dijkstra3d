@@ -23,7 +23,7 @@
 #ifndef DIJKSTRA3D_HPP
 #define DIJKSTRA3D_HPP
 
-#define NHOOD_SIZE 18
+#define NHOOD_SIZE 26
 
 
 void print(float *f, int n) {
@@ -126,14 +126,14 @@ inline void compute_neighborhood(int *neighborhood, size_t loc, size_t sx, size_
   neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
 
   // Now the eight corners of the cube
-  // neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[0] && neighborhood[2] && neighborhood[4]);
-  // neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[1] && neighborhood[2] && neighborhood[4]);
-  // neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[0] && neighborhood[3] && neighborhood[4]);
-  // neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[0] && neighborhood[2] && neighborhood[5]);
-  // neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[1] && neighborhood[3] && neighborhood[4]);
-  // neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[1] && neighborhood[2] && neighborhood[5]);
-  // neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[0] && neighborhood[3] && neighborhood[5]);
-  // neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[1] && neighborhood[3] && neighborhood[5]);
+  neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[0] && neighborhood[2] && neighborhood[4]);
+  neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[1] && neighborhood[2] && neighborhood[4]);
+  neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[0] && neighborhood[3] && neighborhood[4]);
+  neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[0] && neighborhood[2] && neighborhood[5]);
+  neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[1] && neighborhood[3] && neighborhood[4]);
+  neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[1] && neighborhood[2] && neighborhood[5]);
+  neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[0] && neighborhood[3] && neighborhood[5]);
+  neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[1] && neighborhood[3] && neighborhood[5]);
 }
 
 // works for non-negative weights
