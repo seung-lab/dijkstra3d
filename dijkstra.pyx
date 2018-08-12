@@ -21,8 +21,6 @@ import numpy as np
 
 __VERSION__ = '1.0.0'
 
-SUPPORTED_PYTHON_VERSION = (sys.version_info[0] == 3)
-
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[uint32_t] dijkstra3d[T](
     T* field, 
@@ -92,8 +90,9 @@ def dijkstra(data, source, target):
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def _path_to_point_cloud(path, dims, rows, cols):
-  cdef int sxy = rows * cols
   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
+
+  cdef int sxy = rows * cols
 
   if dims == 3:
     for i, pt in enumerate(path):
@@ -104,7 +103,7 @@ def _path_to_point_cloud(path, dims, rows, cols):
     for i, pt in enumerate(path):
       ptlist[ i, 0 ] = pt % cols
       ptlist[ i, 1 ] = (pt % sxy) / cols
-      
+
   return ptlist
 
 
