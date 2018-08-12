@@ -65,6 +65,8 @@ def dijkstra(data, source, target):
 
   if dims == 2:
     data = data[:, :, np.newaxis]
+    source = list(source) + [ 0 ]
+    target = list(target) + [ 0 ]
 
   cdef int cols = data.shape[0]
   cdef int rows = data.shape[1]
@@ -101,17 +103,11 @@ def _validate_coord(data, coord):
   dims = len(data.shape)
 
   if len(coord) != dims:
-    raise IndexError("Coordinates must have the same dimension as the data.")
+    raise IndexError("Coordinates must have the same dimension as the data. coord: {}, data shape: {}".format(coord, data.shape))
 
-  cdef int cols = data.shape[0]
-  cdef int rows = data.shape[1]
-  cdef int depth = data.shape[2]
-  
-  if ((coord[0] < 0 or coord[0] >= cols)
-    or (coord[1] < 0 or coord[1] >= rows)
-    or (coord[2] < 0 or coord[2] >= depth)):
-
-    raise IndexError("Selected voxel {} was not located inside the array.".format(coord))
+  for i, size in enumerate(data.shape):
+    if coord[i] < 0 or coord[i] >= size:
+      raise IndexError("Selected voxel {} was not located inside the array.".format(coord))
 
 def _path_to_point_cloud(path, dims, rows, cols):
   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
