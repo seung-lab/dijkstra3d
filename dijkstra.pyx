@@ -27,6 +27,11 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int sx, int sy, int sz, 
     int source, int target
   )
+  cdef float* distance_field3d[T](
+    T* field,
+    int sx, int sy, int sz,
+    int source
+  )
 
 def dijkstra(data, source, target):
   """
@@ -52,42 +57,63 @@ def dijkstra(data, source, target):
   dims = len(data.shape)
   assert dims in (2, 3)
 
-  if dims == 2:
-    data = data[:, :, np.newaxis]
-
-  dtype = data.dtype
-  if np.issubdtype(dtype, np.integer):
-    assert np.issubdtype(dtype, np.signedinteger)
-
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.uint32)
+
+  _validate_coord(data, source)
+  _validate_coord(data, target)
+
+  if dims == 2:
+    data = data[:, :, np.newaxis]
 
   cdef int cols = data.shape[0]
   cdef int rows = data.shape[1]
   cdef int depth = data.shape[2]
 
-  source = list(source)
-  target = list(target)
-
-  if len(source) == 2:
-    source += [ 0 ]
-  if len(target) == 2:
-    target += [ 0 ]
-
-  if ((source[0] < 0 or source[0] >= cols)
-    or (source[1] < 0 or source[1] >= rows)
-    or (source[2] < 0 or source[2] >= depth)):
-
-    raise IndexError("Selected source voxel {} was not located inside the array.".format(source))
-
-  if ((target[0] < 0 or target[0] >= cols)
-    or (target[1] < 0 or target[1] >= rows)
-    or (target[2] < 0 or target[2] >= depth)):
-
-    raise IndexError("Selected target voxel {} was not located inside the array.".format(target))
-
   path = _execute_dijkstra(data, source, target)
   return _path_to_point_cloud(path, dims, rows, cols)
+
+def distance_field(data, source):
+  dims = len(data.shape)
+  assert dims <= 3
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.float32)
+
+  if dims == 1:
+    data = data[:, np.newaxis, np.newaxis]
+    source = ( source[0], 0, 0 )
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = ( source[0], source[1], 0 )
+
+  _validate_coord(data, source)
+
+  print(data.shape)
+
+  field = _execute_distance_field(data, source)
+  if dims < 3:
+    field = np.squeeze(field, axis=2)
+  if dims < 2:
+    field = np.squeeze(field, axis=1)
+
+  return field
+
+def _validate_coord(data, coord):
+  dims = len(data.shape)
+
+  if len(coord) != dims:
+    raise IndexError("Coordinates must have the same dimension as the data.")
+
+  cdef int cols = data.shape[0]
+  cdef int rows = data.shape[1]
+  cdef int depth = data.shape[2]
+  
+  if ((coord[0] < 0 or coord[0] >= cols)
+    or (coord[1] < 0 or coord[1] >= rows)
+    or (coord[2] < 0 or coord[2] >= depth)):
+
+    raise IndexError("Selected voxel {} was not located inside the array.".format(coord))
 
 def _path_to_point_cloud(path, dims, rows, cols):
   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
@@ -105,7 +131,6 @@ def _path_to_point_cloud(path, dims, rows, cols):
       ptlist[ i, 1 ] = (pt % sxy) / cols
 
   return ptlist
-
 
 def _execute_dijkstra(data, source, target):
   cdef int8_t[:,:,:] arr_memview8
@@ -178,3 +203,75 @@ def _execute_dijkstra(data, source, target):
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(vec_view[:])
   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+
+
+def _execute_distance_field(data, source):
+  cdef int8_t[:,:,:] arr_memview8
+  cdef int16_t[:,:,:] arr_memview16
+  cdef int32_t[:,:,:] arr_memview32
+  cdef int64_t[:,:,:] arr_memview64
+  cdef float[:,:,:] arr_memviewfloat
+  cdef double[:,:,:] arr_memviewdouble
+
+  cdef int cols = data.shape[0]
+  cdef int rows = data.shape[1]
+  cdef int depth = data.shape[2]
+
+  cdef int src = source[0] + cols * (source[1] + rows * source[2])
+
+  cdef float* dist
+
+  dtype = data.dtype
+
+  if dtype == np.float32:
+    arr_memviewfloat = data
+    dist = distance_field3d[float](
+      &arr_memviewfloat[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  elif dtype == np.float64:
+    arr_memviewdouble = data
+    dist = distance_field3d[double](
+      &arr_memviewdouble[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  elif dtype == np.int64:
+    arr_memview64 = data
+    dist = distance_field3d[int64_t](
+      &arr_memview64[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  elif dtype == np.int32:
+    arr_memview32 = data
+    dist = distance_field3d[int32_t](
+      &arr_memview32[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  elif dtype == np.int16:
+    arr_memview16 = data
+    dist = distance_field3d[int16_t](
+      &arr_memview16[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  elif dtype == np.int8:
+    arr_memview8 = data
+    dist = distance_field3d[int8_t](
+      &arr_memview8[0,0,0],
+      cols, rows, depth,
+      src
+    )
+  else:
+    raise TypeError("Type {} not currently supported.".format(dtype))
+
+  cdef int voxels = cols * rows * depth
+  cdef float[:] dist_view = <float[:voxels]>dist
+
+  # This construct is required by python 2.
+  # Python 3 can just do np.frombuffer(vec_view, ...)
+  buf = bytearray(dist_view[:])
+  return np.frombuffer(buf, dtype=np.float32).reshape( (cols, rows, depth) )

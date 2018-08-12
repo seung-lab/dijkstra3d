@@ -161,8 +161,8 @@ std::vector<uint32_t> dijkstra3d(
   const size_t sxy = sx * sy;
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
-  const int xshift = log(sx) / log(2);
-  const int yshift = log(sy) / log(2);
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
 
   float *dist = new float[voxels]();
   uint32_t *parents = new uint32_t[voxels]();
@@ -248,6 +248,84 @@ std::vector<uint32_t> dijkstra2d(
 
   return dijkstra3d<T>(field, sx, sy, 1, source, target);
 }
+
+template <typename T>
+float* distance_field3d(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source
+  ) {
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  int x, y, z;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / sxy;
+      y = (loc - (z * sxy)) / sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
+
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = (float)field[neighboridx];
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      // printf("i %d n %d loc %lu nidx %lu dist[loc] %.1f delta %.1f dist[neighboridx] %.1f\n", i, neighborhood[i], loc, neighboridx, dist[loc], delta, dist[neighboridx]);
+      if (std::signbit(delta)) {
+        continue;
+      }
+      else if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  for (unsigned int i = 0; i < voxels; i++) {
+    dist[i] = std::fabs(dist[i]);
+  }
+
+  return dist;
+}
+
 
 }; // namespace dijkstra3d
 
