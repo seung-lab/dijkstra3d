@@ -103,7 +103,10 @@ def _validate_coord(data, coord):
   dims = len(data.shape)
 
   if len(coord) != dims:
-    raise IndexError("Coordinates must have the same dimension as the data. coord: {}, data shape: {}".format(coord, data.shape))
+    raise IndexError(
+      "Coordinates must have the same dimension as the data. coord: {}, data shape: {}"
+        .format(coord, data.shape)
+    )
 
   for i, size in enumerate(data.shape):
     if coord[i] < 0 or coord[i] >= size:
@@ -268,4 +271,5 @@ def _execute_distance_field(data, source):
   # This construct is required by python 2.
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(dist_view[:])
+  free(dist)
   return np.frombuffer(buf, dtype=np.float32).reshape( (cols, rows, depth) )
