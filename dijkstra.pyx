@@ -272,4 +272,5 @@ def _execute_distance_field(data, source):
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(dist_view[:])
   free(dist)
-  return np.frombuffer(buf, dtype=np.float32).reshape( (cols, rows, depth) )
+  order = 'F' if data.flags['F_CONTIGUOUS'] else 'C'
+  return np.frombuffer(buf, dtype=np.float32).reshape( (cols, rows, depth), order=order)
