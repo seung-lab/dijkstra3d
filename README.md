@@ -53,3 +53,7 @@ y = dijkstra.distance_field(x, (0,0,0), (511, 511, 511))
 ### What is that pairing_heap.hpp?
 
 Early on, I anticipated using decrease key in my heap and implemented a pairing heap, which is supposed to be an improvement on the Fibbonacci heap. However, I ended up not using decrease key, and the STL priority queue ended up being faster. If you need a pairing heap outside of boost, check it out.
+
+## References
+
+1. E. W. Dijkstra. "A Note on Two Problems in Connexion with Graphs" Numerische Mathematik 1. pp. 269-271. (1959)  
