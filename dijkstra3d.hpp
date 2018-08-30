@@ -69,22 +69,22 @@ inline void compute_neighborhood(
   // 18-hood
 
   // xy diagonals
-  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[2] != 0); // up-left
-  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[3] != 0); // up-right
-  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[2] != 0); // down-left
-  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[3] != 0); // down-right
+  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
+  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
+  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[1] && neighborhood[2]); // down-left
+  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[1] && neighborhood[3]); // down-right
 
   // yz diagonals
-  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[4] != 0); // up-left
-  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[5] != 0); // up-right
-  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[4] != 0); // down-left
-  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[5] != 0); // down-right
+  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]); // up-left
+  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]); // up-right
+  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]); // down-left
+  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]); // down-right
 
   // xz diagonals
-  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[4] != 0); // up-left
-  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[5] != 0); // up-right
-  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[4] != 0); // down-left
-  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[5] != 0); // down-right
+  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[0] && neighborhood[4]); // up-left
+  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
+  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
+  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
 
   // 26-hood
 
