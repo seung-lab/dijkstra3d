@@ -151,3 +151,26 @@ def test_distance_field_2d():
         [4, 4, 4, 4, 4],
       ]
     ]))
+
+def test_distance_field_2d_asymmetric():
+  for dtype in TEST_TYPES:
+    values = np.ones((10, 5), dtype=dtype)
+
+    field = dijkstra.distance_field(values, (1,0))
+    assert np.all(field == np.array([
+      [1, 0, 1, 2, 3, 4, 5, 6, 7, 8],
+      [1, 1, 1, 2, 3, 4, 5, 6, 7, 8],
+      [2, 2, 2, 2, 3, 4, 5, 6, 7, 8],
+      [3, 3, 3, 3, 3, 4, 5, 6, 7, 8],
+      [4, 4, 4, 4, 4, 4, 5, 6, 7, 8],
+    ]))
+
+    values = np.copy(values, order='F')
+    field = dijkstra.distance_field(values, (1,0))
+    assert np.all(field == np.array([
+      [1, 0, 1, 2, 3, 4, 5, 6, 7, 8],
+      [1, 1, 1, 2, 3, 4, 5, 6, 7, 8],
+      [2, 2, 2, 2, 3, 4, 5, 6, 7, 8],
+      [3, 3, 3, 3, 3, 4, 5, 6, 7, 8],
+      [4, 4, 4, 4, 4, 4, 5, 6, 7, 8],
+    ]))

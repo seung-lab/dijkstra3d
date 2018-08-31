@@ -244,6 +244,9 @@ def _execute_distance_field(data, source):
 
   cdef int src = source[0] + rows * (source[1] + cols * source[2])
 
+  if data.flags['F_CONTIGUOUS']:
+    data = np.copy(data, order='C')
+
   cdef float* dist
 
   dtype = data.dtype
