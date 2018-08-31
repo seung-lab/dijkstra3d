@@ -1,6 +1,14 @@
 """
-Cython binding for C++ dijkstra shortest path algorithm
-applied to 3D images.
+Cython binding for C++ dijkstra's shortest path algorithm
+applied to 3D images. 
+
+Contains:
+  dijkstra - Find the shortest 26-connected path from source
+    to target using the values of each voxel as edge weights.\
+
+  distance_field - Compute the distance field from a source
+    voxel in an image using image voxel values as edge weights.
+
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
@@ -76,6 +84,26 @@ def dijkstra(data, source, target):
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def distance_field(data, source):
+  """
+  Use dijkstra's shortest path algorithm
+  on a 3D image grid to generate a weighted 
+  distance field from a source voxel. Vertices are 
+  voxels and edges are the 26 nearest neighbors 
+  (except for the edges of the image where 
+  the number of edges is reduced).
+  
+  For given input voxels A and B, the edge
+  weight from A to B is B and from B to A is
+  A. All weights must be non-negative (incl. 
+  negative zero).
+  
+  Parameters:
+   Data: Input weights in a 2D or 3D numpy array. 
+   source: (x,y,z) coordinate of starting voxel
+  
+  Returns: 2D or 3D numpy array with each index
+    containing its distance from the source voxel.
+  """
   dims = len(data.shape)
   assert dims <= 3
 
@@ -162,29 +190,29 @@ def _execute_dijkstra(data, source, target):
       cols, rows, depth,
       src, sink
     )
-  elif dtype == np.int64:
-    arr_memview64 = data
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.int64)
     output = dijkstra3d[int64_t](
       &arr_memview64[0,0,0],
       cols, rows, depth,
       src, sink
     )
-  elif dtype == np.int32:
-    arr_memview32 = data
+  elif dtype in (np.int32, np.uint32):
+    arr_memview32 = data.astype(np.int32)
     output = dijkstra3d[int32_t](
       &arr_memview32[0,0,0],
       cols, rows, depth,
       src, sink
     )
-  elif dtype == np.int16:
-    arr_memview16 = data
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.int16)
     output = dijkstra3d[int16_t](
       &arr_memview16[0,0,0],
       cols, rows, depth,
       src, sink
     )
-  elif dtype == np.int8:
-    arr_memview8 = data
+  elif dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.int8)
     output = dijkstra3d[int8_t](
       &arr_memview8[0,0,0],
       cols, rows, depth,
@@ -234,29 +262,29 @@ def _execute_distance_field(data, source):
       rows, cols, depth,
       src
     )
-  elif dtype == np.int64:
-    arr_memview64 = data
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.int64)
     dist = distance_field3d[int64_t](
       &arr_memview64[0,0,0],
       rows, cols, depth,
       src
     )
-  elif dtype == np.int32:
-    arr_memview32 = data
+  elif dtype in (np.int32, np.uint32):
+    arr_memview32 = data.astype(np.int32)
     dist = distance_field3d[int32_t](
       &arr_memview32[0,0,0],
       rows, cols, depth,
       src
     )
-  elif dtype == np.int16:
-    arr_memview16 = data
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.int16)
     dist = distance_field3d[int16_t](
       &arr_memview16[0,0,0],
       rows, cols, depth,
       src
     )
-  elif dtype == np.int8:
-    arr_memview8 = data
+  elif dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.int8)
     dist = distance_field3d[int8_t](
       &arr_memview8[0,0,0],
       rows, cols, depth,
