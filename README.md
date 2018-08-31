@@ -5,8 +5,6 @@ Dijkstra's Shortest Path for 3D Volumes.
 
 Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the 26 nearest neighbors (except for the edges of the image where the number of edges is reduced). For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be non-negative (incl. negative zero).  
 
-On a field of ones from the bottom left corner to the top right corner of a 512x512x512 float32 image, it takes about 41 seconds, for a performance rating of about 3 MVx/sec on a 3.7 GHz Intel i7-4920K CPU.
-
 ## C++ Use 
 
 ```cpp
@@ -49,6 +47,16 @@ print(y.shape)
 
 y = dijkstra.distance_field(x, (0,0,0), (511, 511, 511))
 ```
+
+## Performance
+
+On a field of ones from the bottom left corner to the top right corner of a 512x512x512 float32 image, it takes about 41 seconds, for a performance rating of about 3 MVx/sec on a 3.7 GHz Intel i7-4920K CPU.  
+
+<p style="font-style: italics;" align="center">
+<img height=384 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/dijkstra3d.png" alt="A memory benchmark of a 512x512x512 field of ones run.." /><br>
+Fig. 1: A benchmark of dijkstra.dijkstra run on a 512<sup>3</sup> voxel field of ones from bottom left source to top right target.
+</p>
+
 
 ### What is that pairing_heap.hpp?
 
