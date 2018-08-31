@@ -50,11 +50,11 @@ y = dijkstra.distance_field(x, (0,0,0), (511, 511, 511))
 
 ## Performance
 
-On a field of ones from the bottom left corner to the top right corner of a 512x512x512 float32 image, it takes about 41 seconds, for a performance rating of about 3 MVx/sec on a 3.7 GHz Intel i7-4920K CPU.  
+On a field of ones from the bottom left corner to the top right corner of a 512x512x512 float32 image, it takes about 41 seconds, for a performance rating of about 3 MVx/sec on a 3.7 GHz Intel i7-4920K CPU. This test forces the algorithm to process nearly all of the volume (dijkstra aborts early when the target is found).
 
 <p style="font-style: italics;" align="center">
 <img height=384 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/dijkstra3d.png" alt="A memory benchmark of a 512x512x512 field of ones run.." /><br>
-Fig. 1: A benchmark of dijkstra.dijkstra run on a 512<sup>3</sup> voxel field of ones from bottom left source to top right target.
+Fig. 1: A benchmark of dijkstra.dijkstra run on a 512<sup>3</sup> voxel field of ones from bottom left source to top right target. Allocation breakdown: 512 MB source image, 512 MB distance field, 512 MB parents field.
 </p>
 
 
