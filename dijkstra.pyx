@@ -301,5 +301,5 @@ def _execute_distance_field(data, source):
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(dist_view[:])
   free(dist)
-  order = 'F' if data.flags['F_CONTIGUOUS'] else 'C'
+  # I don't actually understand why order F works, but it does.
   return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
