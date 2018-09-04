@@ -208,7 +208,7 @@ std::vector<uint32_t> dijkstra3d(
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (std::signbit(delta)) {
+      if (std::signbit(dist[neighboridx])) {
         continue;
       }
       else if (dist[loc] + delta < dist[neighboridx]) { 
@@ -309,7 +309,7 @@ float* distance_field3d(
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (std::signbit(delta)) {
+      if (std::signbit(dist[neighboridx])) {
         continue;
       }
       else if (dist[loc] + delta < dist[neighboridx]) { 
