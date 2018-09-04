@@ -99,6 +99,43 @@ def test_dijkstra3d_3x3x3():
       [0,0,0]
     ]))
 
+def test_dijkstra_2d_loop():
+  x = 20000
+  values = np.array([
+    [x, x, x, x, x, x, 0, x, x, x],
+    [x, x, x, x, x, x, 0, x, x, x],
+    [x, x, 1, x, 0, 0, 0, x, x, x],
+    [x, x, 2, x, 0, x, 0, x, x, x],
+    [x, 0, x, 3, x, x, 0, x, x, x],
+    [x, 0, x, 4, 0, 0, 0, x, x, x],
+    [x, 0, x, 5, x, x, x, x, x, x],
+    [x, 0, x, 6, x, x, x, x, x, x],
+    [x, 0, x, 7, x, x, x, x, x, x],
+    [x, x, x, 1, 8, 9,10, x, x, x],
+    [x, x, x, 4, x, x,11,12, x, x],
+    [x, x, x, x, x, x, x, x,13,14],
+  ])
+
+  path = dijkstra.dijkstra(np.asfortranarray(values), (2,2), (11, 9))
+  correct_path = np.array([
+    [2, 2],
+    [3, 2],
+    [4, 3],
+    [5, 4],
+    [6, 3],
+    [7, 3],
+    [8, 3],
+    [9, 4],
+    [9, 5],
+    [9, 6],
+    [10, 7],
+    [11, 8],
+    [11, 9]
+  ])
+
+  assert np.all(path == correct_path)
+
+
 def test_distance_field_2d():
   for dtype in TEST_TYPES:
     values = np.ones((5,5), dtype=dtype)
@@ -174,3 +211,4 @@ def test_distance_field_2d_asymmetric():
       [3, 3, 3, 3, 3, 4, 5, 6, 7, 8],
       [4, 4, 4, 4, 4, 4, 5, 6, 7, 8],
     ]))
+
