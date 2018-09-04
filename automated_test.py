@@ -201,10 +201,7 @@ def test_distance_field_2d_asymmetric():
       [4, 4, 4, 4, 4, 4, 5, 6, 7, 8],
     ], dtype=np.float32)
 
-    field = dijkstra.distance_field(np.asfortranarray(values), (1,0))
+    field = dijkstra.distance_field(values, (0,1))
     assert np.all(field == answer)
 
-    values = np.copy(values, order='F')
-    field = dijkstra.distance_field(values, (1,0))
-    assert np.all(field == answer)
 

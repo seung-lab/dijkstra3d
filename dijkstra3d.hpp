@@ -279,7 +279,7 @@ float* distance_field3d(
   float delta;
   size_t neighboridx;
 
-  int x, y, z;
+  size_t x, y, z;
 
   while (!queue.empty()) {
     loc = queue.top().value;
@@ -299,7 +299,7 @@ float* distance_field3d(
     compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
-      if (neighborhood[i] == 0) {
+      if (neighborhood[i] == INFINITY) {
         continue;
       }
 

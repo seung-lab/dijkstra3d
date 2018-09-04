@@ -239,15 +239,13 @@ def _execute_distance_field(data, source):
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef int rows = data.shape[0]
-  cdef int cols = data.shape[1]
-  cdef int depth = data.shape[2]
+  cdef int sx = data.shape[0]
+  cdef int sy = data.shape[1]
+  cdef int sz = data.shape[2]
 
-  cdef int src = source[0] + cols * (source[1] + rows * source[2])
+  cdef int src = source[0] + sx * (source[1] + sy * source[2])
 
   cdef float* dist
-
-  data = np.ascontiguousarray(data)
 
   dtype = data.dtype
 
@@ -255,48 +253,48 @@ def _execute_distance_field(data, source):
     arr_memviewfloat = data
     dist = distance_field3d[float](
       &arr_memviewfloat[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     dist = distance_field3d[double](
       &arr_memviewdouble[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     dist = distance_field3d[uint64_t](
       &arr_memview64[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
     dist = distance_field3d[uint32_t](
       &arr_memview32[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     dist = distance_field3d[uint16_t](
       &arr_memview16[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  cdef int voxels = cols * rows * depth
+  cdef int voxels = sx * sy * sz
   cdef float[:] dist_view = <float[:voxels]>dist
 
   # This construct is required by python 2.
@@ -304,4 +302,4 @@ def _execute_distance_field(data, source):
   buf = bytearray(dist_view[:])
   free(dist)
   order = 'F' if data.flags['F_CONTIGUOUS'] else 'C'
-  return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order=order)
+  return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
