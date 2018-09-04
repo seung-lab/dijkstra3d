@@ -159,19 +159,19 @@ def _path_to_point_cloud(path, dims, rows, cols):
   return ptlist
 
 def _execute_dijkstra(data, source, target):
-  cdef int8_t[:,:,:] arr_memview8
-  cdef int16_t[:,:,:] arr_memview16
-  cdef int32_t[:,:,:] arr_memview32
-  cdef int64_t[:,:,:] arr_memview64
+  cdef uint8_t[:,:,:] arr_memview8
+  cdef uint16_t[:,:,:] arr_memview16
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef uint64_t[:,:,:] arr_memview64
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef int cols = data.shape[0]
-  cdef int rows = data.shape[1]
-  cdef int depth = data.shape[2]
+  cdef int sx = data.shape[0]
+  cdef int sy = data.shape[1]
+  cdef int sz = data.shape[2]
 
-  cdef int src = source[0] + cols * (source[1] + rows * source[2])
-  cdef int sink = target[0] + cols * (target[1] + rows * target[2])
+  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+  cdef int sink = target[0] + sx * (target[1] + sy * target[2])
 
   cdef vector[uint32_t] output
 
@@ -181,42 +181,42 @@ def _execute_dijkstra(data, source, target):
     arr_memviewfloat = data
     output = dijkstra3d[float](
       &arr_memviewfloat[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     output = dijkstra3d[double](
       &arr_memviewdouble[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   elif dtype in (np.int64, np.uint64):
-    arr_memview64 = data.astype(np.int64)
-    output = dijkstra3d[int64_t](
+    arr_memview64 = data.astype(np.uint64)
+    output = dijkstra3d[uint64_t](
       &arr_memview64[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   elif dtype in (np.int32, np.uint32):
-    arr_memview32 = data.astype(np.int32)
-    output = dijkstra3d[int32_t](
+    arr_memview32 = data.astype(np.uint32)
+    output = dijkstra3d[uint32_t](
       &arr_memview32[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   elif dtype in (np.int16, np.uint16):
-    arr_memview16 = data.astype(np.int16)
-    output = dijkstra3d[int16_t](
+    arr_memview16 = data.astype(np.uint16)
+    output = dijkstra3d[uint16_t](
       &arr_memview16[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   elif dtype in (np.int8, np.uint8, np.bool):
-    arr_memview8 = data.astype(np.int8)
-    output = dijkstra3d[int8_t](
+    arr_memview8 = data.astype(np.uint8)
+    output = dijkstra3d[uint8_t](
       &arr_memview8[0,0,0],
-      cols, rows, depth,
+      sx, sy, sz,
       src, sink
     )
   else:
