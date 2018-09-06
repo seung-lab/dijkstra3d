@@ -9,10 +9,17 @@ Contains:
   distance_field - Compute the distance field from a source
     voxel in an image using image voxel values as edge weights.
 
+  euclidean_distance_field - Compute the euclidean distance
+    to each voxel in a binary image from a source point.
+
+  parental_field / path_from_parents - Same as dijkstra,
+    but if you're computing dijkstra multiple times on
+    the same image, this can be much much faster.
+
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018
+Date: August-September 2018
 """
 
 from libc.stdlib cimport calloc, free
