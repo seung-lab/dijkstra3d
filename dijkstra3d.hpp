@@ -381,7 +381,7 @@ float* distance_field3d(
     compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
-      if (neighborhood[i] == 0) {
+      if (neighborhood[i] == 0 || std::signbit(dist[loc])) {
         continue;
       }
 
