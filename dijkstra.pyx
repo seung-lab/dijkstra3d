@@ -149,8 +149,9 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
   negative zero).
   
   Parameters:
-   Data: Input weights in a 2D or 3D numpy array. 
+   data: Input weights in a 2D or 3D numpy array. 
    source: (x,y,z) coordinate of starting voxel
+   anisotropy: (wx,wy,wz) weights for each axial direction.
   
   Returns: 2D or 3D numpy array with each index
     containing its distance from the source voxel.
