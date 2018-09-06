@@ -41,6 +41,12 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int sx, int sy, int sz,
     int source
   )
+  cdef float* euclidean_distance_field3d(
+    uint8_t* field,
+    int sx, int sy, int sz,
+    float wx, float wy, float wz,
+    int source
+  )
 
 def dijkstra(data, source, target):
   """
@@ -121,6 +127,50 @@ def distance_field(data, source):
   _validate_coord(data, source)
 
   field = _execute_distance_field(data, source)
+  if dims < 3:
+    field = np.squeeze(field, axis=2)
+  if dims < 2:
+    field = np.squeeze(field, axis=1)
+
+  return field
+
+def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
+  """
+  Use dijkstra's shortest path algorithm
+  on a 3D image grid to generate a weighted 
+  euclidean distance field from a source voxel. Vertices are 
+  voxels and edges are the 26 nearest neighbors 
+  (except for the edges of the image where 
+  the number of edges is reduced).
+  
+  For given input voxels A and B, the edge
+  weight from A to B is B and from B to A is
+  A. All weights must be non-negative (incl. 
+  negative zero).
+  
+  Parameters:
+   Data: Input weights in a 2D or 3D numpy array. 
+   source: (x,y,z) coordinate of starting voxel
+  
+  Returns: 2D or 3D numpy array with each index
+    containing its distance from the source voxel.
+  """
+  dims = len(data.shape)
+  assert dims <= 3
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.float32)
+
+  if dims == 1:
+    data = data[:, np.newaxis, np.newaxis]
+    source = ( source[0], 0, 0 )
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = ( source[0], source[1], 0 )
+
+  _validate_coord(data, source)
+
+  field = _execute_euclidean_distance_field(data, source, anisotropy)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -289,6 +339,44 @@ def _execute_distance_field(data, source):
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
+      src
+    )
+  else:
+    raise TypeError("Type {} not currently supported.".format(dtype))
+
+  cdef int voxels = sx * sy * sz
+  cdef float[:] dist_view = <float[:voxels]>dist
+
+  # This construct is required by python 2.
+  # Python 3 can just do np.frombuffer(vec_view, ...)
+  buf = bytearray(dist_view[:])
+  free(dist)
+  # I don't actually understand why order F works, but it does.
+  return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
+
+def _execute_euclidean_distance_field(data, source, anisotropy):
+  cdef uint8_t[:,:,:] arr_memview8
+
+  cdef int sx = data.shape[0]
+  cdef int sy = data.shape[1]
+  cdef int sz = data.shape[2]
+
+  cdef float wx = anisotropy[0]
+  cdef float wy = anisotropy[1]
+  cdef float wz = anisotropy[2]
+
+  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+
+  cdef float* dist
+
+  dtype = data.dtype
+
+  if dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.uint8)
+    dist = euclidean_distance_field3d(
+      &arr_memview8[0,0,0],
+      sx, sy, sz,
+      wx, wy, wz,
       src
     )
   else:

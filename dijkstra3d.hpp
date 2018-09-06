@@ -299,7 +299,7 @@ float* distance_field3d(
     compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
-      if (neighborhood[i] == INFINITY) {
+      if (neighborhood[i] == 0) {
         continue;
       }
 
@@ -310,6 +310,105 @@ float* distance_field3d(
       // will always be less than as field is filled with non-negative
       // integers.
       if (std::signbit(dist[neighboridx])) {
+        continue;
+      }
+      else if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  for (unsigned int i = 0; i < voxels; i++) {
+    dist[i] = std::fabs(dist[i]);
+  }
+
+  return dist;
+}
+
+// helper function to compute 2D anisotropy ("_s" = "square")
+inline float _s(const float wa, const float wb) {
+  return std::sqrt(wa * wa + wb * wb);
+}
+
+// helper function to compute 3D anisotropy ("_c" = "cube")
+inline float _c(const float wa, const float wb, const float wc) {
+  return std::sqrt(wa * wa + wb * wb + wc * wc);
+}
+
+float* euclidean_distance_field3d(
+    uint8_t* field, // really a boolean field
+    const size_t sx, const size_t sy, const size_t sz, 
+    const float wx, const float wy, const float wz, 
+    const size_t source
+  ) {
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  size_t x, y, z;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / sxy;
+      y = (loc - (z * sxy)) / sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
+
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0 || std::signbit(dist[loc])) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = (float)field[neighboridx] * neighbor_multiplier[i];
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (delta == 0 || std::signbit(dist[neighboridx])) {
         continue;
       }
       else if (dist[loc] + delta < dist[neighboridx]) { 

@@ -1,5 +1,6 @@
 import dijkstra
 import numpy as np
+from math import sqrt
 
 TEST_TYPES = (
   np.float32, np.float64,
@@ -205,3 +206,60 @@ def test_distance_field_2d_asymmetric():
     assert np.all(field == answer)
 
 
+def test_euclidean_distance_field_2d():
+  values = np.ones((2, 2), dtype=bool)
+
+  sq2 = sqrt(2)
+  sq3 = sqrt(3)
+
+  answer = np.array([
+    [0, 1],
+    [1, sq2],
+  ], dtype=np.float32)
+
+  field = dijkstra.euclidean_distance_field(values, (0,0))
+  assert np.all(np.abs(field - answer) < 0.00001)
+
+  values = np.ones((5, 5), dtype=bool)
+
+  answer = np.array(
+    [[0,        1.        , 2.       , 3.        , 4.       ],
+     [1,        1.4142135 , 2.4142137, 3.4142137 , 4.4142137],
+     [2,        2.4142137 , 2.828427 , 3.828427  , 4.8284273],
+     [3,        3.4142137 , 3.828427 , 4.2426405 , 5.2426405],
+     [4,        4.4142137 , 4.8284273, 5.2426405 , 5.656854 ]], 
+  dtype=np.float32)
+
+  field = dijkstra.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  assert np.all(np.abs(field - answer) < 0.00001) 
+
+  answer = np.array([
+    [
+      [0, 1],
+      [1, sq2],
+    ],
+    [
+      [1,   sq2],
+      [sq2, sq3],
+    ]
+  ], dtype=np.float32)
+
+  values = np.ones((2, 2, 2), dtype=bool)
+  field = dijkstra.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  assert np.all(np.abs(field - answer) < 0.00001)   
+
+  values = np.ones((2, 2, 2), dtype=bool)
+  field = dijkstra.euclidean_distance_field(values, (1,1,1), (1,1,1))
+
+  answer = np.array([
+    [
+      [sq3, sq2],
+      [sq2, 1],
+    ],
+    [
+      [sq2,   1],
+      [1, 0],
+    ]
+  ], dtype=np.float32)  
+
+  assert np.all(np.abs(field - answer) < 0.00001)   
