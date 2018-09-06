@@ -166,7 +166,7 @@ def path_from_parents(parents, target):
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(vec_view[:])
   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
-  return _path_to_point_cloud(numpy_path, 3, sx, sy)
+  return _path_to_point_cloud(numpy_path, 3, sy, sx)
 
 def parental_field(data, source):
   """

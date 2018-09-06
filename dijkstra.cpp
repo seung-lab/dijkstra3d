@@ -4326,7 +4326,7 @@ static PyObject *__pyx_pf_8dijkstra_4path_from_parents(CYTHON_UNUSED PyObject *_
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])             # <<<<<<<<<<<<<<
  *   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  */
   __pyx_t_7 = __pyx_memoryview_fromslice(__pyx_v_vec_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 167, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
@@ -4340,7 +4340,7 @@ static PyObject *__pyx_pf_8dijkstra_4path_from_parents(CYTHON_UNUSED PyObject *_
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])
  *   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  */
   __pyx_t_6 = __Pyx_GetModuleGlobalName(__pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 168, __pyx_L1_error)
@@ -4376,16 +4376,16 @@ static PyObject *__pyx_pf_8dijkstra_4path_from_parents(CYTHON_UNUSED PyObject *_
   /* "dijkstra.pyx":169
  *   buf = bytearray(vec_view[:])
  *   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)             # <<<<<<<<<<<<<<
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)             # <<<<<<<<<<<<<<
  * 
  * def parental_field(data, source):
  */
   __Pyx_XDECREF(__pyx_r);
   __pyx_t_4 = __Pyx_GetModuleGlobalName(__pyx_n_s_path_to_point_cloud); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_sx); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_sy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_sy); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 169, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_sx); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 169, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __pyx_t_1 = NULL;
   __pyx_t_3 = 0;
@@ -4478,7 +4478,7 @@ static PyObject *__pyx_pf_8dijkstra_4path_from_parents(CYTHON_UNUSED PyObject *_
 }
 
 /* "dijkstra.pyx":171
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  * def parental_field(data, source):             # <<<<<<<<<<<<<<
  *   """
@@ -5018,7 +5018,7 @@ static PyObject *__pyx_pf_8dijkstra_6parental_field(CYTHON_UNUSED PyObject *__py
   goto __pyx_L0;
 
   /* "dijkstra.pyx":171
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  * def parental_field(data, source):             # <<<<<<<<<<<<<<
  *   """
@@ -28129,7 +28129,7 @@ static int __Pyx_InitCachedConstants(void) {
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])
  *   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  */
   __pyx_slice__8 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__8)) __PYX_ERR(0, 168, __pyx_L1_error)
@@ -28589,7 +28589,7 @@ static int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__59 = (PyObject*)__Pyx_PyCode_New(2, 0, 12, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__58, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra_pyx, __pyx_n_s_path_from_parents, 152, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__59)) __PYX_ERR(0, 152, __pyx_L1_error)
 
   /* "dijkstra.pyx":171
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  * def parental_field(data, source):             # <<<<<<<<<<<<<<
  *   """
@@ -29157,7 +29157,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "dijkstra.pyx":171
- *   return _path_to_point_cloud(numpy_path, 3, sx, sy)
+ *   return _path_to_point_cloud(numpy_path, 3, sy, sx)
  * 
  * def parental_field(data, source):             # <<<<<<<<<<<<<<
  *   """

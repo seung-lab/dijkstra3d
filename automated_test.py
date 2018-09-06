@@ -265,7 +265,7 @@ def test_euclidean_distance_field_2d():
   assert np.all(np.abs(field - answer) < 0.00001)   
 
 
-def test_dijkstra2d_parental_10x10():
+def test_dijkstra_parental():
   for dtype in TEST_TYPES:
     values = np.ones((10,10,1), dtype=dtype)
     
@@ -280,7 +280,8 @@ def test_dijkstra2d_parental_10x10():
       [3,0,0],
     ]))
 
-    for _ in range(10):
+    # Symmetric Test
+    for _ in range(50):
       values = np.random.randint(1,255, size=(10,10,10))
 
       start = np.random.randint(0,9, size=(3,))
@@ -293,3 +294,20 @@ def test_dijkstra2d_parental_10x10():
 
       assert np.all(path == path_orig)
 
+    # Asymmetric Test
+    for _ in range(50):
+      values = np.random.randint(1,255, size=(11,10,10))
+
+      start = np.random.randint(0,9, size=(3,))
+      target = np.random.randint(0,9, size=(3,))
+
+      parents = dijkstra.parental_field(values, start)
+      path = dijkstra.path_from_parents(parents, target)
+
+      path_orig = dijkstra.dijkstra(values, start, target)
+
+      print(start, target)
+      print(path)
+      print(path_orig)
+
+      assert np.all(path == path_orig)
