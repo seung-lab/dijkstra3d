@@ -263,3 +263,33 @@ def test_euclidean_distance_field_2d():
   ], dtype=np.float32)  
 
   assert np.all(np.abs(field - answer) < 0.00001)   
+
+
+def test_dijkstra2d_parental_10x10():
+  for dtype in TEST_TYPES:
+    values = np.ones((10,10,1), dtype=dtype)
+    
+    parents = dijkstra.parental_field(values, (0,0,0))
+    path = dijkstra.path_from_parents(parents, (3,0,0))
+
+    assert len(path) == 4
+    assert np.all(path == np.array([
+      [0,0,0],
+      [1,1,0],
+      [2,1,0],
+      [3,0,0],
+    ]))
+
+    for _ in range(10):
+      values = np.random.randint(1,255, size=(10,10,10))
+
+      start = np.random.randint(0,9, size=(3,))
+      target = np.random.randint(0,9, size=(3,))
+
+      parents = dijkstra.parental_field(values, start)
+      path = dijkstra.path_from_parents(parents, target)
+
+      path_orig = dijkstra.dijkstra(values, start, target)
+
+      assert np.all(path == path_orig)
+

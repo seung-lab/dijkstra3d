@@ -41,12 +41,20 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int sx, int sy, int sz,
     int source
   )
+  cdef uint32_t* parental_field3d[T](
+    T* field, 
+    int sx, int sy, int sz, 
+    int source
+  )
   cdef float* euclidean_distance_field3d(
     uint8_t* field,
     int sx, int sy, int sz,
     float wx, float wy, float wz,
     int source
   )
+  cdef vector[uint32_t] query_shortest_path(
+    uint32_t* parents, uint32_t target
+  ) 
 
 def dijkstra(data, source, target):
   """
@@ -134,11 +142,72 @@ def distance_field(data, source):
 
   return field
 
+def path_from_parents(parents, target):
+  cdef int sx = parents.shape[0]
+  cdef int sy = parents.shape[1]
+  cdef int sz = parents.shape[2]
+
+  cdef int targ = target[0] + sx * (target[1] + sy * target[2])
+
+  cdef uint32_t[:,:,:] arr_memview32 = parents
+
+  cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)
+  cdef uint32_t* path_ptr = <uint32_t*>&path[0]
+  cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr
+
+  # This construct is required by python 2.
+  # Python 3 can just do np.frombuffer(vec_view, ...)
+  buf = bytearray(vec_view[:])
+  numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
+  return _path_to_point_cloud(numpy_path, 3, sx, sy)
+
+def parental_field(data, source):
+  """
+  Use dijkstra's shortest path algorithm
+  on a 3D image grid to generate field of
+  voxels that point to their parent voxel. 
+
+  This is used to execute dijkstra's algorithm
+  once, and then query different targets for
+  the path they represent. 
+
+  Parameters:
+   data: Input weights in a 2D or 3D numpy array. 
+   source: (x,y,z) coordinate of starting voxel
+  
+  Returns: 2D or 3D numpy array with each index
+    containing the index of its parent. The root
+    of a path has index 0.
+  """
+  dims = len(data.shape)
+  assert dims <= 3
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.float32)
+
+  if dims == 1:
+    data = data[:, np.newaxis, np.newaxis]
+    source = ( source[0], 0, 0 )
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = ( source[0], source[1], 0 )
+
+  _validate_coord(data, source)
+
+  field = _execute_parental_field(data, source)
+  if dims < 3:
+    field = np.squeeze(field, axis=2)
+  if dims < 2:
+    field = np.squeeze(field, axis=1)
+
+  return field
+
 def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
-  euclidean distance field from a source voxel. Vertices are 
+  euclidean distance field from a source voxel 
+  from a binary image. Vertices are 
   voxels and edges are the 26 nearest neighbors 
   (except for the edges of the image where 
   the number of edges is reduced).
@@ -354,6 +423,80 @@ def _execute_distance_field(data, source):
   free(dist)
   # I don't actually understand why order F works, but it does.
   return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
+
+
+def _execute_parental_field(data, source):
+  cdef uint8_t[:,:,:] arr_memview8
+  cdef uint16_t[:,:,:] arr_memview16
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef uint64_t[:,:,:] arr_memview64
+  cdef float[:,:,:] arr_memviewfloat
+  cdef double[:,:,:] arr_memviewdouble
+
+  cdef int sx = data.shape[0]
+  cdef int sy = data.shape[1]
+  cdef int sz = data.shape[2]
+
+  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+
+  cdef uint32_t* parents
+
+  dtype = data.dtype
+
+  if dtype == np.float32:
+    arr_memviewfloat = data
+    parents = parental_field3d[float](
+      &arr_memviewfloat[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  elif dtype == np.float64:
+    arr_memviewdouble = data
+    parents = parental_field3d[double](
+      &arr_memviewdouble[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.uint64)
+    parents = parental_field3d[uint64_t](
+      &arr_memview64[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  elif dtype in (np.uint32, np.int32):
+    arr_memview32 = data.astype(np.uint32)
+    parents = parental_field3d[uint32_t](
+      &arr_memview32[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.uint16)
+    parents = parental_field3d[uint16_t](
+      &arr_memview16[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  elif dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.uint8)
+    parents = parental_field3d[uint8_t](
+      &arr_memview8[0,0,0],
+      sx, sy, sz,
+      src
+    )
+  else:
+    raise TypeError("Type {} not currently supported.".format(dtype))
+
+  cdef int voxels = sx * sy * sz
+  cdef uint32_t[:] parents_view = <uint32_t[:voxels]>parents
+
+  # This construct is required by python 2.
+  # Python 3 can just do np.frombuffer(vec_view, ...)
+  buf = bytearray(parents_view[:])
+  free(parents)
+  # I don't actually understand why order F works, but it does.
+  return np.frombuffer(buf, dtype=np.uint32).reshape(data.shape, order='F')
 
 def _execute_euclidean_distance_field(data, source, anisotropy):
   cdef uint8_t[:,:,:] arr_memview8

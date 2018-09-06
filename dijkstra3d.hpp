@@ -34,6 +34,18 @@ inline float* fill(float *arr, const float value, const size_t size) {
   return arr;
 }
 
+inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32_t target) {
+  std::vector<uint32_t> path;
+  uint32_t loc = target;
+  while (parents[loc]) {
+    path.push_back(loc);
+    loc = parents[loc] - 1; // offset by 1 to disambiguate the 0th index
+  }
+  path.push_back(loc);
+
+  return path;
+}
+
 inline void compute_neighborhood(
   int *neighborhood, const size_t loc, 
   const int x, const int y, const int z,
@@ -229,14 +241,7 @@ std::vector<uint32_t> dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<uint32_t> path;
-  loc = target;
-  while (parents[loc]) {
-    path.push_back(loc);
-    loc = parents[loc] - 1; // offset by 1 to disambiguate the 0th index
-  }
-  path.push_back(loc);
-
+  std::vector<uint32_t> path = query_shortest_path(parents, target);
   delete [] parents;
 
   return path;
@@ -251,6 +256,83 @@ std::vector<uint32_t> dijkstra2d(
 
   return dijkstra3d<T>(field, sx, sy, 1, source, target);
 }
+
+template <typename T>
+uint32_t* parental_field3d(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source
+  ) {
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  uint32_t *parents = new uint32_t[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  size_t x, y, z;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / sxy;
+      y = (loc - (z * sxy)) / sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
+
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0 || std::signbit(dist[loc])) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = (float)field[neighboridx];
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (std::signbit(dist[neighboridx])) {
+        continue;
+      }
+      else if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  delete [] dist;
+
+  return parents;
+}
+
 
 template <typename T>
 float* distance_field3d(
