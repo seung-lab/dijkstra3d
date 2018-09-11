@@ -195,6 +195,10 @@ std::vector<uint32_t> dijkstra3d(
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
@@ -220,10 +224,7 @@ std::vector<uint32_t> dijkstra3d(
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (std::signbit(dist[neighboridx])) {
-        continue;
-      }
-      else if (dist[loc] + delta < dist[neighboridx]) { 
+      if (dist[loc] + delta < dist[neighboridx]) { 
         dist[neighboridx] = dist[loc] + delta;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
@@ -368,6 +369,10 @@ float* distance_field3d(
     loc = queue.top().value;
     queue.pop();
 
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
     if (power_of_two) {
       z = loc >> (xshift + yshift);
       y = (loc - (z << (xshift + yshift))) >> xshift;
@@ -382,7 +387,7 @@ float* distance_field3d(
     compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
-      if (neighborhood[i] == 0 || std::signbit(dist[loc])) {
+      if (neighborhood[i] == 0) {
         continue;
       }
 
@@ -392,10 +397,7 @@ float* distance_field3d(
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (std::signbit(dist[neighboridx])) {
-        continue;
-      }
-      else if (dist[loc] + delta < dist[neighboridx]) { 
+      if (dist[loc] + delta < dist[neighboridx]) { 
         dist[neighboridx] = dist[loc] + delta;
         queue.emplace(dist[neighboridx], neighboridx);
       }
