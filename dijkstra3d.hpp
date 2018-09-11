@@ -467,6 +467,10 @@ float* euclidean_distance_field3d(
     loc = queue.top().value;
     queue.pop();
 
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
     if (power_of_two) {
       z = loc >> (xshift + yshift);
       y = (loc - (z << (xshift + yshift))) >> xshift;
@@ -481,20 +485,22 @@ float* euclidean_distance_field3d(
     compute_neighborhood(neighborhood, loc, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
-      if (neighborhood[i] == 0 || std::signbit(dist[loc])) {
+      if (neighborhood[i] == 0) {
         continue;
       }
 
       neighboridx = loc + neighborhood[i];
+
+      if (field[neighboridx] == 0) {
+        continue;
+      }
+
       delta = (float)field[neighboridx] * neighbor_multiplier[i];
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (delta == 0 || std::signbit(dist[neighboridx])) {
-        continue;
-      }
-      else if (dist[loc] + delta < dist[neighboridx]) { 
+      if (dist[loc] + delta < dist[neighboridx]) { 
         dist[neighboridx] = dist[loc] + delta;
         queue.emplace(dist[neighboridx], neighboridx);
       }
