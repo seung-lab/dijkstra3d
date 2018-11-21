@@ -460,7 +460,7 @@ float* euclidean_distance_field3d(
   queue.emplace(0.0, source);
 
   size_t loc;
-  float delta;
+  float new_dist;
   size_t neighboridx;
 
   size_t x, y, z;
@@ -492,19 +492,18 @@ float* euclidean_distance_field3d(
       }
 
       neighboridx = loc + neighborhood[i];
-
       if (field[neighboridx] == 0) {
         continue;
       }
 
-      delta = (float)field[neighboridx] * neighbor_multiplier[i];
-
+      new_dist = dist[loc] + neighbor_multiplier[i];
+      
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (dist[loc] + delta < dist[neighboridx]) { 
-        dist[neighboridx] = dist[loc] + delta;
-        queue.emplace(dist[neighboridx], neighboridx);
+      if (new_dist < dist[neighboridx]) { 
+        dist[neighboridx] = new_dist;
+        queue.emplace(new_dist, neighboridx);
       }
     }
 
@@ -517,6 +516,7 @@ float* euclidean_distance_field3d(
 
   return dist;
 }
+
 
 
 }; // namespace dijkstra3d
