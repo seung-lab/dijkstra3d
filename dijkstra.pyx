@@ -19,7 +19,7 @@ Contains:
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August-September 2018
+Date: August-November 2018
 """
 
 from libc.stdlib cimport calloc, free
