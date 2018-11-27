@@ -1,0 +1,79 @@
+CHANGES
+=======
+
+1.0.0
+-----
+
+* chore: setting up for PyPI distribution
+* test: fill out cpp test code with an example
+* docs: update timestamp
+* fix: euclidean\_distance\_field could be succeptible to non-boolean fields
+* perf: faster dijkstra3d
+* perf: faster euclidean distance field
+* perf: 10% faster
+* perf: bug in distance\_field3d was hurting performance a lot
+* fix: rows/cols swapped in path\_from\_parents
+* docs: updated module help
+* perf: added parental\_field and path\_from\_parents
+* docs: added anisotropy to euclidean\_distance\_field help
+* feat: euclidean distance field
+* feat: supported uints more fully for dijkstra
+* doc: why does fortran order work? idk
+* fix: simplified distance\_field
+* fix: reconciled various transpositions
+* test: added more complex test to dijkstra
+* fix: algorithm was not properly checking visited
+* fix: handle fortran order (by converting to C order..)
+* docs: elaborated on where different contributions to memory usage come from
+* docs: added benchmark
+* feat: added support for uints and bools
+* docs: added reference to Dijkstra paper
+* docs: how to use distance\_field, performance info
+* docs: added travis badge
+* test: added 3d tests
+* test: added automated tests
+* fix: pyx handle Fortran ordered arrays in distance\_field
+* fix: memory leak in distance field calculation
+* fix: accomodate 2d and 3d inputs to dijkstra
+* fix: row col depth assignment in distance\_field
+* fix: corrected neighbor calculation and signed bit is actually needed
+* feat: added prototype of distance\_field function
+* docs: show how to use
+* fix: made point cloud output sensible for 2D
+* refactor: broke dijkstra function into components for neatness
+* feat: running python code
+* feat: Cython bindings for dijkstra3d
+* feat: added dijkstra namespace, 2d and 3d functions
+* refactor: make x,y,z translation more explicit
+* perf: mostly eliminated compute\_neighborhood as a CPU suck
+* perf: shaved another 10sec off the 512^3
+* fix: removed pairing\_heap.hpp include
+* perf: switched to std::priority\_queue, 20% speedup
+* feat: moving to 26-hood
+* feat: moved to 18-hood from 6-hood
+* refactor: allocate heap instance on stack (not the full tree)
+* refactor: allocate neighborhood on the stack
+* fix: y coordinate computed incorrectly
+* feat: now returns st path as a vector of array indicies
+* perf: break out of the loop early, saves huge computation
+* perf: a more dangerous, but highly performant improvement to running time
+* perf: faster delmin through reserving vector size
+* fix: dijkstra working but kinda slow, but very low memory
+* fix: compilation warnings
+* fix: improper deletion of heap
+* fix: segmentation fault from accessing dist after free
+* wip: moving towards a heap based dijkstra
+* chore: add -std=c++11 to test compilation
+* perf: why use two operations when you can have one
+* fix: don't segfault when printing with no root
+* perf: ensure compiler can optimize forest.size()
+* fix: propogated "last" fix for odd sizes
+* fix: pairing heap now sorts numbers
+* docs: fixed formatting in a comment
+* test: added heap sort test
+* fix: construct PHNode correctly
+* fix: syntax errors in pairing\_heap.hpp
+* feat: untested pairing heap implementation
+* docs: added paper references
+* feat: a classic algorithm, O(V^2)
+* Initial commit

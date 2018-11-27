@@ -1,8 +1,6 @@
 import os
 import setuptools
 
-join = os.path.join
-
 # NOTE: If dijkstra.cpp does not exist:
 # cython -3 --fast-fail -v --cplus dijkstra.pyx
 
