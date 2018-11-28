@@ -4,6 +4,8 @@ CHANGES
 1.0.0
 -----
 
+* test: add Python 3.7 to travis testing
+* chore: add documentation and rename dijkstra to dijkstra3d
 * chore: setting up for PyPI distribution
 * test: fill out cpp test code with an example
 * docs: update timestamp
