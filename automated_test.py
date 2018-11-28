@@ -1,4 +1,4 @@
-import dijkstra
+import dijkstra3d
 import numpy as np
 from math import sqrt
 
@@ -13,7 +13,7 @@ def test_dijkstra2d_10x10():
   for dtype in TEST_TYPES:
     values = np.ones((10,10,1), dtype=dtype)
     
-    path = dijkstra.dijkstra(values, (0,0,0), (3,0,0))
+    path = dijkstra3d.dijkstra(values, (0,0,0), (3,0,0))
 
     assert len(path) == 4
     assert np.all(path == np.array([
@@ -23,7 +23,7 @@ def test_dijkstra2d_10x10():
       [3,0,0],
     ]))
 
-    path = dijkstra.dijkstra(values, (0,0,0), (5,5,0))
+    path = dijkstra3d.dijkstra(values, (0,0,0), (5,5,0))
 
     assert len(path) == 6
     assert np.all(path == np.array([
@@ -35,7 +35,7 @@ def test_dijkstra2d_10x10():
       [5,5,0],
     ]))
 
-    path = dijkstra.dijkstra(values, (0,0,0), (9,9,0))
+    path = dijkstra3d.dijkstra(values, (0,0,0), (9,9,0))
     
     assert len(path) == 10
     assert np.all(path == np.array([
@@ -55,7 +55,7 @@ def test_dijkstra2d_10x10_off_origin():
   for dtype in TEST_TYPES:
     values = np.ones((10,10,1), dtype=dtype)
     
-    path = dijkstra.dijkstra(values, (2,0,0), (3,0,0))
+    path = dijkstra3d.dijkstra(values, (2,0,0), (3,0,0))
 
     assert len(path) == 2
     assert np.all(path == np.array([
@@ -63,7 +63,7 @@ def test_dijkstra2d_10x10_off_origin():
       [3,0,0],
     ]))
 
-    path = dijkstra.dijkstra(values, (2,1,0), (3,0,0))
+    path = dijkstra3d.dijkstra(values, (2,1,0), (3,0,0))
 
     assert len(path) == 2
     assert np.all(path == np.array([
@@ -71,7 +71,7 @@ def test_dijkstra2d_10x10_off_origin():
       [3,0,0],
     ]))
 
-    path = dijkstra.dijkstra(values, (9,9,0), (5,5,0))
+    path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0))
 
     assert len(path) == 5
     assert np.all(path == np.array([
@@ -86,14 +86,14 @@ def test_dijkstra3d_3x3x3():
   for dtype in TEST_TYPES:
     values = np.ones((3,3,3), dtype=dtype)
 
-    path = dijkstra.dijkstra(values, (0,0,0), (2,2,2))
+    path = dijkstra3d.dijkstra(values, (0,0,0), (2,2,2))
     assert np.all(path == np.array([
       [0,0,0],
       [1,1,1],
       [2,2,2]
     ]))
 
-    path = dijkstra.dijkstra(values, (2,2,2), (0,0,0))
+    path = dijkstra3d.dijkstra(values, (2,2,2), (0,0,0))
     assert np.all(path == np.array([
       [2,2,2],
       [1,1,1],
@@ -117,7 +117,7 @@ def test_dijkstra_2d_loop():
     [x, x, x, x, x, x, x, x,13,14],
   ])
 
-  path = dijkstra.dijkstra(np.asfortranarray(values), (2,2), (11, 9))
+  path = dijkstra3d.dijkstra(np.asfortranarray(values), (2,2), (11, 9))
   correct_path = np.array([
     [2, 2],
     [3, 2],
@@ -141,7 +141,7 @@ def test_distance_field_2d():
   for dtype in TEST_TYPES:
     values = np.ones((5,5), dtype=dtype)
     
-    field = dijkstra.distance_field(values, (0,0))
+    field = dijkstra3d.distance_field(values, (0,0))
 
     assert np.all(field == np.array([
       [
@@ -153,7 +153,7 @@ def test_distance_field_2d():
       ]
     ]))
 
-    field = dijkstra.distance_field(values, (4,4))
+    field = dijkstra3d.distance_field(values, (4,4))
 
     assert np.all(field == np.array([
       [
@@ -165,7 +165,7 @@ def test_distance_field_2d():
       ]
     ]))
 
-    field = dijkstra.distance_field(values, (2,2))
+    field = dijkstra3d.distance_field(values, (2,2))
 
     assert np.all(field == np.array([
       [
@@ -178,7 +178,7 @@ def test_distance_field_2d():
     ]))
 
 
-    field = dijkstra.distance_field(values * 2, (2,2))
+    field = dijkstra3d.distance_field(values * 2, (2,2))
 
     assert np.all(field == np.array([
       [
@@ -202,7 +202,7 @@ def test_distance_field_2d_asymmetric():
       [4, 4, 4, 4, 4, 4, 5, 6, 7, 8],
     ], dtype=np.float32)
 
-    field = dijkstra.distance_field(values, (0,1))
+    field = dijkstra3d.distance_field(values, (0,1))
     assert np.all(field == answer)
 
 
@@ -217,7 +217,7 @@ def test_euclidean_distance_field_2d():
     [1, sq2],
   ], dtype=np.float32)
 
-  field = dijkstra.euclidean_distance_field(values, (0,0))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0))
   assert np.all(np.abs(field - answer) < 0.00001)
 
   values = np.ones((5, 5), dtype=bool)
@@ -230,7 +230,7 @@ def test_euclidean_distance_field_2d():
      [4,        4.4142137 , 4.8284273, 5.2426405 , 5.656854 ]], 
   dtype=np.float32)
 
-  field = dijkstra.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1))
   assert np.all(np.abs(field - answer) < 0.00001) 
 
   answer = np.array([
@@ -245,11 +245,11 @@ def test_euclidean_distance_field_2d():
   ], dtype=np.float32)
 
   values = np.ones((2, 2, 2), dtype=bool)
-  field = dijkstra.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1))
   assert np.all(np.abs(field - answer) < 0.00001)   
 
   values = np.ones((2, 2, 2), dtype=bool)
-  field = dijkstra.euclidean_distance_field(values, (1,1,1), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (1,1,1), (1,1,1))
 
   answer = np.array([
     [
@@ -269,8 +269,8 @@ def test_dijkstra_parental():
   for dtype in TEST_TYPES:
     values = np.ones((10,10,1), dtype=dtype)
     
-    parents = dijkstra.parental_field(values, (0,0,0))
-    path = dijkstra.path_from_parents(parents, (3,0,0))
+    parents = dijkstra3d.parental_field(values, (0,0,0))
+    path = dijkstra3d.path_from_parents(parents, (3,0,0))
 
     assert len(path) == 4
     assert np.all(path == np.array([
@@ -287,10 +287,10 @@ def test_dijkstra_parental():
       start = np.random.randint(0,9, size=(3,))
       target = np.random.randint(0,9, size=(3,))
 
-      parents = dijkstra.parental_field(values, start)
-      path = dijkstra.path_from_parents(parents, target)
+      parents = dijkstra3d.parental_field(values, start)
+      path = dijkstra3d.path_from_parents(parents, target)
 
-      path_orig = dijkstra.dijkstra(values, start, target)
+      path_orig = dijkstra3d.dijkstra(values, start, target)
 
       assert np.all(path == path_orig)
 
@@ -301,10 +301,10 @@ def test_dijkstra_parental():
       start = np.random.randint(0,9, size=(3,))
       target = np.random.randint(0,9, size=(3,))
 
-      parents = dijkstra.parental_field(values, start)
-      path = dijkstra.path_from_parents(parents, target)
+      parents = dijkstra3d.parental_field(values, start)
+      path = dijkstra3d.path_from_parents(parents, target)
 
-      path_orig = dijkstra.dijkstra(values, start, target)
+      path_orig = dijkstra3d.dijkstra(values, start, target)
 
       print(start, target)
       print(path)

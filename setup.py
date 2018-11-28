@@ -14,8 +14,8 @@ setuptools.setup(
   },
   ext_modules=[
     setuptools.Extension(
-      'dijkstra',
-      sources=[ 'dijkstra.cpp' ],
+      'dijkstra3d',
+      sources=[ 'dijkstra3d.cpp' ],
       language='c++',
       include_dirs=[ np.get_include() ],
       extra_compile_args=[
