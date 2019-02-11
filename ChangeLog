@@ -1,6 +1,11 @@
 CHANGES
 =======
 
+1.0.1
+-----
+
+* chore: drop py34 binary support
+* chore: version 1.0.1
 * refactor: remove experimental code comment
 * perf: use libdivide.h for faster x y z computation
 * docs: added link to PyPI
