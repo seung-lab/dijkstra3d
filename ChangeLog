@@ -1,6 +1,10 @@
 CHANGES
 =======
 
+* refactor: remove experimental code comment
+* perf: use libdivide.h for faster x y z computation
+* docs: added link to PyPI
+
 1.0.0
 -----
 
