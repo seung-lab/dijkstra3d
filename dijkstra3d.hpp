@@ -20,6 +20,8 @@
 #include <queue>
 #include <vector>
 
+#include "./libdivide.h"
+
 #ifndef DIJKSTRA3D_HPP
 #define DIJKSTRA3D_HPP
 
@@ -171,6 +173,9 @@ std::vector<uint32_t> dijkstra3d(
 
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -206,8 +211,8 @@ std::vector<uint32_t> dijkstra3d(
       x = loc - ((y + (z << yshift)) << xshift);
     }
     else {
-      z = loc / sxy;
-      y = (loc - (z * sxy)) / sx;
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
 
@@ -268,6 +273,9 @@ uint32_t* parental_field3d(
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
 
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
@@ -302,8 +310,8 @@ uint32_t* parental_field3d(
       x = loc - ((y + (z << yshift)) << xshift);
     }
     else {
-      z = loc / sxy;
-      y = (loc - (z * sxy)) / sx;
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
 
@@ -315,6 +323,10 @@ uint32_t* parental_field3d(
       }
 
       neighboridx = loc + neighborhood[i];
+      // if (field[neighboridx] == 0) {
+      //   continue;
+      // }
+
       delta = (float)field[neighboridx];
 
       // Visited nodes are negative and thus the current node
@@ -345,6 +357,9 @@ float* distance_field3d(
 
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
+
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -379,8 +394,8 @@ float* distance_field3d(
       x = loc - ((y + (z << yshift)) << xshift);
     }
     else {
-      z = loc / sxy;
-      y = (loc - (z * sxy)) / sx;
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
 
@@ -433,6 +448,9 @@ float* euclidean_distance_field3d(
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
 
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
@@ -479,8 +497,8 @@ float* euclidean_distance_field3d(
       x = loc - ((y + (z << yshift)) << xshift);
     }
     else {
-      z = loc / sxy;
-      y = (loc - (z * sxy)) / sx;
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
 

@@ -4,6 +4,7 @@ CHANGES
 1.0.0
 -----
 
+* chore: added py37 to setup.cfg
 * test: add Python 3.7 to travis testing
 * chore: add documentation and rename dijkstra to dijkstra3d
 * chore: setting up for PyPI distribution

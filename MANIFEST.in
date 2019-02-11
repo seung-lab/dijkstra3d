@@ -1,2 +1,3 @@
 include dijkstra3d.hpp
+include libdivide.h
 include LICENSE
