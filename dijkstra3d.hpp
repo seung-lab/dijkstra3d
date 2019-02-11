@@ -323,10 +323,6 @@ uint32_t* parental_field3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      // if (field[neighboridx] == 0) {
-      //   continue;
-      // }
-
       delta = (float)field[neighboridx];
 
       // Visited nodes are negative and thus the current node
