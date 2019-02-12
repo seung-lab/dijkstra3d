@@ -233,6 +233,8 @@ std::vector<uint32_t> dijkstra3d(
         dist[neighboridx] = dist[loc] + delta;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
         if (neighboridx == target) {
           goto OUTSIDE;
         }

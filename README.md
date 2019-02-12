@@ -115,3 +115,4 @@ Early on, I anticipated using decrease key in my heap and implemented a pairing 
 ## References
 
 1. E. W. Dijkstra. "A Note on Two Problems in Connexion with Graphs" Numerische Mathematik 1. pp. 269-271. (1959)  
+2. E. W. Dijkstra. "Go To Statement Considered Harmful". Communications of the ACM. Vol. 11, No. 3, pp. 147-148. (1968)
