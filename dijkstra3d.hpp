@@ -171,6 +171,10 @@ std::vector<uint32_t> dijkstra3d(
     const size_t source, const size_t target
   ) {
 
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
   
