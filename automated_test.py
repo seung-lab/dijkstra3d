@@ -12,6 +12,10 @@ TEST_TYPES = (
 def test_dijkstra2d_10x10():
   for dtype in TEST_TYPES:
     values = np.ones((10,10,1), dtype=dtype)
+
+    path = dijkstra3d.dijkstra(values, (1,1,0), (1,1,0))
+    assert len(path) == 1
+    assert np.all(path == np.array([ [1,1,0] ]))
     
     path = dijkstra3d.dijkstra(values, (0,0,0), (3,0,0))
 
@@ -85,6 +89,10 @@ def test_dijkstra2d_10x10_off_origin():
 def test_dijkstra3d_3x3x3():
   for dtype in TEST_TYPES:
     values = np.ones((3,3,3), dtype=dtype)
+
+    path = dijkstra3d.dijkstra(values, (1,1,1), (1,1,1))
+    assert len(path) == 1
+    assert np.all(path == np.array([ [1,1,1] ]))
 
     path = dijkstra3d.dijkstra(values, (0,0,0), (2,2,2))
     assert np.all(path == np.array([
