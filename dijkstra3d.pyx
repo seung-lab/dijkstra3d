@@ -60,7 +60,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint8_t* field,
     int sx, int sy, int sz,
     float wx, float wy, float wz,
-    int source
+    int source, float* dist
   )
   cdef vector[uint32_t] query_shortest_path(
     uint32_t* parents, uint32_t target
@@ -530,27 +530,19 @@ def _execute_euclidean_distance_field(data, source, anisotropy):
 
   cdef int src = source[0] + sx * (source[1] + sy * source[2])
 
-  cdef float* dist
+  cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
 
   dtype = data.dtype
 
   if dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
-    dist = euclidean_distance_field3d(
+    euclidean_distance_field3d(
       &arr_memview8[0,0,0],
       sx, sy, sz,
       wx, wy, wz,
-      src
+      src, &dist[0,0,0]
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  cdef int voxels = sx * sy * sz
-  cdef float[:] dist_view = <float[:voxels]>dist
-
-  # This construct is required by python 2.
-  # Python 3 can just do np.frombuffer(vec_view, ...)
-  buf = bytearray(dist_view[:])
-  free(dist)
-  # I don't actually understand why order F works, but it does.
-  return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
+  return dist
