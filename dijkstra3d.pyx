@@ -54,7 +54,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef uint32_t* parental_field3d[T](
     T* field, 
     int sx, int sy, int sz, 
-    int source
+    int source, uint32_t* parents
   )
   cdef float* euclidean_distance_field3d(
     uint8_t* field,
@@ -458,64 +458,55 @@ def _execute_parental_field(data, source):
 
   cdef int src = source[0] + sx * (source[1] + sy * source[2])
 
-  cdef uint32_t* parents
-
+  cdef cnp.ndarray[uint32_t, ndim=3] parents = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
   dtype = data.dtype
 
   if dtype == np.float32:
     arr_memviewfloat = data
-    parents = parental_field3d[float](
+    parental_field3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
-    parents = parental_field3d[double](
+    parental_field3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
-    parents = parental_field3d[uint64_t](
+    parental_field3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
-    parents = parental_field3d[uint32_t](
+    parental_field3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
-    parents = parental_field3d[uint16_t](
+    parental_field3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
-    parents = parental_field3d[uint8_t](
+    parental_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src
+      src, &parents[0,0,0]
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  cdef int voxels = sx * sy * sz
-  cdef uint32_t[:] parents_view = <uint32_t[:voxels]>parents
-
-  # This construct is required by python 2.
-  # Python 3 can just do np.frombuffer(vec_view, ...)
-  buf = bytearray(parents_view[:])
-  free(parents)
-  # I don't actually understand why order F works, but it does.
-  return np.frombuffer(buf, dtype=np.uint32).reshape(data.shape, order='F')
+  return parents
 
 def _execute_euclidean_distance_field(data, source, anisotropy):
   cdef uint8_t[:,:,:] arr_memview8
