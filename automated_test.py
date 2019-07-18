@@ -275,7 +275,7 @@ def test_euclidean_distance_field_2d():
 
 def test_dijkstra_parental():
   for dtype in TEST_TYPES:
-    values = np.ones((10,10,1), dtype=dtype)
+    values = np.ones((10,10,1), dtype=dtype, order='F')
     
     parents = dijkstra3d.parental_field(values, (0,0,0))
     path = dijkstra3d.path_from_parents(parents, (3,0,0))
@@ -291,6 +291,7 @@ def test_dijkstra_parental():
     # Symmetric Test
     for _ in range(50):
       values = np.random.randint(1,255, size=(10,10,10))
+      values = np.asfortranarray(values)
 
       start = np.random.randint(0,9, size=(3,))
       target = np.random.randint(0,9, size=(3,))
@@ -305,6 +306,7 @@ def test_dijkstra_parental():
     # Asymmetric Test
     for _ in range(50):
       values = np.random.randint(1,255, size=(11,10,10))
+      values = np.asfortranarray(values)
 
       start = np.random.randint(0,9, size=(3,))
       target = np.random.randint(0,9, size=(3,))

@@ -273,7 +273,7 @@ template <typename T>
 uint32_t* parental_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source
+    const size_t source, uint32_t* parents = NULL
   ) {
 
   const size_t voxels = sx * sy * sz;
@@ -287,7 +287,11 @@ uint32_t* parental_field3d(
   const int yshift = std::log2(sy);
 
   float *dist = new float[voxels]();
-  uint32_t *parents = new uint32_t[voxels]();
+  
+  if (parents == NULL) {
+    parents = new uint32_t[voxels]();
+  }
+
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
@@ -444,7 +448,7 @@ float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
     const size_t sx, const size_t sy, const size_t sz, 
     const float wx, const float wy, const float wz, 
-    const size_t source
+    const size_t source, float* dist = NULL
   ) {
 
   const size_t voxels = sx * sy * sz;
@@ -457,7 +461,10 @@ float* euclidean_distance_field3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
+  if (dist == NULL) {
+    dist = new float[voxels]();
+  }
+
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
