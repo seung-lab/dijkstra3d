@@ -37,6 +37,9 @@ import numpy as np
 
 __VERSION__ = '1.0.1'
 
+class MemoryOrderError(Exception):
+  pass
+
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[uint32_t] dijkstra3d[T](
     T* field, 
@@ -88,7 +91,7 @@ def dijkstra(data, source, target):
   assert dims in (2, 3)
 
   if data.size == 0:
-    return np.zeros(shape=(0,), dtype=np.uint32)
+    return np.zeros(shape=(0,), dtype=np.uint32, order='F')
 
   _validate_coord(data, source)
   _validate_coord(data, target)
@@ -97,6 +100,8 @@ def dijkstra(data, source, target):
     data = data[:, :, np.newaxis]
     source = list(source) + [ 0 ]
     target = list(target) + [ 0 ]
+
+  data = np.asfortranarray(data)
 
   cdef int cols = data.shape[0]
   cdef int rows = data.shape[1]
@@ -140,6 +145,8 @@ def distance_field(data, source):
     source = ( source[0], source[1], 0 )
 
   _validate_coord(data, source)
+
+  data = np.asfortranarray(data)
 
   field = _execute_distance_field(data, source)
   if dims < 3:
@@ -201,6 +208,9 @@ def parental_field(data, source):
 
   _validate_coord(data, source)
 
+  if not np.isfortran(data):
+    raise MemoryOrderError("Input array must be Fortran ordered.")
+
   field = _execute_parental_field(data, source)
   if dims < 3:
     field = np.squeeze(field, axis=2)
@@ -246,6 +256,8 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
     source = ( source[0], source[1], 0 )
 
   _validate_coord(data, source)
+
+  data = np.asfortranarray(data)
 
   field = _execute_euclidean_distance_field(data, source, anisotropy)
   if dims < 3:
