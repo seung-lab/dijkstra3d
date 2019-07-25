@@ -29,8 +29,8 @@
 
 namespace dijkstra {
 
-inline float* fill(float *arr, const float value, const size_t size) {
-  for (size_t i = 0; i < size; i++) {
+inline float* fill(float *arr, const float value, const uint64_t size) {
+  for (uint64_t i = 0; i < size; i++) {
     arr[i] = value;
   }
   return arr;
@@ -51,7 +51,7 @@ inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32
 inline void compute_neighborhood(
   int *neighborhood, 
   const int x, const int y, const int z,
-  const size_t sx, const size_t sy, const size_t sz) {
+  const uint64_t sx, const uint64_t sy, const uint64_t sz) {
 
   for (int i = 0; i < NHOOD_SIZE; i++) {
     neighborhood[i] = 0;
@@ -167,19 +167,19 @@ struct HeapNodeCompare {
 template <typename T>
 std::vector<uint32_t> dijkstra3d(
     T* field, 
-    const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source, const size_t target
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target
   ) {
 
   if (source == target) {
     return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
   }
 
-  const size_t voxels = sx * sy * sz;
-  const size_t sxy = sx * sy;
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
   
-  const libdivide::divider<size_t> fast_sx(sx); 
-  const libdivide::divider<size_t> fast_sxy(sxy); 
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -195,9 +195,9 @@ std::vector<uint32_t> dijkstra3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  uint64_t loc;
   float delta;
-  size_t neighboridx;
+  uint64_t neighboridx;
 
   int x, y, z;
 
@@ -262,8 +262,8 @@ std::vector<uint32_t> dijkstra3d(
 template <typename T>
 std::vector<uint32_t> dijkstra2d(
     T* field, 
-    const size_t sx, const size_t sy, 
-    const size_t source, const size_t target
+    const uint64_t sx, const uint64_t sy, 
+    const uint64_t source, const uint64_t target
   ) {
 
   return dijkstra3d<T>(field, sx, sy, 1, source, target);
@@ -272,15 +272,15 @@ std::vector<uint32_t> dijkstra2d(
 template <typename T>
 uint32_t* parental_field3d(
     T* field, 
-    const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source, uint32_t* parents = NULL
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, uint32_t* parents = NULL
   ) {
 
-  const size_t voxels = sx * sy * sz;
-  const size_t sxy = sx * sy;
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
 
-  const libdivide::divider<size_t> fast_sx(sx); 
-  const libdivide::divider<size_t> fast_sxy(sxy); 
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -300,11 +300,11 @@ uint32_t* parental_field3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  uint64_t loc;
   float delta;
-  size_t neighboridx;
+  uint64_t neighboridx;
 
-  size_t x, y, z;
+  uint64_t x, y, z;
 
   while (!queue.empty()) {
     loc = queue.top().value;
@@ -357,15 +357,15 @@ uint32_t* parental_field3d(
 template <typename T>
 float* distance_field3d(
     T* field, 
-    const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source
   ) {
 
-  const size_t voxels = sx * sy * sz;
-  const size_t sxy = sx * sy;
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
 
-  const libdivide::divider<size_t> fast_sx(sx); 
-  const libdivide::divider<size_t> fast_sxy(sxy); 
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -380,11 +380,11 @@ float* distance_field3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  uint64_t loc;
   float delta;
-  size_t neighboridx;
+  uint64_t neighboridx;
 
-  size_t x, y, z;
+  uint64_t x, y, z;
 
   while (!queue.empty()) {
     loc = queue.top().value;
@@ -446,16 +446,16 @@ inline float _c(const float wa, const float wb, const float wc) {
 
 float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
-    const size_t sx, const size_t sy, const size_t sz, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
     const float wx, const float wy, const float wz, 
-    const size_t source, float* dist = NULL
+    const uint64_t source, float* dist = NULL
   ) {
 
-  const size_t voxels = sx * sy * sz;
-  const size_t sxy = sx * sy;
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
 
-  const libdivide::divider<size_t> fast_sx(sx); 
-  const libdivide::divider<size_t> fast_sxy(sxy); 
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -486,11 +486,11 @@ float* euclidean_distance_field3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  uint64_t loc;
   float new_dist;
-  size_t neighboridx;
+  uint64_t neighboridx;
 
-  size_t x, y, z;
+  uint64_t x, y, z;
 
   while (!queue.empty()) {
     loc = queue.top().value;
