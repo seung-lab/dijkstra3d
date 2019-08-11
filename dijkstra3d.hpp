@@ -259,6 +259,150 @@ std::vector<uint32_t> dijkstra3d(
   return path;
 }
 
+// helper function for bidirectional_dijkstra
+inline std::vector<uint32_t> bidirectional_core(
+    const uint64_t loc, 
+    float *dist, uint32_t* parents, 
+    const int &neighborhood, 
+    std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
+  ) {
+  
+  float delta;
+  uint64_t neighboridx;
+
+  for (int i = 0; i < NHOOD_SIZE; i++) {
+    if (neighborhood[i] == 0) {
+      continue;
+    }
+
+    neighboridx = loc + neighborhood[i];
+    delta = static_cast<float>(field[neighboridx]);
+
+    // Visited nodes are negative and thus the current node
+    // will always be less than as field is filled with non-negative
+    // integers.
+    if (dist[loc] + delta < dist[neighboridx]) { 
+      dist[neighboridx] = dist[loc] + delta;
+      parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+      // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+      // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+      if (neighboridx == target) {
+        goto OUTSIDE;
+      }
+
+      queue.emplace(dist[neighboridx], neighboridx);
+    }
+  }
+
+  dist[loc] *= -1;
+}
+
+template <typename T>
+std::vector<uint32_t> bidirectional_dijkstra3d(
+    T* field, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target
+  ) {
+
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+  
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist_fwd = new float[voxels]();
+  uint32_t *parents_fwd = new uint32_t[voxels]();
+
+  float *dist_rev = new float[voxels]();
+  uint32_t *parents_rev = new uint32_t[voxels]();
+
+  fill(dist_fwd, +INFINITY, voxels);
+  fill(dist_rev, +INFINITY, voxels);
+  dist_fwd[source] = -0;
+  dist_rev[target] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
+  queue_fwd.emplace(0.0, source);
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_rev;
+  queue_rev.emplace(0.0, target);
+
+  uint64_t loc;
+  int x, y, z;
+
+  bool which_queue = 0;
+
+  while (!queue_fwd.empty() && !queue_rev.empty()) {
+    if (which_queue == FALSE) {
+      loc = queue_fwd.top().value;
+      queue_fwd.pop();
+
+      if (dist_rev[loc] < INFINITY) {
+        // we met in the middle
+      }
+      else if (std::signbit(dist_fwd[loc])) {
+        continue;
+      }
+    }
+    else {
+      loc = queue_rev.top().value;
+      queue_rev.pop();
+
+      if (dist_fwd[loc] < INFINITY) {
+        // we met in the middle
+      }
+      if (std::signbit(dist_rev[loc])) {
+        continue;
+      }
+    }
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+
+    if (which_queue == 0) {
+      bidirectional_core(loc, dist_fwd, parents_fwd, neighborhood, queue_fwd);
+    }
+    else {
+      bidirectional_core(loc, dist_rev, parents_rev, neighborhood, queue_rev);
+    }
+  }
+
+  delete []dist_fwd;
+  delete []dist_rev;
+
+  std::vector<uint32_t> path_rev = query_shortest_path(parents_rev, loc);
+  delete [] parents_rev;
+
+  std::vector<uint32_t> path_fwd = query_shortest_path(parents_fwd, loc);
+  delete [] parents_fwd;
+
+  std::reverse(path_rev.begin(), path_rev.end()); 
+  path_fwd.insert(path_fwd.end(), path_rev.begin(), path_rev.end());
+
+  return path_fwd;
+}
+
 template <typename T>
 std::vector<uint32_t> dijkstra2d(
     T* field, 
