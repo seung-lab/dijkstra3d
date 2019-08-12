@@ -260,7 +260,7 @@ std::vector<uint32_t> dijkstra3d(
 }
 
 // helper function for bidirectional_dijkstra
-inline std::vector<uint32_t> bidirectional_core(
+inline void bidirectional_core(
     const uint64_t loc, 
     float *dist, uint32_t* parents, 
     const int &neighborhood, 
@@ -284,13 +284,6 @@ inline std::vector<uint32_t> bidirectional_core(
     if (dist[loc] + delta < dist[neighboridx]) { 
       dist[neighboridx] = dist[loc] + delta;
       parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
-
-      // Dijkstra, Edgar. "Go To Statement Considered Harmful".
-      // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
-      if (neighboridx == target) {
-        goto OUTSIDE;
-      }
-
       queue.emplace(dist[neighboridx], neighboridx);
     }
   }
@@ -349,7 +342,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_fwd.pop();
 
       if (dist_rev[loc] < INFINITY) {
-        // we met in the middle
+        goto OUTSIDE;
       }
       else if (std::signbit(dist_fwd[loc])) {
         continue;
@@ -360,11 +353,15 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_rev.pop();
 
       if (dist_fwd[loc] < INFINITY) {
-        // we met in the middle
+        goto OUTSIDE;
       }
       if (std::signbit(dist_rev[loc])) {
         continue;
       }
+    }
+
+    if (loc == target) {
+      break;
     }
 
     if (power_of_two) {
