@@ -7,9 +7,9 @@ Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxe
 
 ## What Problem does this Package Solve?
 
-This package was developed in the course of exploring TEASAR skeletonization of 3D image volumes (the in-core part is now available in [Kimimaro](https://github.com/seung-lab/kimimaro)). Other commonly available packages implementing Dijkstra used matricies or object graphs as their underlying implementation. In either case, these generic graph packages necessitate explicitly creating the graph's edges and vertices, which turned out to be a significant computational cost compared with the execution time. Additionally, some implementations required memory quadratic in the number of vertices (e.g. an NxN matrix for N nodes). In some cases, a compressed sparse matrix representation was used to remain within memory limits.  
+This package was developed in the course of exploring TEASAR skeletonization of 3D image volumes (now available in [Kimimaro](https://github.com/seung-lab/kimimaro)). Other commonly available packages implementing Dijkstra used matricies or object graphs as their underlying implementation. In either case, these generic graph packages necessitate explicitly creating the graph's edges and vertices, which turned out to be a significant computational cost compared with the search time. Additionally, some implementations required memory quadratic in the number of vertices (e.g. an NxN matrix for N nodes) which becomes prohibitive for large arrays. In some cases, a compressed sparse matrix representation was used to remain within memory limits.  
 
-Neither of these costs are necessary for an image analysis application. The edges between voxels (3D pixels) are regular and implicit in rectangular structure of the image. Additionally, the cost of each edge can be stored a single time instead of 26 times in contiguous uncompressed memory regions for faster performance.  
+Neither of graph construction nor quadratic memory pressure are necessary for an image analysis application. The edges between voxels (3D pixels) are regular and implicit in the rectangular structure of the image. Additionally, the cost of each edge can be stored a single time instead of 26 times in contiguous uncompressed memory regions for faster performance.  
 
 ## Available Dijkstra Variants
 
