@@ -46,6 +46,11 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int sx, int sy, int sz, 
     int source, int target
   )
+  cdef vector[uint32_t] astar_straight_line[T](
+    T* field, 
+    int sx, int sy, int sz, 
+    int source, int target
+  )
   cdef float* distance_field3d[T](
     T* field,
     int sx, int sy, int sz,
@@ -66,7 +71,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* parents, uint32_t target
   ) 
 
-def dijkstra(data, source, target):
+def dijkstra(data, source, target, heuristic='line'):
   """
   Perform dijkstra's shortest path algorithm
   on a 3D image grid. Vertices are voxels and
@@ -83,6 +88,10 @@ def dijkstra(data, source, target):
    Data: Input weights in a 2D or 3D numpy array. 
    source: (x,y,z) coordinate of starting voxel
    target: (x,y,z) coordinate of target voxel
+   heuristic: None or 'line'. If None, execute
+    standard dijkstra's algorithm. If 'line', execute
+    A* search using euclidean distance to target as
+    the heuristic.
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
@@ -107,7 +116,7 @@ def dijkstra(data, source, target):
   cdef int rows = data.shape[1]
   cdef int depth = data.shape[2]
 
-  path = _execute_dijkstra(data, source, target)
+  path = _execute_dijkstra(data, source, target, heuristic)
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def distance_field(data, source):
@@ -297,7 +306,7 @@ def _path_to_point_cloud(path, dims, rows, cols):
 
   return ptlist
 
-def _execute_dijkstra(data, source, target):
+def _execute_dijkstra(data, source, target, heuristic):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -316,48 +325,94 @@ def _execute_dijkstra(data, source, target):
 
   dtype = data.dtype
 
+  if heuristic not in (None, 'line'):
+    raise ValueError("Heuristic must be None or 'line'.")
+
   if dtype == np.float32:
     arr_memviewfloat = data
-    output = dijkstra3d[float](
-      &arr_memviewfloat[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+
+    if heuristic is 'line':
+      output = astar_straight_line[float](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[float](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   elif dtype == np.float64:
     arr_memviewdouble = data
-    output = dijkstra3d[double](
-      &arr_memviewdouble[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+    if heuristic is 'line':
+      output = astar_straight_line[double](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[double](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
-    output = dijkstra3d[uint64_t](
-      &arr_memview64[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+    if heuristic == 'line':
+      output = astar_straight_line[uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
-    output = dijkstra3d[uint32_t](
-      &arr_memview32[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+    if heuristic == 'line':
+      output = astar_straight_line[uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
-    output = dijkstra3d[uint16_t](
-      &arr_memview16[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+    if heuristic == 'line':
+      output = astar_straight_line[uint16_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[uint16_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
-    output = dijkstra3d[uint8_t](
-      &arr_memview8[0,0,0],
-      sx, sy, sz,
-      src, sink
-    )
+    if heuristic == 'line':
+      output = astar_straight_line[uint8_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
+    else:
+      output = dijkstra3d[uint8_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink
+      )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 

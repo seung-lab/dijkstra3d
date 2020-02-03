@@ -228,7 +228,7 @@ std::vector<uint32_t> dijkstra3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -258,6 +258,110 @@ std::vector<uint32_t> dijkstra3d(
 
   return path;
 }
+
+template <typename T>
+std::vector<uint32_t> astar_straight_line(
+    T* field, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target
+  ) {
+
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+  
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  uint32_t *parents = new uint32_t[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
+
+  uint64_t loc;
+  float delta;
+  uint64_t neighboridx;
+
+  int x, y, z;
+  int tx, ty, tz;
+
+  tz = target / fast_sxy;
+  ty = (target - (tz * sxy)) / fast_sx;
+  tx = target - sx * (ty + tz * sy);
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]);
+      delta += static_cast<float>(
+        (tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z) // straight line heuristic
+      );
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+        if (neighboridx == target) {
+          goto OUTSIDE;
+        }
+
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<uint32_t> path = query_shortest_path(parents, target);
+  delete [] parents;
+
+  return path;
+}
+
 
 template <typename T>
 std::vector<uint32_t> dijkstra2d(
