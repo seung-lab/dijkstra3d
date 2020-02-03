@@ -296,6 +296,7 @@ std::vector<uint32_t> astar_straight_line(
 
   int x, y, z;
   int tx, ty, tz;
+  float heuristic_cost;
 
   tz = target / fast_sxy;
   ty = (target - (tz * sxy)) / fast_sx;
@@ -329,9 +330,6 @@ std::vector<uint32_t> astar_straight_line(
 
       neighboridx = loc + neighborhood[i];
       delta = static_cast<float>(field[neighboridx]);
-      delta += static_cast<float>(
-        (tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z) // straight line heuristic
-      );
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -346,7 +344,11 @@ std::vector<uint32_t> astar_straight_line(
           goto OUTSIDE;
         }
 
-        queue.emplace(dist[neighboridx], neighboridx);
+        heuristic_cost = static_cast<float>(
+          (tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z) // straight line heuristic
+        );
+
+        queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
       }
     }
 
