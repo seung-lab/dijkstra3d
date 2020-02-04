@@ -295,6 +295,12 @@ def test_dijkstra_parental(dtype, heuristic):
     [3,0,0],
   ]))
 
+  def path_len(path, values):
+    length = 0
+    for p in path:
+      length += values[tuple(p)]
+    return length
+
   # Symmetric Test
   for _ in range(50):
     values = np.random.randint(1,255, size=(10,10,10))
@@ -308,7 +314,14 @@ def test_dijkstra_parental(dtype, heuristic):
 
     path_orig = dijkstra3d.dijkstra(values, start, target, heuristic=heuristic)
 
-    assert np.all(path == path_orig)
+    print(start, target)
+    print(path)
+    print(path_orig)
+
+    assert path_len(path, values) == path_len(path_orig, values)
+
+    if heuristic is None:
+      assert np.all(path == path_orig)
 
   # Asymmetric Test
   for _ in range(50):
@@ -327,4 +340,7 @@ def test_dijkstra_parental(dtype, heuristic):
     print(path)
     print(path_orig)
 
-    assert np.all(path == path_orig)
+    assert path_len(path, values) == path_len(path_orig, values)
+
+    if heuristic is None:
+      assert np.all(path == path_orig)
