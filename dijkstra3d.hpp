@@ -344,9 +344,12 @@ std::vector<uint32_t> astar_straight_line(
           goto OUTSIDE;
         }
 
-        heuristic_cost = sqrt(static_cast<float>(
-          (tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z) // straight line heuristic
-        ));
+        // Use Chebychev heuristic instead of Euclidean 
+        // because we can only move voxel by voxel rather 
+        // than at any angle.
+        heuristic_cost = static_cast<float>(
+          std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
+        );
 
         queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
       }
