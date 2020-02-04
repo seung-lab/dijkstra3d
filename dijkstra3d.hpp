@@ -344,9 +344,9 @@ std::vector<uint32_t> astar_straight_line(
           goto OUTSIDE;
         }
 
-        heuristic_cost = static_cast<float>(
+        heuristic_cost = sqrt(static_cast<float>(
           (tx - x) * (tx - x) + (ty - y) * (ty - y) + (tz - z) * (tz - z) // straight line heuristic
-        );
+        ));
 
         queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
       }
