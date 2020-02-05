@@ -285,6 +285,13 @@ std::vector<uint32_t> astar_straight_line(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
+  float min_field_value = static_cast<float>(field[0]);
+  for (uint64_t i = 0; i < voxels; i++) {
+    if (min_field_value > static_cast<float>(field[i])) {
+      min_field_value = static_cast<float>(field[i]);
+    }
+  }
+
   int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
@@ -351,7 +358,7 @@ std::vector<uint32_t> astar_straight_line(
           std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
         );
 
-        queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
+        queue.emplace(dist[neighboridx] + min_field_value * heuristic_cost, neighboridx);
       }
     }
 
