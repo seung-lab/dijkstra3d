@@ -30,7 +30,22 @@ def test_dijkstra2d_10x10(dtype, heuristic):
     [1,1,0],
     [2,1,0],
     [3,0,0],
-  ]))
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,1,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) 
 
   path = dijkstra3d.dijkstra(values, (0,0,0), (5,5,0), heuristic=heuristic)
 
