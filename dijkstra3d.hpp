@@ -356,14 +356,19 @@ std::vector<uint32_t> astar_straight_line(
           goto OUTSIDE;
         }
 
-        // Use Chebychev heuristic instead of Euclidean 
-        // because we can only move voxel by voxel rather 
-        // than at any angle.
-        heuristic_cost = static_cast<float>(
-          std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
-        );
+        if (dist[neighboridx] == 0) {
+          heuristic_cost = 0;
+        }
+        else {
+          // Use Chebychev heuristic instead of Euclidean 
+          // because we can only move voxel by voxel rather 
+          // than at any angle.
+          heuristic_cost = normalizer * static_cast<float>(
+            std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
+          );
+        }
 
-        queue.emplace(dist[neighboridx] + normalizer * heuristic_cost, neighboridx);
+        queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
       }
     }
 
