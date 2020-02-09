@@ -260,10 +260,11 @@ std::vector<uint32_t> dijkstra3d(
 }
 
 // helper function for bidirectional_dijkstra
+template <typename T>
 inline void bidirectional_core(
     const uint64_t loc, 
-    float *dist, uint32_t* parents, 
-    const int &neighborhood, 
+    T* field, float *dist, uint32_t* parents, 
+    const int (&neighborhood)[NHOOD_SIZE], 
     std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
   ) {
   
@@ -334,10 +335,12 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   uint64_t loc;
   int x, y, z;
 
-  bool which_queue = 0;
+  bool forward = false;
 
   while (!queue_fwd.empty() && !queue_rev.empty()) {
-    if (which_queue == FALSE) {
+    forward = !forward;
+
+    if (forward) {
       loc = queue_fwd.top().value;
       queue_fwd.pop();
 
@@ -377,14 +380,15 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
-    if (which_queue == 0) {
-      bidirectional_core(loc, dist_fwd, parents_fwd, neighborhood, queue_fwd);
+    if (forward) {
+      bidirectional_core<T>(loc, field, dist_fwd, parents_fwd, neighborhood, queue_fwd);
     }
     else {
-      bidirectional_core(loc, dist_rev, parents_rev, neighborhood, queue_rev);
+      bidirectional_core<T>(loc, field, dist_rev, parents_rev, neighborhood, queue_rev);
     }
   }
 
+  OUTSIDE:
   delete []dist_fwd;
   delete []dist_rev;
 
