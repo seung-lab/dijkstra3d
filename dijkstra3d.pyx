@@ -19,7 +19,7 @@ Contains:
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August-November 2018
+Date: August 2018-February 2020
 """
 
 from libc.stdlib cimport calloc, free
@@ -46,6 +46,11 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int sx, int sy, int sz, 
     int source, int target
   )
+  cdef vector[uint32_t] bidirectional_dijkstra3d[T](
+    T* field, 
+    int sx, int sy, int sz, 
+    int source, int target
+  )
   cdef float* distance_field3d[T](
     T* field,
     int sx, int sy, int sz,
@@ -66,7 +71,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* parents, uint32_t target
   ) 
 
-def dijkstra(data, source, target):
+def dijkstra(data, source, target, bidirectional=False):
   """
   Perform dijkstra's shortest path algorithm
   on a 3D image grid. Vertices are voxels and
@@ -107,7 +112,10 @@ def dijkstra(data, source, target):
   cdef int rows = data.shape[1]
   cdef int depth = data.shape[2]
 
-  path = _execute_dijkstra(data, source, target)
+  if bidirectional:
+    path = _execute_bidirectional_dijkstra(data, source, target)
+  else:
+    path = _execute_dijkstra(data, source, target)
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def distance_field(data, source):
@@ -369,6 +377,77 @@ def _execute_dijkstra(data, source, target):
   buf = bytearray(vec_view[:])
   return np.frombuffer(buf, dtype=np.uint32)[::-1]
 
+def _execute_bidirectional_dijkstra(data, source, target):
+  cdef uint8_t[:,:,:] arr_memview8
+  cdef uint16_t[:,:,:] arr_memview16
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef uint64_t[:,:,:] arr_memview64
+  cdef float[:,:,:] arr_memviewfloat
+  cdef double[:,:,:] arr_memviewdouble
+
+  cdef int sx = data.shape[0]
+  cdef int sy = data.shape[1]
+  cdef int sz = data.shape[2]
+
+  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+  cdef int sink = target[0] + sx * (target[1] + sy * target[2])
+
+  cdef vector[uint32_t] output
+
+  dtype = data.dtype
+
+  if dtype == np.float32:
+    arr_memviewfloat = data
+    output = bidirectional_dijkstra3d[float](
+      &arr_memviewfloat[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  elif dtype == np.float64:
+    arr_memviewdouble = data
+    output = bidirectional_dijkstra3d[double](
+      &arr_memviewdouble[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.uint64)
+    output = bidirectional_dijkstra3d[uint64_t](
+      &arr_memview64[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  elif dtype in (np.int32, np.uint32):
+    arr_memview32 = data.astype(np.uint32)
+    output = bidirectional_dijkstra3d[uint32_t](
+      &arr_memview32[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.uint16)
+    output = bidirectional_dijkstra3d[uint16_t](
+      &arr_memview16[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  elif dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.uint8)
+    output = bidirectional_dijkstra3d[uint8_t](
+      &arr_memview8[0,0,0],
+      sx, sy, sz,
+      src, sink
+    )
+  else:
+    raise TypeError("Type {} not currently supported.".format(dtype))
+
+  cdef uint32_t* output_ptr = <uint32_t*>&output[0]
+  cdef uint32_t[:] vec_view = <uint32_t[:output.size()]>output_ptr
+
+  # This construct is required by python 2.
+  # Python 3 can just do np.frombuffer(vec_view, ...)
+  buf = bytearray(vec_view[:])
+  return np.frombuffer(buf, dtype=np.uint32)[::-1]
 
 def _execute_distance_field(data, source):
   cdef uint8_t[:,:,:] arr_memview8
