@@ -447,7 +447,7 @@ def _execute_bidirectional_dijkstra(data, source, target):
   # This construct is required by python 2.
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(vec_view[:])
-  return np.frombuffer(buf, dtype=np.uint32)[::-1]
+  return np.frombuffer(buf, dtype=np.uint32)
 
 def _execute_distance_field(data, source):
   cdef uint8_t[:,:,:] arr_memview8

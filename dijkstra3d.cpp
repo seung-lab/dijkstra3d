@@ -8926,7 +8926,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_bidirectional_dijkstra(CYTHON_
  *   # This construct is required by python 2.
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])             # <<<<<<<<<<<<<<
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+ *   return np.frombuffer(buf, dtype=np.uint32)
  * 
  */
   __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_vec_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 449, __pyx_L1_error)
@@ -8940,7 +8940,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_bidirectional_dijkstra(CYTHON_
   /* "dijkstra3d.pyx":450
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
  *   buf = bytearray(vec_view[:])
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
+ *   return np.frombuffer(buf, dtype=np.uint32)             # <<<<<<<<<<<<<<
  * 
  * def _execute_distance_field(data, source):
  */
@@ -8969,11 +8969,8 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_bidirectional_dijkstra(CYTHON_
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyObject_GetItem(__pyx_t_2, __pyx_slice__3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 450, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_r = __pyx_t_6;
-  __pyx_t_6 = 0;
+  __pyx_r = __pyx_t_2;
+  __pyx_t_2 = 0;
   goto __pyx_L0;
 
   /* "dijkstra3d.pyx":380
@@ -9018,7 +9015,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_bidirectional_dijkstra(CYTHON_
 }
 
 /* "dijkstra3d.pyx":452
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+ *   return np.frombuffer(buf, dtype=np.uint32)
  * 
  * def _execute_distance_field(data, source):             # <<<<<<<<<<<<<<
  *   cdef uint8_t[:,:,:] arr_memview8
@@ -10040,7 +10037,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_distance_field(CYTHON_UNUSED P
   goto __pyx_L0;
 
   /* "dijkstra3d.pyx":452
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+ *   return np.frombuffer(buf, dtype=np.uint32)
  * 
  * def _execute_distance_field(data, source):             # <<<<<<<<<<<<<<
  *   cdef uint8_t[:,:,:] arr_memview8
@@ -29136,17 +29133,6 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_slice__3);
   __Pyx_GIVEREF(__pyx_slice__3);
 
-  /* "dijkstra3d.pyx":450
- *   # Python 3 can just do np.frombuffer(vec_view, ...)
- *   buf = bytearray(vec_view[:])
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]             # <<<<<<<<<<<<<<
- * 
- * def _execute_distance_field(data, source):
- */
-  __pyx_slice__3 = PySlice_New(Py_None, Py_None, __pyx_int_neg_1); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 450, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_slice__3);
-  __Pyx_GIVEREF(__pyx_slice__3);
-
   /* "../../../Library/Python/2.7/site-packages/Cython/Includes/numpy/__init__.pxd":272
  *             if ((flags & pybuf.PyBUF_C_CONTIGUOUS == pybuf.PyBUF_C_CONTIGUOUS)
  *                 and not PyArray_CHKFLAGS(self, NPY_ARRAY_C_CONTIGUOUS)):
@@ -29567,7 +29553,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__51 = (PyObject*)__Pyx_PyCode_New(3, 0, 19, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__50, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_dijkstra3d_pyx, __pyx_n_s_execute_bidirectional_dijkstra, 380, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__51)) __PYX_ERR(0, 380, __pyx_L1_error)
 
   /* "dijkstra3d.pyx":452
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+ *   return np.frombuffer(buf, dtype=np.uint32)
  * 
  * def _execute_distance_field(data, source):             # <<<<<<<<<<<<<<
  *   cdef uint8_t[:,:,:] arr_memview8
@@ -30223,7 +30209,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "dijkstra3d.pyx":452
- *   return np.frombuffer(buf, dtype=np.uint32)[::-1]
+ *   return np.frombuffer(buf, dtype=np.uint32)
  * 
  * def _execute_distance_field(data, source):             # <<<<<<<<<<<<<<
  *   cdef uint8_t[:,:,:] arr_memview8
