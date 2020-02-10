@@ -363,7 +363,10 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       }
     }
 
-    if (loc == target) {
+    if (forward && loc == target) {
+      break;
+    }
+    else if (!forward && loc == source) {
       break;
     }
 
