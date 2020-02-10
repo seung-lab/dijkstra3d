@@ -336,6 +336,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   int x, y, z;
 
   bool forward = false;
+  short int victory_condition = 0; 
 
   while (!queue_fwd.empty() && !queue_rev.empty()) {
     forward = !forward;
@@ -345,6 +346,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_fwd.pop();
 
       if (dist_rev[loc] < INFINITY) {
+        victory_condition = 0; // meet in middle
         goto OUTSIDE;
       }
       else if (std::signbit(dist_fwd[loc])) {
@@ -356,6 +358,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_rev.pop();
 
       if (dist_fwd[loc] < INFINITY) {
+        victory_condition = 0; // meet in middle
         goto OUTSIDE;
       }
       if (std::signbit(dist_rev[loc])) {
@@ -364,9 +367,11 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
     }
 
     if (forward && loc == target) {
+      victory_condition = 1; // found target in forward pass
       break;
     }
     else if (!forward && loc == source) {
+      victory_condition = 2; // found source in backward pass
       break;
     }
 
@@ -395,16 +400,27 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   delete []dist_fwd;
   delete []dist_rev;
 
-  std::vector<uint32_t> path_rev = query_shortest_path(parents_rev, loc);
+  std::vector<uint32_t> path, path_fwd, path_rev;
+
+  if (victory_condition == 0) {
+    path_rev = query_shortest_path(parents_rev, loc);
+    path_fwd = query_shortest_path(parents_fwd, loc);
+    std::reverse(path_fwd.begin(), path_fwd.end());
+    path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+    path = path_fwd;
+  }
+  else if (victory_condition == 1) {
+    path = query_shortest_path(parents_fwd, loc);
+    std::reverse(path.begin(), path.end());
+  }
+  else if (victory_condition == 2) {
+    path = query_shortest_path(parents_rev, loc);
+  }
+
+  delete [] parents_fwd;
   delete [] parents_rev;
 
-  std::vector<uint32_t> path_fwd = query_shortest_path(parents_fwd, loc);
-  delete [] parents_fwd;
-
-  std::reverse(path_rev.begin(), path_rev.end()); 
-  path_fwd.insert(path_fwd.end(), path_rev.begin(), path_rev.end());
-
-  return path_fwd;
+  return path;
 }
 
 template <typename T>
