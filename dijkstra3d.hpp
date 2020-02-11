@@ -36,7 +36,7 @@ inline float* fill(float *arr, const float value, const uint64_t size) {
   return arr;
 }
 
-inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32_t target) {
+inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const uint32_t target) {
   std::vector<uint32_t> path;
   uint32_t loc = target;
   while (parents[loc]) {
@@ -332,7 +332,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_rev;
   queue_rev.emplace(0.0, target);
 
-  uint64_t loc;
+  uint64_t loc = source;
   int x, y, z;
 
   bool forward = false;
@@ -345,7 +345,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_fwd.pop();
 
       if (dist_rev[loc] < INFINITY) {
-        goto OUTSIDE;
+        break;
       }
       else if (std::signbit(dist_fwd[loc])) {
         continue;
@@ -356,9 +356,9 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_rev.pop();
 
       if (dist_fwd[loc] < INFINITY) {
-        goto OUTSIDE;
+        break;
       }
-      if (std::signbit(dist_rev[loc])) {
+      else if (std::signbit(dist_rev[loc])) {
         continue;
       }
     }
@@ -391,7 +391,6 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
     }
   }
 
-  OUTSIDE:
   delete [] dist_fwd;
   delete [] dist_rev;
 
@@ -402,9 +401,9 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   std::vector<uint32_t> path_fwd, path_rev;
 
-  path_rev = query_shortest_path(parents_rev, loc);
+  path_rev = query_shortest_path(parents_rev, loc_rev);
   delete [] parents_rev;
-  path_fwd = query_shortest_path(parents_fwd, loc);
+  path_fwd = query_shortest_path(parents_fwd, loc_fwd);
   delete [] parents_fwd;
 
   std::reverse(path_fwd.begin(), path_fwd.end());
