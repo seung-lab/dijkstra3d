@@ -401,9 +401,9 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   std::vector<uint32_t> path_fwd, path_rev;
 
-  path_rev = query_shortest_path(parents_rev, loc_rev);
+  path_rev = query_shortest_path(parents_rev, loc);
   delete [] parents_rev;
-  path_fwd = query_shortest_path(parents_fwd, loc_fwd);
+  path_fwd = query_shortest_path(parents_fwd, loc);
   delete [] parents_fwd;
 
   std::reverse(path_fwd.begin(), path_fwd.end());
