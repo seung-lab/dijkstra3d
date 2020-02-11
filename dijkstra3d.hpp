@@ -14,6 +14,7 @@
  */
 
 #include <algorithm>
+#include <functional>
 #include <cmath>
 #include <cstdio>
 #include <cstdint>
@@ -321,21 +322,27 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   fill(dist_fwd, +INFINITY, voxels);
   fill(dist_rev, +INFINITY, voxels);
-  dist_fwd[source] = -0;
-  dist_rev[target] = -0;
+  dist_fwd[source] = 0;
+  dist_rev[target] = 0;
 
   int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
-  queue_fwd.emplace(0.0, source);
+  queue_fwd.emplace(dist_fwd[source], source);
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_rev;
-  queue_rev.emplace(0.0, target);
+  queue_rev.emplace(dist_rev[target], target);
 
   uint64_t loc = source;
+  uint64_t final_loc = source;
   int x, y, z;
 
   bool forward = false;
+  float cost = INFINITY;
+
+  std::function<float(uint64_t)> costfn = [field, target, dist_fwd, dist_rev](uint64_t loc) { 
+    return abs(dist_rev[loc]) + abs(dist_fwd[loc]) + static_cast<float>(field[target]) - static_cast<float>(field[loc]);
+  };
 
   while (!queue_fwd.empty() && !queue_rev.empty()) {
     forward = !forward;
@@ -345,7 +352,13 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_fwd.pop();
 
       if (dist_rev[loc] < INFINITY) {
-        break;
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
       }
       else if (std::signbit(dist_fwd[loc])) {
         continue;
@@ -356,18 +369,17 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       queue_rev.pop();
 
       if (dist_fwd[loc] < INFINITY) {
-        break;
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
       }
       else if (std::signbit(dist_rev[loc])) {
         continue;
       }
-    }
-
-    if (forward && loc == target) {
-      break;
-    }
-    else if (!forward && loc == source) {
-      break;
     }
 
     if (power_of_two) {
@@ -401,9 +413,9 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   std::vector<uint32_t> path_fwd, path_rev;
 
-  path_rev = query_shortest_path(parents_rev, loc);
+  path_rev = query_shortest_path(parents_rev, final_loc);
   delete [] parents_rev;
-  path_fwd = query_shortest_path(parents_fwd, loc);
+  path_fwd = query_shortest_path(parents_fwd, final_loc);
   delete [] parents_fwd;
 
   std::reverse(path_fwd.begin(), path_fwd.end());
