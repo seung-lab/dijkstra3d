@@ -14,6 +14,7 @@
  */
 
 #include <algorithm>
+#include <functional>
 #include <cmath>
 #include <cstdio>
 #include <cstdint>
@@ -36,7 +37,7 @@ inline float* fill(float *arr, const float value, const uint64_t size) {
   return arr;
 }
 
-inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32_t target) {
+inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const uint32_t target) {
   std::vector<uint32_t> path;
   uint32_t loc = target;
   while (parents[loc]) {
@@ -257,6 +258,170 @@ std::vector<uint32_t> dijkstra3d(
   delete [] parents;
 
   return path;
+}
+
+// helper function for bidirectional_dijkstra
+template <typename T>
+inline void bidirectional_core(
+    const uint64_t loc, 
+    T* field, float *dist, uint32_t* parents, 
+    const int (&neighborhood)[NHOOD_SIZE], 
+    std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
+  ) {
+  
+  float delta;
+  uint64_t neighboridx;
+
+  for (int i = 0; i < NHOOD_SIZE; i++) {
+    if (neighborhood[i] == 0) {
+      continue;
+    }
+
+    neighboridx = loc + neighborhood[i];
+    delta = static_cast<float>(field[neighboridx]);
+
+    // Visited nodes are negative and thus the current node
+    // will always be less than as field is filled with non-negative
+    // integers.
+    if (dist[loc] + delta < dist[neighboridx]) { 
+      dist[neighboridx] = dist[loc] + delta;
+      parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+      queue.emplace(dist[neighboridx], neighboridx);
+    }
+  }
+
+  dist[loc] *= -1;
+}
+
+template <typename T>
+std::vector<uint32_t> bidirectional_dijkstra3d(
+    T* field, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target
+  ) {
+
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+  
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist_fwd = new float[voxels]();
+  uint32_t *parents_fwd = new uint32_t[voxels]();
+
+  float *dist_rev = new float[voxels]();
+  uint32_t *parents_rev = new uint32_t[voxels]();
+
+  fill(dist_fwd, +INFINITY, voxels);
+  fill(dist_rev, +INFINITY, voxels);
+  dist_fwd[source] = 0;
+  dist_rev[target] = 0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
+  queue_fwd.emplace(dist_fwd[source], source);
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_rev;
+  queue_rev.emplace(dist_rev[target], target);
+
+  uint64_t loc = source;
+  uint64_t final_loc = source;
+  int x, y, z;
+
+  bool forward = false;
+  float cost = INFINITY;
+
+  std::function<float(uint64_t)> costfn = [field, target, dist_fwd, dist_rev](uint64_t loc) { 
+    return abs(dist_rev[loc]) + abs(dist_fwd[loc]) + static_cast<float>(field[target]) - static_cast<float>(field[loc]);
+  };
+
+  while (!queue_fwd.empty() && !queue_rev.empty()) {
+    forward = !forward;
+
+    if (forward) {
+      loc = queue_fwd.top().value;
+      queue_fwd.pop();
+
+      if (dist_rev[loc] < INFINITY) {
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
+      }
+      else if (std::signbit(dist_fwd[loc])) {
+        continue;
+      }
+    }
+    else {
+      loc = queue_rev.top().value;
+      queue_rev.pop();
+
+      if (dist_fwd[loc] < INFINITY) {
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
+      }
+      else if (std::signbit(dist_rev[loc])) {
+        continue;
+      }
+    }
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+
+    if (forward) {
+      bidirectional_core<T>(loc, field, dist_fwd, parents_fwd, neighborhood, queue_fwd);
+    }
+    else {
+      bidirectional_core<T>(loc, field, dist_rev, parents_rev, neighborhood, queue_rev);
+    }
+  }
+
+  delete [] dist_fwd;
+  delete [] dist_rev;
+
+  // We will always have a "meet in middle" victory condition
+  // because we set it up so if fwd finds target or rev finds
+  // source, that will count as "meeting in the middle" because
+  // those points were initialized.
+
+  std::vector<uint32_t> path_fwd, path_rev;
+
+  path_rev = query_shortest_path(parents_rev, final_loc);
+  delete [] parents_rev;
+  path_fwd = query_shortest_path(parents_fwd, final_loc);
+  delete [] parents_fwd;
+
+  std::reverse(path_fwd.begin(), path_fwd.end());
+  path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+
+  return path_fwd;
 }
 
 template <typename T>

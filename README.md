@@ -15,7 +15,7 @@ Neither of graph construction nor quadratic memory pressure are necessary for an
 
 The following variants are available in 2D and 3D:
 
-- **dijkstra** - Shortest path between source and target. Early termination on finding the target. 
+- **dijkstra** - Shortest path between source and target. Early termination on finding the target. Bidirectional version available.
 - **parental_field / query_shortest_path** - Compute shortest path between source and all targets. Use query_shortest_path to make repeated queries against the result set.  
 - **euclidean_distance_field** - Given a boolean label field and a source vertex, compute the anisotropic euclidean distance from the source to all labeled vertices.
 - **distance_field** - Given a numerical field, for each directed edge from adjacent voxels A and B, use B as the edge weight. In this fashion, compute the distance from a source point for all finite voxels.
@@ -28,7 +28,11 @@ import dijkstra3d
 import numpy as np
 
 field = np.ones((512, 512, 512), dtype=np.int32)
-path = dijkstra3d.dijkstra(field, (0,0,0), (511, 511, 511)) # terminates early
+source = (0,0,0)
+target = (511, 511, 511)
+
+path = dijkstra3d.dijkstra(field, source, target) # terminates early
+path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # 2x memory usage, faster algorithm
 print(path.shape)
 
 parents = dijkstra3d.parental_field(field, source=(0,0,0))
@@ -53,6 +57,11 @@ int source = 0 + 512 * 5 + 512 * 512 * 3; // coordinate <0, 5, 3>
 int target = 128 + 512 * 128 + 512 * 512 * 128; // coordinate <128, 128, 128>
 
 vector<unsigned int> path = dijkstra::dijkstra3d<float>(
+  labels, /*sx=*/512, /*sy=*/512, /*sz=*/512,
+  source, target
+);
+
+vector<unsigned int> path = dijkstra::bidirectional_dijkstra3d<float>(
   labels, /*sx=*/512, /*sy=*/512, /*sz=*/512,
   source, target
 );
