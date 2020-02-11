@@ -119,10 +119,10 @@ def test_bidirectional():
     [x, x, x, x, x, x, x, x, x, x],
     [x, x, x, x, x, x, x, x, x, x],
     [x, x, x, x, x, x, x, x, x, x],
-    [x, 1, x, x, x, 5, x, x, x, x],
-    [x, x, 1, x, 5, x, 5, x, x, x],
-    [x, x, x, 1, 7, 7, 1, x, x, x],
-    [x, x, x, x, x, x, x, 1, x, x],
+    [x, 1, x, x, x, 6, x, x, x, x],
+    [x, x, 1, x, 4, x, 7, x, x, x], # two paths: cost 22, length 8
+    [x, x, x, 1, 8, x, 1, x, x, x], #            cost 23, length 9
+    [x, x, x, x, x, 8, x, 1, x, x],
     [x, x, x, x, x, x, x, x, 1, x],
     [x, x, x, x, x, x, x, x, x, x],
     [x, x, x, x, x, x, x, x, x, x],
@@ -137,12 +137,13 @@ def test_bidirectional():
 
   assert np.all(path_reg == path_bi)
 
+  assert len(path_bi) == 8
   assert np.all(path_bi == [
     [3,1],
     [4,2],
     [5,3],
     [5,4], # critical
-    [5,5], 
+    [6,5], 
     [5,6],
     [6,7],
     [7,8]
