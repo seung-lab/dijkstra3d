@@ -128,7 +128,6 @@ def test_bidirectional():
     [x, x, x, x, x, x, x, x, x, x],
   ])
 
-
   path_reg = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=False)
   path_bi = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=True)
 
@@ -149,6 +148,47 @@ def test_bidirectional():
     [7,8]
   ])
 
+  values = np.array([
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, 6, 6, 6, 6, x, x, x],
+    [1, 1, 1, x, x, x, x, 6, 6, 6], # 42, 45
+    [x, x, 9, x, x, x, 7, x, x, x],
+    [x, x, 1, x, x, x, 1, x, x, x],
+    [x, x, 1, x, x, x, 1, x, x, x],
+    [x, x, 1, 1, 1, 1, 1, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+  ])
+
+  path_reg = dijkstra3d.dijkstra(np.asfortranarray(values), (4,0), (4, 9), bidirectional=False)
+  path_bi = dijkstra3d.dijkstra(np.asfortranarray(values), (4,0), (4, 9), bidirectional=True)
+
+  print(path_reg)
+  print(path_bi)
+
+  assert np.all(path_reg == path_bi)
+
+  assert len(path_bi) == 14
+  assert np.all(path_bi == [
+    [4,0],
+    [4,1],
+    # [4,2],
+    [5,2], 
+    [6,2], 
+    [7,2],
+    # [8,2],
+    [8,3],
+    [8,4],
+    [8,5],
+    # [8,6],
+    [7,6],
+    [6,6],
+    [5,6],
+    [4,7],
+    [4,8],
+    [4,9]
+  ])
 
 
 
