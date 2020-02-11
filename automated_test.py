@@ -113,6 +113,44 @@ def test_dijkstra3d_3x3x3(bidirectional, dtype):
     [0,0,0]
   ]))
 
+def test_bidirectional():
+  x = 20000
+  values = np.array([
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, 1, x, x, x, 5, x, x, x, x],
+    [x, x, 1, x, 5, x, 5, x, x, x],
+    [x, x, x, 1, 7, 7, 1, x, x, x],
+    [x, x, x, x, x, x, x, 1, x, x],
+    [x, x, x, x, x, x, x, x, 1, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+  ])
+
+
+  path_reg = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=False)
+  path_bi = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=True)
+
+  print(path_reg)
+  print(path_bi)
+
+  assert np.all(path_reg == path_bi)
+
+  assert np.all(path_bi == [
+    [3,1],
+    [4,2],
+    [5,3],
+    [5,4], # critical
+    [5,5], 
+    [5,6],
+    [6,7],
+    [7,8]
+  ])
+
+
+
+
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 def test_dijkstra_2d_loop(bidirectional):
   x = 20000
