@@ -109,12 +109,26 @@ python setup.py develop
 
 ## Performance
 
-On a field of ones from the bottom left corner to the top right corner of a 512x512x512 float32 image, it takes about 41 seconds, for a performance rating of about 3 MVx/sec on a 3.7 GHz Intel i7-4920K CPU. This test forces the algorithm to process nearly all of the volume (dijkstra aborts early when the target is found).
+I ran the algorithm on a field of ones from the bottom left corner to the top right corner of a 512x512x512 int8 image using a 3.7 GHz Intel i7-4920K CPU. Unidirectional search takes about 39.5 seconds (3.4 MVx/sec) with a maximum memory usage of about 1300 MB. In the unidirectional case, this test forces the algorithm to process nearly all of the volume (dijkstra aborts early when the target is found). In the bidirectional case, the volume is processed in about 11.5 seconds (11.7 MVx/sec) with a peak memory usage of about 2300 MB.
+
+Theoretical unidirectional memory allocation breakdown: 128 MB source image, 512 MB distance field, 512 MB parents field (1152 MB). Theoretical bidirectional memory allocation breakdown: 128 MB source image, 2x 512 distance field, 2x 512 MB parental field (2176 MB).
 
 <p style="font-style: italics;" align="center">
-<img height=384 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/dijkstra3d.png" alt="A memory benchmark of a 512x512x512 field of ones run.." /><br>
-Fig. 1: A benchmark of dijkstra.dijkstra run on a 512<sup>3</sup> voxel field of ones from bottom left source to top right target. Allocation breakdown: 512 MB source image, 512 MB distance field, 512 MB parents field.
+<img height=384 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/dijkstra3d.png" alt="Fig. 1: A benchmark of dijkstra.dijkstra run on a 512^3 voxel field of ones from bottom left source to top right target. (black) bidirectional search (blue) unidirectional search." /><br>
+Fig. 1: A benchmark of dijkstra.dijkstra run on a 512<sup>3</sup> voxel field of ones from bottom left source to top right target. (black) bidirectional search (blue) unidirectional search.
 </p>
+
+```python 
+import numpy as np
+import time
+import dijkstra3d
+
+field = np.ones((512,512,512), order='F', dtype=np.int8)
+
+s = time.time()
+path = dijkstra3d.dijkstra(x, source=(0,0,0), target=(511, 511, 511), bidirectional=True) # or False 
+print(time.time() - s)
+```
 
 
 ### What is that pairing_heap.hpp?
