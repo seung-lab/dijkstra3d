@@ -534,14 +534,18 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
 
         xyzfn(neighboridx);
 
-        // Use Chebychev heuristic instead of Euclidean 
-        // because we can only move voxel by voxel rather 
-        // than at any angle.
-        heuristic_cost = normalizer * static_cast<float>(
-          std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
-        );
+        if (connectivity == 6) { // manhattan (L_1)
+          heuristic_cost = static_cast<float>(
+            abs(tx - x) + abs(ty - y) + abs(tz - z)
+          );
+        }
+        else { // chebychev (L_inf)
+          heuristic_cost = static_cast<float>(
+            std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
+          );
+        }
 
-        queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
+        queue.emplace(dist[neighboridx] + normalizer * heuristic_cost, neighboridx);
       }
     }
 
