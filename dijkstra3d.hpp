@@ -201,7 +201,7 @@ std::vector<uint32_t> dijkstra3d(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
-  int* neighborhood = new int[connectivity]();
+  int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
@@ -263,7 +263,6 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
-  delete [] neighborhood;
 
   std::vector<uint32_t> path = query_shortest_path(parents, target);
   delete [] parents;
@@ -337,7 +336,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   dist_fwd[source] = 0;
   dist_rev[target] = 0;
 
-  int* neighborhood = new int[connectivity]();
+  int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
   queue_fwd.emplace(dist_fwd[source], source);
@@ -425,7 +424,6 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   delete [] dist_fwd;
   delete [] dist_rev;
-  delete [] neighborhood;
 
   // We will always have a "meet in middle" victory condition
   // because we set it up so if fwd finds target or rev finds
