@@ -37,19 +37,18 @@ import numpy as np
 
 __VERSION__ = '1.2.0'
 
-class MemoryOrderError(Exception):
-  pass
-
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[uint32_t] dijkstra3d[T](
     T* field, 
     int sx, int sy, int sz, 
-    int source, int target
+    int source, int target,
+    int connectivity
   )
   cdef vector[uint32_t] bidirectional_dijkstra3d[T](
     T* field, 
     int sx, int sy, int sz, 
-    int source, int target
+    int source, int target,
+    int connectivity
   )
   cdef float* distance_field3d[T](
     T* field,
@@ -59,7 +58,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef uint32_t* parental_field3d[T](
     T* field, 
     int sx, int sy, int sz, 
-    int source, uint32_t* parents
+    int source, uint32_t* parents,
+    int connectivity
   )
   cdef float* euclidean_distance_field3d(
     uint8_t* field,
@@ -71,7 +71,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* parents, uint32_t target
   ) 
 
-def dijkstra(data, source, target, bidirectional=False):
+def dijkstra(data, source, target, bidirectional=False, connectivity=26):
   """
   Perform dijkstra's shortest path algorithm
   on a 3D image grid. Vertices are voxels and
@@ -88,12 +88,23 @@ def dijkstra(data, source, target, bidirectional=False):
    Data: Input weights in a 2D or 3D numpy array. 
    source: (x,y,z) coordinate of starting voxel
    target: (x,y,z) coordinate of target voxel
+   bidirectional: If True, use more memory but conduct
+    a bidirectional search, which has the potential to be 
+    much faster.
+   connectivity: 6 (faces), 18 (faces + edges), and 
+    26 (faces + edges + corners) voxel graph connectivities 
+    are supported.
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
   """
   dims = len(data.shape)
   assert dims in (2, 3)
+
+  if connectivity not in (6,18,26):
+    raise ValueError(
+      "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
+    )
 
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.uint32, order='F')
@@ -113,9 +124,9 @@ def dijkstra(data, source, target, bidirectional=False):
   cdef int depth = data.shape[2]
 
   if bidirectional:
-    path = _execute_bidirectional_dijkstra(data, source, target)
+    path = _execute_bidirectional_dijkstra(data, source, target, connectivity)
   else:
-    path = _execute_dijkstra(data, source, target)
+    path = _execute_dijkstra(data, source, target, connectivity)
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def distance_field(data, source):
@@ -183,7 +194,7 @@ def path_from_parents(parents, target):
   numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
   return _path_to_point_cloud(numpy_path, 3, sy, sx)
 
-def parental_field(data, source):
+def parental_field(data, source, connectivity=26):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate field of
@@ -204,6 +215,11 @@ def parental_field(data, source):
   dims = len(data.shape)
   assert dims <= 3
 
+  if connectivity not in (6,18,26):
+    raise ValueError(
+      "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
+    )
+
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.float32)
 
@@ -216,10 +232,9 @@ def parental_field(data, source):
 
   _validate_coord(data, source)
 
-  if not np.isfortran(data):
-    raise MemoryOrderError("Input array must be Fortran ordered.")
+  data = np.asfortranarray(data)
 
-  field = _execute_parental_field(data, source)
+  field = _execute_parental_field(data, source, connectivity)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -305,7 +320,7 @@ def _path_to_point_cloud(path, dims, rows, cols):
 
   return ptlist
 
-def _execute_dijkstra(data, source, target):
+def _execute_dijkstra(data, source, target, connectivity):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -329,42 +344,42 @@ def _execute_dijkstra(data, source, target):
     output = dijkstra3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     output = dijkstra3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     output = dijkstra3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
     output = dijkstra3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     output = dijkstra3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     output = dijkstra3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -377,7 +392,7 @@ def _execute_dijkstra(data, source, target):
   buf = bytearray(vec_view[:])
   return np.frombuffer(buf, dtype=np.uint32)[::-1]
 
-def _execute_bidirectional_dijkstra(data, source, target):
+def _execute_bidirectional_dijkstra(data, source, target, connectivity):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -401,42 +416,42 @@ def _execute_bidirectional_dijkstra(data, source, target):
     output = bidirectional_dijkstra3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     output = bidirectional_dijkstra3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     output = bidirectional_dijkstra3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
     output = bidirectional_dijkstra3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     output = bidirectional_dijkstra3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     output = bidirectional_dijkstra3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src, sink
+      src, sink, connectivity
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -522,8 +537,7 @@ def _execute_distance_field(data, source):
   # I don't actually understand why order F works, but it does.
   return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
 
-
-def _execute_parental_field(data, source):
+def _execute_parental_field(data, source, connectivity):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -545,42 +559,48 @@ def _execute_parental_field(data, source):
     parental_field3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     parental_field3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     parental_field3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
     parental_field3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     parental_field3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     parental_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src, &parents[0,0,0]
+      src, &parents[0,0,0],
+      connectivity
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
