@@ -11,52 +11,108 @@ TEST_TYPES = (
   np.bool
 )
 
+@pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("bidirectional", [ False, True ])
-def test_dijkstra2d_10x10(bidirectional):
-  for dtype in TEST_TYPES:
-    values = np.ones((10,10,1), dtype=dtype)
+@pytest.mark.parametrize("connectivity", [ 18, 26 ])
+def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity):
+  values = np.ones((10,10,1), dtype=dtype)
 
-    path = dijkstra3d.dijkstra(values, (1,1,0), (1,1,0), bidirectional=bidirectional)
-    assert len(path) == 1
-    assert np.all(path == np.array([ [1,1,0] ]))
-    
-    path = dijkstra3d.dijkstra(values, (0,0,0), (3,0,0), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (1,1,0), (1,1,0), 
+    bidirectional=bidirectional, connectivity=connectivity
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,0] ]))
+  
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (3,0,0), 
+    bidirectional=bidirectional, connectivity=connectivity
+  )
 
-    assert len(path) == 4
-    assert np.all(path == np.array([
-      [0,0,0],
-      [1,1,0],
-      [2,1,0],
-      [3,0,0],
-    ]))
+  assert len(path) == 4
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,1,0],
+    [3,0,0],
+  ]))
 
-    path = dijkstra3d.dijkstra(values, (0,0,0), (5,5,0), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (5,5,0), 
+    bidirectional=bidirectional, connectivity=connectivity
+  )
 
-    assert len(path) == 6
-    assert np.all(path == np.array([
-      [0,0,0],
-      [1,1,0],
-      [2,2,0],
-      [3,3,0],
-      [4,4,0],
-      [5,5,0],
-    ]))
+  assert len(path) == 6
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+  ]))
 
-    path = dijkstra3d.dijkstra(values, (0,0,0), (9,9,0), bidirectional=bidirectional)
-    
-    assert len(path) == 10
-    assert np.all(path == np.array([
-      [0,0,0],
-      [1,1,0],
-      [2,2,0],
-      [3,3,0],
-      [4,4,0],
-      [5,5,0],
-      [6,6,0],
-      [7,7,0],
-      [8,8,0],
-      [9,9,0]
-    ]))
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (9,9,0), 
+    bidirectional=bidirectional, connectivity=connectivity
+  )
+  
+  assert len(path) == 10
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+    [6,6,0],
+    [7,7,0],
+    [8,8,0],
+    [9,9,0]
+  ]))
+
+# There are many more equal distance paths 
+# for 6 connected... so we have to be less specific.
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+def test_dijkstra2d_10x10_6(dtype, bidirectional):
+  values = np.ones((10,10,1), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,0), (1,1,0), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,0] ]))
+  
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (3,0,0), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  
+  assert len(path) == 4
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,0,0],
+    [3,0,0],
+  ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (5,5,0), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 11
+  assert tuple(path[0]) == (0,0,0)
+  assert tuple(path[-1]) == (5,5,0)
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (9,9,0), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 19
+  assert tuple(path[0]) == (0,0,0)
+  assert tuple(path[-1]) == (9,9,0)
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 def test_dijkstra2d_10x10_off_origin(bidirectional):
