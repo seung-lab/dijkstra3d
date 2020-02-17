@@ -1,6 +1,30 @@
 CHANGES
 =======
 
+1.2.0
+-----
+
+* release(1.2.0): bidirectional search option
+* docs: update with new benchmark
+* docs: add reference to original bidirectional search paper
+* feat: bidirectional dijkstra (#5)
+* docs: reword some sentences in README.md
+* fix: make python3.5 compile better on macOS
+* fix: replace size\_t with uint64\_t to make libdivide work on mac
+
+1.1.0
+-----
+
+* release(1.1.0): fortran + removing copy ops
+* feat+perf: mandate fortran order arrays + avoid copies (#4)
+* refactor: not necessary to pass loc to compute\_neighborhood
+* test: source == target
+* perf: simplify search when source == target
+* chore: update setup.cfg with markdown description content type
+* Update README.md
+* docs: added reference for early termination technique
+* chore: drop py34 from travis testing
+
 1.0.1
 -----
 
