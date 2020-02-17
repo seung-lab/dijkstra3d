@@ -11,10 +11,14 @@ field = np.ones((512, 512, 512), dtype=np.int32)
 source = (0,0,0)
 target = (511, 511, 511)
 
+# path is an [N,3] numpy array i.e. a list of x,y,z coordinates
 # terminates early, default is 26 connected
 path = dijkstra3d.dijkstra(field, source, target, connectivity=26) 
 path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # 2x memory usage, faster
-print(path.shape)
+
+# Use distance from target as a heuristic (A* search)
+# Does nothing if bidirectional=True (it's just not implemented)
+path = dijkstra3d.dijkstra(field, source, target, compass=True) 
 
 parents = dijkstra3d.parental_field(field, source=(0,0,0), connectivity=6) # default is 26 connected
 path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
