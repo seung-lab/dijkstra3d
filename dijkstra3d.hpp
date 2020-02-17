@@ -222,7 +222,7 @@ std::vector<uint32_t> dijkstra3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -425,6 +425,138 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
 
   return path_fwd;
 }
+
+// A* using distance to target as a heuristic
+// setting normalizer to a postive value allows you
+// to manipulate the A* priority. By default it 
+// is normalized to the field minimum which guarantees
+// correctness.
+template <typename T>
+std::vector<uint32_t> compass_guided_dijkstra3d(
+    T* field, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26, float normalizer = -1
+  ) {
+
+  connectivity_check(connectivity);
+
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+  
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  uint32_t *parents = new uint32_t[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = 0;
+
+  // Normalizer value must be positive. 
+  // If negative, use min field value.
+  if (normalizer < 0) {
+    normalizer = static_cast<float>(field[0]);
+    for (uint64_t i = 0; i < voxels; i++) {
+      if (normalizer > static_cast<float>(field[i])) {
+        normalizer = static_cast<float>(field[i]);
+      }
+    }
+  }
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
+  queue.emplace(0.0, source);
+
+  uint64_t loc;
+  float delta;
+  uint64_t neighboridx;
+
+  int x, y, z;
+  int tx, ty, tz;
+  float heuristic_cost;
+
+  tz = target / fast_sxy;
+  ty = (target - (tz * sxy)) / fast_sx;
+  tx = target - sx * (ty + tz * sy);
+
+  std::function<void(uint64_t)> xyzfn = [&x,&y,&z,power_of_two,xshift,yshift,sx,sy,sxy,fast_sx,fast_sxy](uint64_t l){
+    if (power_of_two) {
+      z = l >> (xshift + yshift);
+      y = (l - (z << (xshift + yshift))) >> xshift;
+      x = l - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = l / fast_sxy;
+      y = (l - (z * sxy)) / fast_sx;
+      x = l - sx * (y + z * sy);
+    }
+  };
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    xyzfn(loc);
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]);
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        if (neighboridx == target) {
+          goto OUTSIDE;
+        }
+
+        xyzfn(neighboridx);
+
+        // Use Chebychev heuristic instead of Euclidean 
+        // because we can only move voxel by voxel rather 
+        // than at any angle.
+        heuristic_cost = normalizer * static_cast<float>(
+          std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
+        );
+
+        queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<uint32_t> path = query_shortest_path(parents, target);
+  delete [] parents;
+
+  return path;
+}
+
 
 template <typename T>
 std::vector<uint32_t> dijkstra2d(

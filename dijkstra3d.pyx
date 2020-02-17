@@ -50,6 +50,12 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int source, int target,
     int connectivity
   )
+  cdef vector[uint32_t] compass_guided_dijkstra3d[T](
+    T* field, 
+    int sx, int sy, int sz, 
+    int source, int target,
+    int connectivity, float normalizer
+  )
   cdef float* distance_field3d[T](
     T* field,
     int sx, int sy, int sz,
@@ -71,7 +77,11 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* parents, uint32_t target
   ) 
 
-def dijkstra(data, source, target, bidirectional=False, connectivity=26):
+def dijkstra(
+  data, source, target, 
+  bidirectional=False, connectivity=26, 
+  compass=False, compass_norm=-1
+):
   """
   Perform dijkstra's shortest path algorithm
   on a 3D image grid. Vertices are voxels and
@@ -95,6 +105,16 @@ def dijkstra(data, source, target, bidirectional=False, connectivity=26):
     26 (faces + edges + corners) voxel graph connectivities 
     are supported. For 2D images, 4 gets translated to 6,
     8 gets translated to 18.
+   compass: If True, A* search using the chessboard 
+    distance to target as the heuristic. This has the 
+    effect of guiding the search like using a compass.
+    This option has no effect when bidirectional search
+    is enabled as it is not supported yet.
+   compass_norm: Allows you to manipulate the relative
+    greed of the A* search. By default set to -1, which
+    means the norm will be the field minimum, but you 
+    can choose whatever you want if you know what you're
+    doing.
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
@@ -133,7 +153,11 @@ def dijkstra(data, source, target, bidirectional=False, connectivity=26):
   if bidirectional:
     path = _execute_bidirectional_dijkstra(data, source, target, connectivity)
   else:
-    path = _execute_dijkstra(data, source, target, connectivity)
+    path = _execute_dijkstra(
+      data, source, target, connectivity, 
+      compass, compass_norm
+    )
+
   return _path_to_point_cloud(path, dims, rows, cols)
 
 def distance_field(data, source):
@@ -337,7 +361,10 @@ def _path_to_point_cloud(path, dims, rows, cols):
 
   return ptlist
 
-def _execute_dijkstra(data, source, target, connectivity):
+def _execute_dijkstra(
+  data, source, target, int connectivity, 
+  compass, float compass_norm=-1
+):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -358,48 +385,94 @@ def _execute_dijkstra(data, source, target, connectivity):
 
   if dtype == np.float32:
     arr_memviewfloat = data
-    output = dijkstra3d[float](
-      &arr_memviewfloat[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
+    if compass:
+      output = compass_guided_dijkstra3d[float](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[float](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
   elif dtype == np.float64:
     arr_memviewdouble = data
-    output = dijkstra3d[double](
-      &arr_memviewdouble[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
+    if compass:
+      output = compass_guided_dijkstra3d[double](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[double](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
-    output = dijkstra3d[uint64_t](
-      &arr_memview64[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
+    if compass:
+      output = compass_guided_dijkstra3d[uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
-    output = dijkstra3d[uint32_t](
-      &arr_memview32[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
+    if compass:
+      output = compass_guided_dijkstra3d[uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
-    output = dijkstra3d[uint16_t](
-      &arr_memview16[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
+    if compass:
+      output = compass_guided_dijkstra3d[uint16_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[uint16_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
-    output = dijkstra3d[uint8_t](
-      &arr_memview8[0,0,0],
-      sx, sy, sz,
-      src, sink, connectivity
-    )
-  else:
-    raise TypeError("Type {} not currently supported.".format(dtype))
+    if compass:
+      output = compass_guided_dijkstra3d[uint8_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink, 
+        connectivity, compass_norm
+      )
+    else:
+      output = dijkstra3d[uint8_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink, connectivity
+      )
 
   cdef uint32_t* output_ptr = <uint32_t*>&output[0]
   cdef uint32_t[:] vec_view = <uint32_t[:output.size()]>output_ptr

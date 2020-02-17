@@ -14,19 +14,22 @@ TEST_TYPES = (
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 @pytest.mark.parametrize("connectivity", [ 18, 26 ])
-def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity, compass):
   values = np.ones((10,10,1), dtype=dtype)
 
   path = dijkstra3d.dijkstra(
     values, (1,1,0), (1,1,0), 
-    bidirectional=bidirectional, connectivity=connectivity
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
   )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,0] ]))
   
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (3,0,0), 
-    bidirectional=bidirectional, connectivity=connectivity
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
   )
 
   assert len(path) == 4
@@ -35,11 +38,27 @@ def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity):
     [1,1,0],
     [2,1,0],
     [3,0,0],
-  ]))
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,1,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) 
 
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (5,5,0), 
-    bidirectional=bidirectional, connectivity=connectivity
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
   )
 
   assert len(path) == 6
@@ -54,7 +73,8 @@ def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity):
 
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (9,9,0), 
-    bidirectional=bidirectional, connectivity=connectivity
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
   )
   
   assert len(path) == 10
@@ -71,23 +91,45 @@ def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity):
     [9,9,0]
   ]))
 
+  path = dijkstra3d.dijkstra(values, (2,1,0), (3,0,0), compass=compass)
+
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,1,0],
+    [3,0,0],
+  ]))
+
+  path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0), compass=compass)
+
+  assert len(path) == 5
+  assert np.all(path == np.array([
+    [9,9,0],
+    [8,8,0],
+    [7,7,0],
+    [6,6,0],
+    [5,5,0],
+  ]))
+
 # There are many more equal distance paths 
 # for 6 connected... so we have to be less specific.
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("bidirectional", [ False, True ])
-def test_dijkstra2d_10x10_6(dtype, bidirectional):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_6(dtype, bidirectional, compass):
   values = np.ones((10,10,1), dtype=dtype)
 
   path = dijkstra3d.dijkstra(
     values, (1,1,0), (1,1,0), 
-    bidirectional=bidirectional, connectivity=6
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
   )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,0] ]))
   
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (3,0,0), 
-    bidirectional=bidirectional, connectivity=6
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
   )
   
   assert len(path) == 4
@@ -98,62 +140,58 @@ def test_dijkstra2d_10x10_6(dtype, bidirectional):
     [3,0,0],
   ]))
 
-  path = dijkstra3d.dijkstra(
-    values, (0,0,0), (5,5,0), 
-    bidirectional=bidirectional, connectivity=6
-  )
-  assert len(path) == 11
-  assert tuple(path[0]) == (0,0,0)
-  assert tuple(path[-1]) == (5,5,0)
-
-  path = dijkstra3d.dijkstra(
-    values, (0,0,0), (9,9,0), 
-    bidirectional=bidirectional, connectivity=6
-  )
-  assert len(path) == 19
-  assert tuple(path[0]) == (0,0,0)
-  assert tuple(path[-1]) == (9,9,0)
-
 @pytest.mark.parametrize("bidirectional", [ False, True ])
-def test_dijkstra2d_10x10_off_origin(bidirectional):
-  for dtype in TEST_TYPES:
-    values = np.ones((10,10,1), dtype=dtype)
-    
-    path = dijkstra3d.dijkstra(values, (2,0,0), (3,0,0), bidirectional=bidirectional)
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_off_origin(bidirectional, dtype, compass):
+  values = np.ones((10,10,1), dtype=dtype)
+  
+  path = dijkstra3d.dijkstra(
+    values, (2,0,0), (3,0,0), 
+    bidirectional=bidirectional, compass=compass
+  )
 
-    assert len(path) == 2
-    assert np.all(path == np.array([
-      [2,0,0],
-      [3,0,0],
-    ]))
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,0,0],
+    [3,0,0],
+  ]))
 
-    path = dijkstra3d.dijkstra(values, (2,1,0), (3,0,0), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (2,1,0), (3,0,0), 
+    bidirectional=bidirectional, compass=compass
+  )
 
-    assert len(path) == 2
-    assert np.all(path == np.array([
-      [2,1,0],
-      [3,0,0],
-    ]))
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,1,0],
+    [3,0,0],
+  ]))
 
-    path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (9,9,0), (5,5,0), 
+    bidirectional=bidirectional, compass=compass
+  )
 
-    assert len(path) == 5
-    assert np.all(path == np.array([
-      [9,9,0],
-      [8,8,0],
-      [7,7,0],
-      [6,6,0],
-      [5,5,0],
-    ]))
+  assert len(path) == 5
+  assert np.all(path == np.array([
+    [9,9,0],
+    [8,8,0],
+    [7,7,0],
+    [6,6,0],
+    [5,5,0],
+  ]))
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_dijkstra3d_3x3x3_26(bidirectional, dtype):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_26(bidirectional, dtype, compass):
   values = np.ones((3,3,3), dtype=dtype)
 
   path = dijkstra3d.dijkstra(
     values, (1,1,1), (1,1,1), 
-    bidirectional=bidirectional, connectivity=26
+    bidirectional=bidirectional, connectivity=26,
+    compass=compass
   )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,1] ]))
@@ -162,6 +200,7 @@ def test_dijkstra3d_3x3x3_26(bidirectional, dtype):
     values, (0,0,0), (2,2,2), 
     bidirectional=bidirectional, connectivity=26
   )
+
   assert np.all(path == np.array([
     [0,0,0],
     [1,1,1],
@@ -170,7 +209,8 @@ def test_dijkstra3d_3x3x3_26(bidirectional, dtype):
 
   path = dijkstra3d.dijkstra(
     values, (2,2,2), (0,0,0), 
-    bidirectional=bidirectional, connectivity=26
+    bidirectional=bidirectional, connectivity=26,
+    compass=compass
   )
   assert np.all(path == np.array([
     [2,2,2],
@@ -180,21 +220,23 @@ def test_dijkstra3d_3x3x3_26(bidirectional, dtype):
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_18(bidirectional, dtype, compass):
   values = np.ones((3,3,3), dtype=dtype)
 
   path = dijkstra3d.dijkstra(
     values, (1,1,1), (1,1,1), 
-    bidirectional=bidirectional, connectivity=18
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
   )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,1] ]))
 
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (2,2,2), 
-    bidirectional=bidirectional, connectivity=18
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
   )
-  print(path)
   assert np.all(path == np.array([
     [0,0,0],
     [1,0,1],
@@ -219,9 +261,9 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
 
   path = dijkstra3d.dijkstra(
     values, (2,2,2), (0,0,0), 
-    bidirectional=bidirectional, connectivity=18
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
   )
-  print(path)
   assert np.all(path == np.array([
     [2,2,2],
     [1,2,1],
@@ -246,19 +288,22 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_dijkstra3d_3x3x3_6(bidirectional, dtype):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_6(bidirectional, dtype, compass):
   values = np.ones((3,3,3), dtype=dtype)
 
   path = dijkstra3d.dijkstra(
     values, (1,1,1), (1,1,1), 
-    bidirectional=bidirectional, connectivity=6
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
   )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,1] ]))
 
   path = dijkstra3d.dijkstra(
     values, (0,0,0), (2,2,2), 
-    bidirectional=bidirectional, connectivity=6
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
   )
   assert len(path) == 7
   assert tuple(path[0]) == (0,0,0)
@@ -266,7 +311,8 @@ def test_dijkstra3d_3x3x3_6(bidirectional, dtype):
 
   path = dijkstra3d.dijkstra(
     values, (2,2,2), (0,0,0), 
-    bidirectional=bidirectional, connectivity=6
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
   )
   assert len(path) == 7
   assert tuple(path[0]) == (2,2,2)
@@ -352,7 +398,8 @@ def test_bidirectional():
 
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
-def test_dijkstra_2d_loop(bidirectional):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra_2d_loop(bidirectional, compass):
   x = 20000
   values = np.array([
     [x, x, x, x, x, x, 0, x, x, x],
@@ -367,9 +414,9 @@ def test_dijkstra_2d_loop(bidirectional):
     [x, x, x, 1, 8, 9,10, x, x, x],
     [x, x, x, 4, x, x,11,12, x, x],
     [x, x, x, x, x, x, x, x,13,14],
-  ])
+  ], order='F')
 
-  path = dijkstra3d.dijkstra(np.asfortranarray(values), (2,2), (11, 9), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(values, (2,2), (11, 9), bidirectional=bidirectional, compass=compass)
   correct_path = np.array([
     [2, 2],
     [3, 2],
@@ -428,6 +475,56 @@ def test_distance_field_2d(dtype):
     ]
   ]))
 
+
+  field = dijkstra3d.distance_field(values * 2, (2,2))
+
+  assert np.all(field == np.array([
+    [
+      [4, 4, 4, 4, 4],
+      [4, 2, 2, 2, 4],
+      [4, 2, 0, 2, 4],
+      [4, 2, 2, 2, 4],
+      [4, 4, 4, 4, 4],
+    ]
+  ]))
+
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+def test_distance_field_2d_asymmetric(dtype):
+  values = np.ones((5, 10), dtype=dtype)
+
+  assert np.all(field == np.array([
+    [
+      [0, 1, 2, 3, 4],
+      [1, 1, 2, 3, 4],
+      [2, 2, 2, 3, 4],
+      [3, 3, 3, 3, 4],
+      [4, 4, 4, 4, 4],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (4,4))
+
+  assert np.all(field == np.array([
+    [
+      [4, 4, 4, 4, 4],
+      [4, 3, 3, 3, 3],
+      [4, 3, 2, 2, 2],
+      [4, 3, 2, 1, 1],
+      [4, 3, 2, 1, 0],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (2,2))
+
+  assert np.all(field == np.array([
+    [
+      [2, 2, 2, 2, 2],
+      [2, 1, 1, 1, 2],
+      [2, 1, 0, 1, 2],
+      [2, 1, 1, 1, 2],
+      [2, 2, 2, 2, 2],
+    ]
+  ]))
 
   field = dijkstra3d.distance_field(values * 2, (2,2))
 
@@ -514,52 +611,68 @@ def test_euclidean_distance_field_2d():
 
   assert np.all(np.abs(field - answer) < 0.00001)   
 
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra_parental(dtype, compass):
+  values = np.ones((10,10,1), dtype=dtype, order='F')
+  
+  parents = dijkstra3d.parental_field(values, (0,0,0))
+  path = dijkstra3d.path_from_parents(parents, (3,0,0))
 
-def test_dijkstra_parental():
-  for dtype in TEST_TYPES:
-    values = np.ones((10,10,1), dtype=dtype, order='F')
-    
-    parents = dijkstra3d.parental_field(values, (0,0,0))
-    path = dijkstra3d.path_from_parents(parents, (3,0,0))
+  assert len(path) == 4
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,1,0],
+    [3,0,0],
+  ]))
 
-    assert len(path) == 4
-    assert np.all(path == np.array([
-      [0,0,0],
-      [1,1,0],
-      [2,1,0],
-      [3,0,0],
-    ]))
+  def path_len(path, values):
+    length = 0
+    for p in path:
+      length += values[tuple(p)]
+    return length
 
-    # Symmetric Test
-    for _ in range(50):
-      values = np.random.randint(1,255, size=(10,10,10))
-      values = np.asfortranarray(values)
+  # Symmetric Test
+  for _ in range(50):
+    values = np.random.randint(1,255, size=(10,10,10))
+    values = np.asfortranarray(values)
 
-      start = np.random.randint(0,9, size=(3,))
-      target = np.random.randint(0,9, size=(3,))
+    start = np.random.randint(0,9, size=(3,))
+    target = np.random.randint(0,9, size=(3,))
 
-      parents = dijkstra3d.parental_field(values, start)
-      path = dijkstra3d.path_from_parents(parents, target)
+    parents = dijkstra3d.parental_field(values, start)
+    path = dijkstra3d.path_from_parents(parents, target)
 
-      path_orig = dijkstra3d.dijkstra(values, start, target)
+    path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
+    print(start, target)
+    print(path)
+    print(path_orig)
+
+    assert path_len(path, values) == path_len(path_orig, values)
+
+    if compass == False:
       assert np.all(path == path_orig)
 
-    # Asymmetric Test
-    for _ in range(50):
-      values = np.random.randint(1,255, size=(11,10,10))
-      values = np.asfortranarray(values)
+  # Asymmetric Test
+  for _ in range(50):
+    values = np.random.randint(1,255, size=(11,10,10))
+    values = np.asfortranarray(values)
 
-      start = np.random.randint(0,9, size=(3,))
-      target = np.random.randint(0,9, size=(3,))
+    start = np.random.randint(0,9, size=(3,))
+    target = np.random.randint(0,9, size=(3,))
 
-      parents = dijkstra3d.parental_field(values, start)
-      path = dijkstra3d.path_from_parents(parents, target)
+    parents = dijkstra3d.parental_field(values, start)
+    path = dijkstra3d.path_from_parents(parents, target)
 
-      path_orig = dijkstra3d.dijkstra(values, start, target)
+    path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
-      print(start, target)
-      print(path)
-      print(path_orig)
+    print(start, target)
+    print(path)
+    print(path_orig)
 
+    assert path_len(path, values) == path_len(path_orig, values)
+
+    if compass == False:
       assert np.all(path == path_orig)
