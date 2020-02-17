@@ -284,6 +284,16 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype, compass):
     [1,1,2],
     [1,0,1],
     [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [1,1,2],
+    [1,1,0],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [2,1,1],
+    [1,1,0],
+    [0,0,0]
   ]))
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
@@ -611,6 +621,40 @@ def test_euclidean_distance_field_2d():
 
   assert np.all(np.abs(field - answer) < 0.00001)   
 
+
+def test_compass():
+  field = np.array([
+   [6, 9, 7, 7, 1, 7, 4, 3, 5, 9],
+   [4, 8, 7, 8, 1, 2, 5, 8, 3, 9],
+   [5, 9, 4, 5, 7, 9, 2, 1, 5, 1],
+   [1, 3, 6, 9, 6, 1, 7, 9, 5, 8],
+   [2, 7, 3, 6, 1, 8, 9, 2, 1, 5],
+   [7, 3, 7, 2, 9, 9, 8, 8, 9, 6],
+   [3, 3, 8, 9, 3, 6, 8, 1, 6, 4],
+   [9, 7, 5, 7, 9, 7, 8, 6, 7, 2],
+   [6, 3, 7, 1, 1, 5, 2, 1, 3, 9],
+   [2, 4, 8, 2, 9, 5, 2, 3, 3, 2],
+  ])
+  start = (8,1)
+  target = (1,5)
+  dijkstra_path = dijkstra3d.dijkstra(field, start, target, compass=False)
+  compass_path = dijkstra3d.dijkstra(field, start, target, compass=True)
+
+  def path_len(path):
+    length = 0
+    for p in path:
+      length += field[tuple(p)]
+    return length
+
+  if not np.all(dijkstra_path == compass_path):
+    print(field)
+    print(dijkstra_path)
+    print("dijkstra cost: %d" % path_len(dijkstra_path))
+    print(compass_path)
+    print("compass cost: %d" % path_len(compass_path))
+
+  assert np.all(dijkstra_path == compass_path)
+
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("compass", [ False, True ])
 def test_dijkstra_parental(dtype, compass):
@@ -634,21 +678,31 @@ def test_dijkstra_parental(dtype, compass):
     return length
 
   # Symmetric Test
-  for _ in range(50):
-    values = np.random.randint(1,255, size=(10,10,10))
+  for _ in range(500):
+    values = np.random.randint(1,10, size=(10,10,1))
     values = np.asfortranarray(values)
 
     start = np.random.randint(0,9, size=(3,))
     target = np.random.randint(0,9, size=(3,))
+    start[2] = 0
+    target[2] = 0
 
     parents = dijkstra3d.parental_field(values, start)
     path = dijkstra3d.path_from_parents(parents, target)
 
     path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
-    print(start, target)
-    print(path)
-    print(path_orig)
+    if path_len(path, values) != path_len(path_orig, values):
+      print(start, target)
+      print(path)
+      print(path_orig)
+      print(values[:,:,0])
+      print('parents_path')
+      for p in path:
+        print(values[tuple(p)])
+      print('compass_path')
+      for p in path_orig:
+        print(values[tuple(p)])
 
     assert path_len(path, values) == path_len(path_orig, values)
 
@@ -656,21 +710,24 @@ def test_dijkstra_parental(dtype, compass):
       assert np.all(path == path_orig)
 
   # Asymmetric Test
-  for _ in range(50):
+  for _ in range(500):
     values = np.random.randint(1,255, size=(11,10,10))
     values = np.asfortranarray(values)
 
     start = np.random.randint(0,9, size=(3,))
     target = np.random.randint(0,9, size=(3,))
+    start[0] = np.random.randint(0,10)
+    target[0] = np.random.randint(0,10)
 
     parents = dijkstra3d.parental_field(values, start)
     path = dijkstra3d.path_from_parents(parents, target)
 
     path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
-    print(start, target)
-    print(path)
-    print(path_orig)
+    if path_len(path, values) != path_len(path_orig, values):
+      print(start, target)
+      print(path)
+      print(path_orig)
 
     assert path_len(path, values) == path_len(path_orig, values)
 
