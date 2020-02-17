@@ -37,6 +37,12 @@ inline float* fill(float *arr, const float value, const uint64_t size) {
   return arr;
 }
 
+void connectivity_check(int connectivity) {
+  if (connectivity != 6 && connectivity != 18 && connectivity != 26) {
+    throw std::runtime_error("Only 6, 18, and 26 connectivities are supported.");
+  }
+}
+
 inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const uint32_t target) {
   std::vector<uint32_t> path;
   uint32_t loc = target;
@@ -173,6 +179,8 @@ std::vector<uint32_t> dijkstra3d(
     const int connectivity = 26
   ) {
 
+  connectivity_check(connectivity);
+
   if (source == target) {
     return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
   }
@@ -301,6 +309,8 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
     const uint64_t source, const uint64_t target,
     const int connectivity = 26
   ) {
+
+  connectivity_check(connectivity);
 
   if (source == target) {
     return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
@@ -452,6 +462,8 @@ uint32_t* parental_field3d(
     const uint64_t source, uint32_t* parents = NULL,
     const int connectivity = 26
   ) {
+
+  connectivity_check(connectivity);
 
   const uint64_t voxels = sx * sy * sz;
   const uint64_t sxy = sx * sy;
