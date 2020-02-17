@@ -458,7 +458,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
   float *dist = new float[voxels]();
   uint32_t *parents = new uint32_t[voxels]();
   fill(dist, +INFINITY, voxels);
-  dist[source] = -0;
+  dist[source] = 0;
 
   // Normalizer value must be positive. 
   // If negative, use min field value.
@@ -524,10 +524,19 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
         dist[neighboridx] = dist[loc] + delta;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
-        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
-        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
         if (neighboridx == target) {
           goto OUTSIDE;
+        }
+
+        if (power_of_two) {
+          z = neighboridx >> (xshift + yshift);
+          y = (neighboridx - (z << (xshift + yshift))) >> xshift;
+          x = neighboridx - ((y + (z << yshift)) << xshift);
+        }
+        else {
+          z = neighboridx / fast_sxy;
+          y = (neighboridx - (z * sxy)) / fast_sx;
+          x = neighboridx - sx * (y + z * sy);
         }
 
         // Use Chebychev heuristic instead of Euclidean 
