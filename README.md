@@ -144,6 +144,42 @@ path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # blue lin
 path = dijkstra3d.dijkstra(field, source, target, compass=True) # red line
 ```
 
+<p style="font-style: italics;" align="center">
+<img height=480 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/multimethod.png" alt="Fig. 2: A benchmark of dijkstra.dijkstra run on a 50<sup>3</sup> voxel field of random integers of increasing variation from random source to random target. (blue/squares) unidirectional search (yellow/triangles) bidirectional search (red/diamonds) A* search aka .compass=True." /><br>
+Fig. 2: A benchmark of dijkstra.dijkstra run on a 50<sup>3</sup> voxel field of random integers of increasing variation from random source to random target. (blue/squares) unidirectional search (yellow/triangles) bidirectional search (red/diamonds) A* search aka <code>compass=True</code>.
+</p>
+
+```python
+import numpy as np
+import time
+import dijkstra3d
+
+N = 250
+sx, sy, sz = 50, 50, 50
+
+def trial(bi, compass):
+  for n in range(1, 100, 1):
+    accum = 0
+    for i in range(N):
+      values = np.random.randint(1,n+1, size=(sx,sy,sz))
+      values = np.asfortranarray(values)
+      start = np.random.randint(0,min(sx,sy,sz), size=(3,))
+      target = np.random.randint(0,min(sx,sy,sz), size=(3,))  
+
+      s = time.time()
+      path_orig = dijkstra3d.dijkstra(values, start, target, bidirectional=bi, compass=compass)
+      accum += (time.time() - s)
+
+    MVx_per_sec = N * sx * sy * sz / accum / 1000000
+    print(n, ',', '%.3f' % MVx_per_sec)
+
+print("Unidirectional")
+trial(False, False)
+print("Bidirectional")
+trial(True, False)
+print("Compass")
+trial(False, True)
+```
 
 ### What is that pairing_heap.hpp?
 
