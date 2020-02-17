@@ -539,6 +539,20 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
             abs(tx - x) + abs(ty - y) + abs(tz - z)
           );
         }
+        else if (connectivity == 18) {
+          // The faces + edges case is weird... 
+          // It's 8 connected on each plane, but you can't
+          // move diagonally in 3D.
+          heuristic_cost = static_cast<float>(
+            std::min(
+              std::min(
+                std::max(abs(tx - x), abs(ty - y)) + abs(tz - z),
+                std::max(abs(tx - x), abs(tz - z)) + abs(ty - y)
+              ),
+              std::max(abs(ty - y), abs(tz - z)) + abs(tx - x)
+            )
+          );
+        }
         else { // chebychev (L_inf)
           heuristic_cost = static_cast<float>(
             std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
