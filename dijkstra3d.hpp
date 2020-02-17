@@ -52,9 +52,10 @@ inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const 
 inline void compute_neighborhood(
   int *neighborhood, 
   const int x, const int y, const int z,
-  const uint64_t sx, const uint64_t sy, const uint64_t sz) {
+  const uint64_t sx, const uint64_t sy, const uint64_t sz,
+  const int connectivity = 26) {
 
-  for (int i = 0; i < NHOOD_SIZE; i++) {
+  for (int i = 0; i < connectivity; i++) {
     neighborhood[i] = 0;
   }
 
@@ -65,20 +66,24 @@ inline void compute_neighborhood(
   if (x > 0) {
     neighborhood[0] = -1;
   }
-  if (x < (int)sx - 1) {
+  if (x < static_cast<int>(sx) - 1) {
     neighborhood[1] = 1;
   }
   if (y > 0) {
-    neighborhood[2] = -(int)sx;
+    neighborhood[2] = -static_cast<int>(sx);
   }
-  if (y < (int)sy - 1) {
-    neighborhood[3] = (int)sx;
+  if (y < static_cast<int>(sy) - 1) {
+    neighborhood[3] = static_cast<int>(sx);
   }
   if (z > 0) {
     neighborhood[4] = -sxy;
   }
-  if (z < (int)sz - 1) {
+  if (z < static_cast<int>(sz) - 1) {
     neighborhood[5] = sxy;
+  }
+
+  if (connectivity == 6) {
+    return;
   }
 
   // 18-hood
@@ -100,6 +105,10 @@ inline void compute_neighborhood(
   neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
   neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
   neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
+
+  if (connectivity == 18) {
+    return;
+  }
 
   // 26-hood
 
@@ -169,7 +178,8 @@ template <typename T>
 std::vector<uint32_t> dijkstra3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, const uint64_t target
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26
   ) {
 
   if (source == target) {
@@ -191,7 +201,7 @@ std::vector<uint32_t> dijkstra3d(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
-  int neighborhood[NHOOD_SIZE];
+  int* neighborhood = new int[connectivity]();
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
@@ -223,7 +233,7 @@ std::vector<uint32_t> dijkstra3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
@@ -253,6 +263,7 @@ std::vector<uint32_t> dijkstra3d(
 
   OUTSIDE:
   delete []dist;
+  delete [] neighborhood;
 
   std::vector<uint32_t> path = query_shortest_path(parents, target);
   delete [] parents;
@@ -265,14 +276,14 @@ template <typename T>
 inline void bidirectional_core(
     const uint64_t loc, 
     T* field, float *dist, uint32_t* parents, 
-    const int (&neighborhood)[NHOOD_SIZE], 
+    int *neighborhood, const int connectivity, 
     std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
   ) {
   
   float delta;
   uint64_t neighboridx;
 
-  for (int i = 0; i < NHOOD_SIZE; i++) {
+  for (int i = 0; i < connectivity; i++) {
     if (neighborhood[i] == 0) {
       continue;
     }
@@ -297,7 +308,8 @@ template <typename T>
 std::vector<uint32_t> bidirectional_dijkstra3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, const uint64_t target
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26
   ) {
 
   if (source == target) {
@@ -325,7 +337,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
   dist_fwd[source] = 0;
   dist_rev[target] = 0;
 
-  int neighborhood[NHOOD_SIZE];
+  int* neighborhood = new int[connectivity]();
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
   queue_fwd.emplace(dist_fwd[source], source);
@@ -393,18 +405,27 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     if (forward) {
-      bidirectional_core<T>(loc, field, dist_fwd, parents_fwd, neighborhood, queue_fwd);
+      bidirectional_core<T>(
+        loc, field, dist_fwd, parents_fwd, 
+        neighborhood, connectivity, 
+        queue_fwd
+      );
     }
     else {
-      bidirectional_core<T>(loc, field, dist_rev, parents_rev, neighborhood, queue_rev);
+      bidirectional_core<T>(
+        loc, field, dist_rev, parents_rev, 
+        neighborhood, connectivity, 
+        queue_rev
+      );
     }
   }
 
   delete [] dist_fwd;
   delete [] dist_rev;
+  delete [] neighborhood;
 
   // We will always have a "meet in middle" victory condition
   // because we set it up so if fwd finds target or rev finds
@@ -428,17 +449,19 @@ template <typename T>
 std::vector<uint32_t> dijkstra2d(
     T* field, 
     const uint64_t sx, const uint64_t sy, 
-    const uint64_t source, const uint64_t target
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26
   ) {
 
-  return dijkstra3d<T>(field, sx, sy, 1, source, target);
+  return dijkstra3d<T>(field, sx, sy, 1, source, target, connectivity);
 }
 
 template <typename T>
 uint32_t* parental_field3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, uint32_t* parents = NULL
+    const uint64_t source, uint32_t* parents = NULL,
+    const int connectivity = 26
   ) {
 
   const uint64_t voxels = sx * sy * sz;
@@ -460,7 +483,7 @@ uint32_t* parental_field3d(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
-  int neighborhood[NHOOD_SIZE];
+  int neighborhood[connectivity];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
@@ -490,15 +513,17 @@ uint32_t* parental_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(
+      neighborhood, x, y, z, sx, sy, sz, connectivity
+    );
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -570,7 +595,7 @@ float* distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
@@ -578,7 +603,7 @@ float* distance_field3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -676,7 +701,7 @@ float* euclidean_distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
