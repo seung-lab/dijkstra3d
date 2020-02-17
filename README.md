@@ -1,9 +1,30 @@
 [![Build Status](https://travis-ci.org/seung-lab/dijkstra3d.svg?branch=master)](https://travis-ci.org/seung-lab/dijkstra3d) [![PyPI version](https://badge.fury.io/py/dijkstra3d.svg)](https://badge.fury.io/py/dijkstra3d)  
 
 # dijkstra3d
-Dijkstra's Shortest Path variants for 26-connected 3D Image Volumes or 8-connected 2D images. 
+Dijkstra's Shortest Path variants for 6, 18, and 26-connected 3D Image Volumes or 8-connected 2D images. 
 
-Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the 26 nearest neighbors (except for the edges of the image where the number of edges is reduced). For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be non-negative (incl. negative zero).  
+```python
+import dijkstra3d
+import numpy as np
+
+field = np.ones((512, 512, 512), dtype=np.int32)
+source = (0,0,0)
+target = (511, 511, 511)
+
+# terminates early, default is 26 connected
+path = dijkstra3d.dijkstra(field, source, target, connectivity=26) 
+path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # 2x memory usage, faster
+print(path.shape)
+
+parents = dijkstra3d.parental_field(field, source=(0,0,0), connectivity=6) # default is 26 connected
+path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
+print(path.shape)
+
+dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
+dist_field = dijkstra3d.distance_field(field, source=(0,0,0))
+```
+
+Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel, 18 is faces and edges, 26 is faces, edges, and corners. For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be non-negative (incl. negative zero).  
 
 ## What Problem does this Package Solve?
 
@@ -20,29 +41,6 @@ The following variants are available in 2D and 3D:
 - **euclidean_distance_field** - Given a boolean label field and a source vertex, compute the anisotropic euclidean distance from the source to all labeled vertices.
 - **distance_field** - Given a numerical field, for each directed edge from adjacent voxels A and B, use B as the edge weight. In this fashion, compute the distance from a source point for all finite voxels.
 
-
-## Python Use
-
-```python
-import dijkstra3d
-import numpy as np
-
-field = np.ones((512, 512, 512), dtype=np.int32)
-source = (0,0,0)
-target = (511, 511, 511)
-
-path = dijkstra3d.dijkstra(field, source, target) # terminates early
-path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # 2x memory usage, faster algorithm
-print(path.shape)
-
-parents = dijkstra3d.parental_field(field, source=(0,0,0))
-path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
-print(path.shape)
-
-dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
-dist_field = dijkstra3d.distance_field(field, source=(0,0,0))
-```
-
 ## C++ Use 
 
 ```cpp
@@ -58,15 +56,18 @@ int target = 128 + 512 * 128 + 512 * 512 * 128; // coordinate <128, 128, 128>
 
 vector<unsigned int> path = dijkstra::dijkstra3d<float>(
   labels, /*sx=*/512, /*sy=*/512, /*sz=*/512,
-  source, target
+  source, target, /*connectivity=*/26 // 26 is default
 );
 
 vector<unsigned int> path = dijkstra::bidirectional_dijkstra3d<float>(
   labels, /*sx=*/512, /*sy=*/512, /*sz=*/512,
-  source, target
+  source, target, /*connectivity=*/26 // 26 is default
 );
 
-uint32_t* parents = dijkstra::parental_field3d<float>(labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, source);
+uint32_t* parents = dijkstra::parental_field3d<float>(
+  labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, 
+  source, /*connectivity=*/26 // 26 is default
+);
 vector<unsigned int> path = dijkstra::query_shortest_path(parents, target);
 
 
@@ -74,7 +75,8 @@ float* field = dijkstra::euclidean_distance_field3d<float>(
   labels, 
   /*sx=*/512, /*sy=*/512, /*sz=*/512, 
   /*wx=*/4, /*wy=*/4, /*wz=*/40, 
-  source);
+  source
+);
 
 float* field = dijkstra::distance_field3d<float>(labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, source);
 ```
