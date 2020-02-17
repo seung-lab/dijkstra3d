@@ -566,14 +566,16 @@ std::vector<uint32_t> dijkstra2d(
     const int connectivity = 8
   ) {
 
+  int adj_connectivity = connectivity;
+
   if (connectivity == 4) {
-    connectivity = 6; // 3d equivalent
+    adj_connectivity = 6; // 3d equivalent
   }
   else if (connectivity == 8) {
-    connectivity = 18; // 3d equivalent, 26 works too but 18 might be faster
+    adj_connectivity = 18; // 3d equivalent, 26 works too but 18 might be faster
   }
 
-  return dijkstra3d<T>(field, sx, sy, 1, source, target, connectivity);
+  return dijkstra3d<T>(field, sx, sy, 1, source, target, adj_connectivity);
 }
 
 template <typename T>
