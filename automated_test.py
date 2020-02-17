@@ -148,24 +148,89 @@ def test_dijkstra2d_10x10_off_origin(bidirectional):
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_dijkstra3d_3x3x3(bidirectional, dtype):
+def test_dijkstra3d_3x3x3_26(bidirectional, dtype):
   values = np.ones((3,3,3), dtype=dtype)
 
-  path = dijkstra3d.dijkstra(values, (1,1,1), (1,1,1), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=26
+  )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,1] ]))
 
-  path = dijkstra3d.dijkstra(values, (0,0,0), (2,2,2), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=26
+  )
   assert np.all(path == np.array([
     [0,0,0],
     [1,1,1],
     [2,2,2]
   ]))
 
-  path = dijkstra3d.dijkstra(values, (2,2,2), (0,0,0), bidirectional=bidirectional)
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=26
+  )
   assert np.all(path == np.array([
     [2,2,2],
     [1,1,1],
+    [0,0,0]
+  ]))
+
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
+  values = np.ones((3,3,3), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=18
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,1] ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=18
+  )
+  print(path)
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,0,1],
+    [1,1,2],
+    [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [0,1,1],
+    [1,1,2],
+    [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [0,1,1],
+    [1,2,1],
+    [2,2,2],
+  ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=18
+  )
+  print(path)
+  assert np.all(path == np.array([
+    [2,2,2],
+    [1,2,1],
+    [1,1,0],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [1,2,1],
+    [0,1,1],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [2,1,1],
+    [1,0,1],
     [0,0,0]
   ]))
 
