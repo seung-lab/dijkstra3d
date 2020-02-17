@@ -93,13 +93,20 @@ def dijkstra(data, source, target, bidirectional=False, connectivity=26):
     much faster.
    connectivity: 6 (faces), 18 (faces + edges), and 
     26 (faces + edges + corners) voxel graph connectivities 
-    are supported.
+    are supported. For 2D images, 4 gets translated to 6,
+    8 gets translated to 18.
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
   """
   dims = len(data.shape)
   assert dims in (2, 3)
+
+  if dims == 2:
+    if connectivity == 4:
+      connectivity = 6
+    elif connectivity == 8:
+      connectivity = 18 # or 26 but 18 might be faster
 
   if connectivity not in (6,18,26):
     raise ValueError(
@@ -205,15 +212,25 @@ def parental_field(data, source, connectivity=26):
   the path they represent. 
 
   Parameters:
-   data: Input weights in a 2D or 3D numpy array. 
-   source: (x,y,z) coordinate of starting voxel
-  
+    data: Input weights in a 2D or 3D numpy array. 
+    source: (x,y,z) coordinate of starting voxel
+    connectivity: 6 (faces), 18 (faces + edges), and 
+      26 (faces + edges + corners) voxel graph connectivities 
+      are supported. For 2D images, 4 gets translated to 6,
+      8 gets translated to 18.
+
   Returns: 2D or 3D numpy array with each index
     containing the index of its parent. The root
     of a path has index 0.
   """
   dims = len(data.shape)
   assert dims <= 3
+
+  if dims == 2:
+    if connectivity == 4:
+      connectivity = 6
+    elif connectivity == 8:
+      connectivity = 18 # or 26 but 18 might be faster
 
   if connectivity not in (6,18,26):
     raise ValueError(

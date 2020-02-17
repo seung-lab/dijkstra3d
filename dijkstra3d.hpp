@@ -431,8 +431,15 @@ std::vector<uint32_t> dijkstra2d(
     T* field, 
     const uint64_t sx, const uint64_t sy, 
     const uint64_t source, const uint64_t target,
-    const int connectivity = 26
+    const int connectivity = 8
   ) {
+
+  if (connectivity == 4) {
+    connectivity = 6; // 3d equivalent
+  }
+  else if (connectivity == 8) {
+    connectivity = 18; // 3d equivalent, 26 works too but 18 might be faster
+  }
 
   return dijkstra3d<T>(field, sx, sy, 1, source, target, connectivity);
 }
