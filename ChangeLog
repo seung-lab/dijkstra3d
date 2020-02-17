@@ -1,6 +1,23 @@
 CHANGES
 =======
 
+1.3.0
+-----
+
+* release(1.3.0): adds connectivity and compass parameters
+* docs: improve performance test and documentation
+* docs: add random start/target performance numbers
+* docs: add description of how to use cpp compass search
+* docs: update benchmark with A\*
+* docs: show how to use the compass feature
+* test: additional tests for A\* search
+* feat: add A\* search via "compass" parameter to djikstra (#6)
+* feat: accept 4 and 8 connectivity for 2D images
+* fix: update description of connectivity for 2D
+* docs: add connectivity to README.md
+* feat: add support for 6 and 18 connectivities (#8)
+* chore: update ChangeLog
+
 1.2.0
 -----
 
