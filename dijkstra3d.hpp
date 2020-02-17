@@ -14,6 +14,7 @@
  */
 
 #include <algorithm>
+#include <functional>
 #include <cmath>
 #include <cstdio>
 #include <cstdint>
@@ -36,7 +37,13 @@ inline float* fill(float *arr, const float value, const uint64_t size) {
   return arr;
 }
 
-inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32_t target) {
+void connectivity_check(int connectivity) {
+  if (connectivity != 6 && connectivity != 18 && connectivity != 26) {
+    throw std::runtime_error("Only 6, 18, and 26 connectivities are supported.");
+  }
+}
+
+inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const uint32_t target) {
   std::vector<uint32_t> path;
   uint32_t loc = target;
   while (parents[loc]) {
@@ -51,66 +58,50 @@ inline std::vector<uint32_t> query_shortest_path(uint32_t* parents, const uint32
 inline void compute_neighborhood(
   int *neighborhood, 
   const int x, const int y, const int z,
-  const uint64_t sx, const uint64_t sy, const uint64_t sz) {
-
-  for (int i = 0; i < NHOOD_SIZE; i++) {
-    neighborhood[i] = 0;
-  }
+  const uint64_t sx, const uint64_t sy, const uint64_t sz,
+  const int connectivity = 26) {
 
   const int sxy = sx * sy;
 
   // 6-hood
-
-  if (x > 0) {
-    neighborhood[0] = -1;
-  }
-  if (x < (int)sx - 1) {
-    neighborhood[1] = 1;
-  }
-  if (y > 0) {
-    neighborhood[2] = -(int)sx;
-  }
-  if (y < (int)sy - 1) {
-    neighborhood[3] = (int)sx;
-  }
-  if (z > 0) {
-    neighborhood[4] = -sxy;
-  }
-  if (z < (int)sz - 1) {
-    neighborhood[5] = sxy;
-  }
+  neighborhood[0] = -1 * (x > 0); // -x
+  neighborhood[1] = (x < (static_cast<int>(sx) - 1)); // +x
+  neighborhood[2] = -static_cast<int>(sx) * (y > 0); // -y
+  neighborhood[3] = static_cast<int>(sx) * (y < static_cast<int>(sy) - 1); // +y
+  neighborhood[4] = -sxy * static_cast<int>(z > 0); // -z
+  neighborhood[5] = sxy * (z < static_cast<int>(sz) - 1); // +z
 
   // 18-hood
 
   // xy diagonals
-  neighborhood[6] = (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
-  neighborhood[7] = (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
-  neighborhood[8] = (neighborhood[1] + neighborhood[2]) * (neighborhood[1] && neighborhood[2]); // down-left
-  neighborhood[9] = (neighborhood[1] + neighborhood[3]) * (neighborhood[1] && neighborhood[3]); // down-right
+  neighborhood[6] = (connectivity > 6) * (neighborhood[0] + neighborhood[2]) * (neighborhood[0] && neighborhood[2]); // up-left
+  neighborhood[7] = (connectivity > 6) * (neighborhood[0] + neighborhood[3]) * (neighborhood[0] && neighborhood[3]); // up-right
+  neighborhood[8] = (connectivity > 6) * (neighborhood[1] + neighborhood[2]) * (neighborhood[1] && neighborhood[2]); // down-left
+  neighborhood[9] = (connectivity > 6) * (neighborhood[1] + neighborhood[3]) * (neighborhood[1] && neighborhood[3]); // down-right
 
   // yz diagonals
-  neighborhood[10] = (neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]); // up-left
-  neighborhood[11] = (neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]); // up-right
-  neighborhood[12] = (neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]); // down-left
-  neighborhood[13] = (neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]); // down-right
+  neighborhood[10] = (connectivity > 6) * (neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]); // up-left
+  neighborhood[11] = (connectivity > 6) * (neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]); // up-right
+  neighborhood[12] = (connectivity > 6) * (neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]); // down-left
+  neighborhood[13] = (connectivity > 6) * (neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]); // down-right
 
   // xz diagonals
-  neighborhood[14] = (neighborhood[0] + neighborhood[4]) * (neighborhood[0] && neighborhood[4]); // up-left
-  neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
-  neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
-  neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
+  neighborhood[14] = (connectivity > 6) * (neighborhood[0] + neighborhood[4]) * (neighborhood[0] && neighborhood[4]); // up-left
+  neighborhood[15] = (connectivity > 6) * (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
+  neighborhood[16] = (connectivity > 6) * (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
+  neighborhood[17] = (connectivity > 6) * (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
 
   // 26-hood
 
   // Now the eight corners of the cube
-  neighborhood[18] = (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
-  neighborhood[19] = (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
-  neighborhood[20] = (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
-  neighborhood[21] = (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
-  neighborhood[22] = (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
-  neighborhood[23] = (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
-  neighborhood[24] = (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
-  neighborhood[25] = (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
+  neighborhood[18] = (connectivity > 18) * (neighborhood[0] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
+  neighborhood[19] = (connectivity > 18) * (neighborhood[1] + neighborhood[2] + neighborhood[4]) * (neighborhood[2] && neighborhood[4]);
+  neighborhood[20] = (connectivity > 18) * (neighborhood[0] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
+  neighborhood[21] = (connectivity > 18) * (neighborhood[0] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
+  neighborhood[22] = (connectivity > 18) * (neighborhood[1] + neighborhood[3] + neighborhood[4]) * (neighborhood[3] && neighborhood[4]);
+  neighborhood[23] = (connectivity > 18) * (neighborhood[1] + neighborhood[2] + neighborhood[5]) * (neighborhood[2] && neighborhood[5]);
+  neighborhood[24] = (connectivity > 18) * (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
+  neighborhood[25] = (connectivity > 18) * (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
 }
 
 class HeapNode {
@@ -168,8 +159,11 @@ template <typename T>
 std::vector<uint32_t> dijkstra3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, const uint64_t target
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26
   ) {
+
+  connectivity_check(connectivity);
 
   if (source == target) {
     return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
@@ -220,7 +214,7 @@ std::vector<uint32_t> dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
@@ -259,13 +253,193 @@ std::vector<uint32_t> dijkstra3d(
   return path;
 }
 
+// helper function for bidirectional_dijkstra
 template <typename T>
-std::vector<uint32_t> astar_straight_line(
+inline void bidirectional_core(
+    const uint64_t loc, 
+    T* field, float *dist, uint32_t* parents, 
+    int *neighborhood, 
+    std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
+  ) {
+  
+  float delta;
+  uint64_t neighboridx;
+
+  for (int i = 0; i < NHOOD_SIZE; i++) {
+    if (neighborhood[i] == 0) {
+      continue;
+    }
+
+    neighboridx = loc + neighborhood[i];
+    delta = static_cast<float>(field[neighboridx]);
+
+    // Visited nodes are negative and thus the current node
+    // will always be less than as field is filled with non-negative
+    // integers.
+    if (dist[loc] + delta < dist[neighboridx]) { 
+      dist[neighboridx] = dist[loc] + delta;
+      parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+      queue.emplace(dist[neighboridx], neighboridx);
+    }
+  }
+
+  dist[loc] *= -1;
+}
+
+template <typename T>
+std::vector<uint32_t> bidirectional_dijkstra3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
     const uint64_t source, const uint64_t target,
-    float normalizer = -1
+    const int connectivity = 26
   ) {
+
+  connectivity_check(connectivity);
+
+  if (source == target) {
+    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+  }
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+  
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist_fwd = new float[voxels]();
+  uint32_t *parents_fwd = new uint32_t[voxels]();
+
+  float *dist_rev = new float[voxels]();
+  uint32_t *parents_rev = new uint32_t[voxels]();
+
+  fill(dist_fwd, +INFINITY, voxels);
+  fill(dist_rev, +INFINITY, voxels);
+  dist_fwd[source] = 0;
+  dist_rev[target] = 0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_fwd;
+  queue_fwd.emplace(dist_fwd[source], source);
+
+  std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue_rev;
+  queue_rev.emplace(dist_rev[target], target);
+
+  uint64_t loc = source;
+  uint64_t final_loc = source;
+  int x, y, z;
+
+  bool forward = false;
+  float cost = INFINITY;
+
+  std::function<float(uint64_t)> costfn = [field, target, dist_fwd, dist_rev](uint64_t loc) { 
+    return abs(dist_rev[loc]) + abs(dist_fwd[loc]) + static_cast<float>(field[target]) - static_cast<float>(field[loc]);
+  };
+
+  while (!queue_fwd.empty() && !queue_rev.empty()) {
+    forward = !forward;
+
+    if (forward) {
+      loc = queue_fwd.top().value;
+      queue_fwd.pop();
+
+      if (dist_rev[loc] < INFINITY) {
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
+      }
+      else if (std::signbit(dist_fwd[loc])) {
+        continue;
+      }
+    }
+    else {
+      loc = queue_rev.top().value;
+      queue_rev.pop();
+
+      if (dist_fwd[loc] < INFINITY) {
+        if (costfn(loc) < cost) {
+          cost = costfn(loc);
+          final_loc = loc;
+        }
+        else {
+          break;
+        }
+      }
+      else if (std::signbit(dist_rev[loc])) {
+        continue;
+      }
+    }
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+
+    if (forward) {
+      bidirectional_core<T>(
+        loc, field, dist_fwd, parents_fwd, 
+        neighborhood, queue_fwd
+      );
+    }
+    else {
+      bidirectional_core<T>(
+        loc, field, dist_rev, parents_rev, 
+        neighborhood, queue_rev
+      );
+    }
+  }
+
+  delete [] dist_fwd;
+  delete [] dist_rev;
+
+  // We will always have a "meet in middle" victory condition
+  // because we set it up so if fwd finds target or rev finds
+  // source, that will count as "meeting in the middle" because
+  // those points were initialized.
+
+  std::vector<uint32_t> path_fwd, path_rev;
+
+  path_rev = query_shortest_path(parents_rev, final_loc);
+  delete [] parents_rev;
+  path_fwd = query_shortest_path(parents_fwd, final_loc);
+  delete [] parents_fwd;
+
+  std::reverse(path_fwd.begin(), path_fwd.end());
+  path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+
+  return path_fwd;
+}
+
+// A* using distance to target as a heuristic
+// setting normalizer to a postive value allows you
+// to manipulate the A* priority. By default it 
+// is normalized to the field minimum which guarantees
+// correctness.
+template <typename T>
+std::vector<uint32_t> compass_guided_dijkstra3d(
+    T* field, 
+    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 26, float normalizer = -1
+  ) {
+
+  connectivity_check(connectivity);
 
   if (source == target) {
     return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
@@ -335,7 +509,7 @@ std::vector<uint32_t> astar_straight_line(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
@@ -356,17 +530,12 @@ std::vector<uint32_t> astar_straight_line(
           goto OUTSIDE;
         }
 
-        if (dist[neighboridx] == 0) {
-          heuristic_cost = 0;
-        }
-        else {
-          // Use Chebychev heuristic instead of Euclidean 
-          // because we can only move voxel by voxel rather 
-          // than at any angle.
-          heuristic_cost = normalizer * static_cast<float>(
-            std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
-          );
-        }
+        // Use Chebychev heuristic instead of Euclidean 
+        // because we can only move voxel by voxel rather 
+        // than at any angle.
+        heuristic_cost = normalizer * static_cast<float>(
+          std::max(std::max(abs(tx - x), abs(ty - y)), abs(tz - z)) 
+        );
 
         queue.emplace(dist[neighboridx] + heuristic_cost, neighboridx);
       }
@@ -389,18 +558,29 @@ template <typename T>
 std::vector<uint32_t> dijkstra2d(
     T* field, 
     const uint64_t sx, const uint64_t sy, 
-    const uint64_t source, const uint64_t target
+    const uint64_t source, const uint64_t target,
+    const int connectivity = 8
   ) {
 
-  return dijkstra3d<T>(field, sx, sy, 1, source, target);
+  if (connectivity == 4) {
+    connectivity = 6; // 3d equivalent
+  }
+  else if (connectivity == 8) {
+    connectivity = 18; // 3d equivalent, 26 works too but 18 might be faster
+  }
+
+  return dijkstra3d<T>(field, sx, sy, 1, source, target, connectivity);
 }
 
 template <typename T>
 uint32_t* parental_field3d(
     T* field, 
     const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, uint32_t* parents = NULL
+    const uint64_t source, uint32_t* parents = NULL,
+    const int connectivity = 26
   ) {
+
+  connectivity_check(connectivity);
 
   const uint64_t voxels = sx * sy * sz;
   const uint64_t sxy = sx * sy;
@@ -451,15 +631,15 @@ uint32_t* parental_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -539,7 +719,7 @@ float* distance_field3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = (float)field[neighboridx];
+      delta = static_cast<float>(field[neighboridx]);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative

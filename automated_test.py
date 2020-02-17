@@ -11,19 +11,27 @@ TEST_TYPES = (
   np.bool
 )
 
-HEURISTICS = [ None, 'line' ]
-
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-@pytest.mark.parametrize("heuristic", HEURISTICS)
-def test_dijkstra2d_10x10(dtype, heuristic):
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("connectivity", [ 18, 26 ])
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity, compass):
   values = np.ones((10,10,1), dtype=dtype)
 
-  path = dijkstra3d.dijkstra(values, (1,1,0), (1,1,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (1,1,0), (1,1,0), 
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
+  )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,0] ]))
   
-  path = dijkstra3d.dijkstra(values, (0,0,0), (3,0,0), heuristic=heuristic)
-  print(heuristic, path)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (3,0,0), 
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
+  )
+
   assert len(path) == 4
   assert np.all(path == np.array([
     [0,0,0],
@@ -47,7 +55,11 @@ def test_dijkstra2d_10x10(dtype, heuristic):
     [3,0,0],    
   ])) 
 
-  path = dijkstra3d.dijkstra(values, (0,0,0), (5,5,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (5,5,0), 
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
+  )
 
   assert len(path) == 6
   assert np.all(path == np.array([
@@ -59,7 +71,11 @@ def test_dijkstra2d_10x10(dtype, heuristic):
     [5,5,0],
   ]))
 
-  path = dijkstra3d.dijkstra(values, (0,0,0), (9,9,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (9,9,0), 
+    bidirectional=bidirectional, connectivity=connectivity,
+    compass=compass
+  )
   
   assert len(path) == 10
   assert np.all(path == np.array([
@@ -75,20 +91,7 @@ def test_dijkstra2d_10x10(dtype, heuristic):
     [9,9,0]
   ]))
 
-@pytest.mark.parametrize("dtype", TEST_TYPES)
-@pytest.mark.parametrize("heuristic", HEURISTICS)
-def test_dijkstra2d_10x10_off_origin(dtype, heuristic):
-  values = np.ones((10,10,1), dtype=dtype)
-  
-  path = dijkstra3d.dijkstra(values, (2,0,0), (3,0,0), heuristic=heuristic)
-
-  assert len(path) == 2
-  assert np.all(path == np.array([
-    [2,0,0],
-    [3,0,0],
-  ]))
-
-  path = dijkstra3d.dijkstra(values, (2,1,0), (3,0,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(values, (2,1,0), (3,0,0), compass=compass)
 
   assert len(path) == 2
   assert np.all(path == np.array([
@@ -96,7 +99,7 @@ def test_dijkstra2d_10x10_off_origin(dtype, heuristic):
     [3,0,0],
   ]))
 
-  path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0), compass=compass)
 
   assert len(path) == 5
   assert np.all(path == np.array([
@@ -107,31 +110,296 @@ def test_dijkstra2d_10x10_off_origin(dtype, heuristic):
     [5,5,0],
   ]))
 
+# There are many more equal distance paths 
+# for 6 connected... so we have to be less specific.
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-@pytest.mark.parametrize("heuristic", HEURISTICS)
-def test_dijkstra3d_3x3x3(dtype, heuristic):
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_6(dtype, bidirectional, compass):
+  values = np.ones((10,10,1), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,0), (1,1,0), 
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,0] ]))
+  
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (3,0,0), 
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
+  )
+  
+  assert len(path) == 4
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,0,0],
+    [3,0,0],
+  ]))
+
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra2d_10x10_off_origin(bidirectional, dtype, compass):
+  values = np.ones((10,10,1), dtype=dtype)
+  
+  path = dijkstra3d.dijkstra(
+    values, (2,0,0), (3,0,0), 
+    bidirectional=bidirectional, compass=compass
+  )
+
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,0,0],
+    [3,0,0],
+  ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (2,1,0), (3,0,0), 
+    bidirectional=bidirectional, compass=compass
+  )
+
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,1,0],
+    [3,0,0],
+  ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (9,9,0), (5,5,0), 
+    bidirectional=bidirectional, compass=compass
+  )
+
+  assert len(path) == 5
+  assert np.all(path == np.array([
+    [9,9,0],
+    [8,8,0],
+    [7,7,0],
+    [6,6,0],
+    [5,5,0],
+  ]))
+
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_26(bidirectional, dtype, compass):
   values = np.ones((3,3,3), dtype=dtype)
 
-  path = dijkstra3d.dijkstra(values, (1,1,1), (1,1,1), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=26,
+    compass=compass
+  )
   assert len(path) == 1
   assert np.all(path == np.array([ [1,1,1] ]))
 
-  path = dijkstra3d.dijkstra(values, (0,0,0), (2,2,2), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=26
+  )
+
   assert np.all(path == np.array([
     [0,0,0],
     [1,1,1],
     [2,2,2]
   ]))
 
-  path = dijkstra3d.dijkstra(values, (2,2,2), (0,0,0), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=26,
+    compass=compass
+  )
   assert np.all(path == np.array([
     [2,2,2],
     [1,1,1],
     [0,0,0]
   ]))
 
-@pytest.mark.parametrize("heuristic", HEURISTICS)
-def test_dijkstra_2d_loop(heuristic):
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_18(bidirectional, dtype, compass):
+  values = np.ones((3,3,3), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,1] ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
+  )
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,0,1],
+    [1,1,2],
+    [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [0,1,1],
+    [1,1,2],
+    [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [0,1,1],
+    [1,2,1],
+    [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [1,2,1],
+    [2,2,2],
+  ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=18,
+    compass=compass
+  )
+  assert np.all(path == np.array([
+    [2,2,2],
+    [1,2,1],
+    [1,1,0],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [1,2,1],
+    [0,1,1],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [2,1,1],
+    [1,0,1],
+    [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [1,1,2],
+    [1,0,1],
+    [0,0,0]
+  ]))
+
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra3d_3x3x3_6(bidirectional, dtype, compass):
+  values = np.ones((3,3,3), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,1] ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
+  )
+  assert len(path) == 7
+  assert tuple(path[0]) == (0,0,0)
+  assert tuple(path[-1]) == (2,2,2)
+
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=6,
+    compass=compass
+  )
+  assert len(path) == 7
+  assert tuple(path[0]) == (2,2,2)
+  assert tuple(path[-1]) == (0,0,0)
+
+def test_bidirectional():
+  x = 20000
+  values = np.array([
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, 1, x, x, x, 6, x, x, x, x],
+    [x, x, 1, x, 4, x, 7, x, x, x], # two paths: cost 22, length 8
+    [x, x, x, 1, 8, x, 1, x, x, x], #            cost 23, length 9
+    [x, x, x, x, x, 8, x, 1, x, x],
+    [x, x, x, x, x, x, x, x, 1, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+  ])
+
+  path_reg = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=False)
+  path_bi = dijkstra3d.dijkstra(np.asfortranarray(values), (3,1), (7, 8), bidirectional=True)
+
+  print(path_reg)
+  print(path_bi)
+
+  assert np.all(path_reg == path_bi)
+
+  assert len(path_bi) == 8
+  assert np.all(path_bi == [
+    [3,1],
+    [4,2],
+    [5,3],
+    [5,4], # critical
+    [6,5], 
+    [5,6],
+    [6,7],
+    [7,8]
+  ])
+
+  values = np.array([
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+    [x, x, x, 6, 6, 6, 6, x, x, x],
+    [1, 1, 1, x, x, x, x, 6, 6, 6], # 42, 45
+    [x, x, 9, x, x, x, 7, x, x, x],
+    [x, x, 1, x, x, x, 1, x, x, x],
+    [x, x, 1, x, x, x, 1, x, x, x],
+    [x, x, 1, 1, 1, 1, 1, x, x, x],
+    [x, x, x, x, x, x, x, x, x, x],
+  ])
+
+  path_reg = dijkstra3d.dijkstra(np.asfortranarray(values), (4,0), (4, 9), bidirectional=False)
+  path_bi = dijkstra3d.dijkstra(np.asfortranarray(values), (4,0), (4, 9), bidirectional=True)
+
+  print(path_reg)
+  print(path_bi)
+
+  assert np.all(path_reg == path_bi)
+
+  assert len(path_bi) == 14
+  assert np.all(path_bi == [
+    [4,0],
+    [4,1],
+    # [4,2],
+    [5,2], 
+    [6,2], 
+    [7,2],
+    # [8,2],
+    [8,3],
+    [8,4],
+    [8,5],
+    # [8,6],
+    [7,6],
+    [6,6],
+    [5,6],
+    [4,7],
+    [4,8],
+    [4,9]
+  ])
+
+
+
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra_2d_loop(bidirectional, compass):
   x = 20000
   values = np.array([
     [x, x, x, x, x, x, 0, x, x, x],
@@ -146,9 +414,9 @@ def test_dijkstra_2d_loop(heuristic):
     [x, x, x, 1, 8, 9,10, x, x, x],
     [x, x, x, 4, x, x,11,12, x, x],
     [x, x, x, x, x, x, x, x,13,14],
-  ])
+  ], order='F')
 
-  path = dijkstra3d.dijkstra(np.asfortranarray(values), (2,2), (11, 9), heuristic=heuristic)
+  path = dijkstra3d.dijkstra(values, (2,2), (11, 9), bidirectional=bidirectional, compass=compass)
   correct_path = np.array([
     [2, 2],
     [3, 2],
@@ -224,6 +492,56 @@ def test_distance_field_2d(dtype):
 def test_distance_field_2d_asymmetric(dtype):
   values = np.ones((5, 10), dtype=dtype)
 
+  assert np.all(field == np.array([
+    [
+      [0, 1, 2, 3, 4],
+      [1, 1, 2, 3, 4],
+      [2, 2, 2, 3, 4],
+      [3, 3, 3, 3, 4],
+      [4, 4, 4, 4, 4],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (4,4))
+
+  assert np.all(field == np.array([
+    [
+      [4, 4, 4, 4, 4],
+      [4, 3, 3, 3, 3],
+      [4, 3, 2, 2, 2],
+      [4, 3, 2, 1, 1],
+      [4, 3, 2, 1, 0],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (2,2))
+
+  assert np.all(field == np.array([
+    [
+      [2, 2, 2, 2, 2],
+      [2, 1, 1, 1, 2],
+      [2, 1, 0, 1, 2],
+      [2, 1, 1, 1, 2],
+      [2, 2, 2, 2, 2],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values * 2, (2,2))
+
+  assert np.all(field == np.array([
+    [
+      [4, 4, 4, 4, 4],
+      [4, 2, 2, 2, 4],
+      [4, 2, 0, 2, 4],
+      [4, 2, 2, 2, 4],
+      [4, 4, 4, 4, 4],
+    ]
+  ]))
+
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+def test_distance_field_2d_asymmetric(dtype):
+  values = np.ones((5, 10), dtype=dtype)
+
   answer = np.array([
     [1, 0, 1, 2, 3, 4, 5, 6, 7, 8],
     [1, 1, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -234,7 +552,6 @@ def test_distance_field_2d_asymmetric(dtype):
 
   field = dijkstra3d.distance_field(values, (0,1))
   assert np.all(field == answer)
-
 
 def test_euclidean_distance_field_2d():
   values = np.ones((2, 2), dtype=bool)
@@ -295,8 +612,8 @@ def test_euclidean_distance_field_2d():
   assert np.all(np.abs(field - answer) < 0.00001)   
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-@pytest.mark.parametrize("heuristic", HEURISTICS)
-def test_dijkstra_parental(dtype, heuristic):
+@pytest.mark.parametrize("compass", [ False, True ])
+def test_dijkstra_parental(dtype, compass):
   values = np.ones((10,10,1), dtype=dtype, order='F')
   
   parents = dijkstra3d.parental_field(values, (0,0,0))
@@ -327,7 +644,7 @@ def test_dijkstra_parental(dtype, heuristic):
     parents = dijkstra3d.parental_field(values, start)
     path = dijkstra3d.path_from_parents(parents, target)
 
-    path_orig = dijkstra3d.dijkstra(values, start, target, heuristic=heuristic)
+    path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
     print(start, target)
     print(path)
@@ -335,7 +652,7 @@ def test_dijkstra_parental(dtype, heuristic):
 
     assert path_len(path, values) == path_len(path_orig, values)
 
-    if heuristic is None:
+    if compass == False:
       assert np.all(path == path_orig)
 
   # Asymmetric Test
@@ -349,7 +666,7 @@ def test_dijkstra_parental(dtype, heuristic):
     parents = dijkstra3d.parental_field(values, start)
     path = dijkstra3d.path_from_parents(parents, target)
 
-    path_orig = dijkstra3d.dijkstra(values, start, target, heuristic=heuristic)
+    path_orig = dijkstra3d.dijkstra(values, start, target, compass=compass)
 
     print(start, target)
     print(path)
@@ -357,5 +674,5 @@ def test_dijkstra_parental(dtype, heuristic):
 
     assert path_len(path, values) == path_len(path_orig, values)
 
-    if heuristic is None:
+    if compass == False:
       assert np.all(path == path_orig)
