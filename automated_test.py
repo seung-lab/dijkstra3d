@@ -237,6 +237,11 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
     [2,1,1],
     [1,0,1],
     [0,0,0]
+  ])) or np.all(path == np.array([
+    [2,2,2],
+    [1,1,2],
+    [1,0,1],
+    [0,0,0]
   ]))
 
 @pytest.mark.parametrize("bidirectional", [ False, True ])
