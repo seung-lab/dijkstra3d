@@ -210,6 +210,11 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
     [0,1,1],
     [1,2,1],
     [2,2,2],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [1,2,1],
+    [2,2,2],
   ]))
 
   path = dijkstra3d.dijkstra(
