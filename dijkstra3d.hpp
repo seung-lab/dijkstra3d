@@ -52,10 +52,9 @@ inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const 
 inline void compute_neighborhood(
   int *neighborhood, 
   const int x, const int y, const int z,
-  const uint64_t sx, const uint64_t sy, const uint64_t sz,
-  const int connectivity = 26) {
+  const uint64_t sx, const uint64_t sy, const uint64_t sz) {
 
-  for (int i = 0; i < connectivity; i++) {
+  for (int i = 0; i < NHOOD_SIZE; i++) {
     neighborhood[i] = 0;
   }
 
@@ -82,10 +81,6 @@ inline void compute_neighborhood(
     neighborhood[5] = sxy;
   }
 
-  if (connectivity == 6) {
-    return;
-  }
-
   // 18-hood
 
   // xy diagonals
@@ -105,10 +100,6 @@ inline void compute_neighborhood(
   neighborhood[15] = (neighborhood[0] + neighborhood[5]) * (neighborhood[0] && neighborhood[5]); // up-right
   neighborhood[16] = (neighborhood[1] + neighborhood[4]) * (neighborhood[1] && neighborhood[4]); // down-left
   neighborhood[17] = (neighborhood[1] + neighborhood[5]) * (neighborhood[1] && neighborhood[5]); // down-right
-
-  if (connectivity == 18) {
-    return;
-  }
 
   // 26-hood
 
@@ -404,7 +395,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
     if (forward) {
       bidirectional_core<T>(
@@ -481,7 +472,7 @@ uint32_t* parental_field3d(
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
-  int neighborhood[connectivity];
+  int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
@@ -511,9 +502,7 @@ uint32_t* parental_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(
-      neighborhood, x, y, z, sx, sy, sz, connectivity
-    );
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
@@ -593,7 +582,7 @@ float* distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
@@ -699,7 +688,7 @@ float* euclidean_distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
