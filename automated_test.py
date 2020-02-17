@@ -234,6 +234,34 @@ def test_dijkstra3d_3x3x3_18(bidirectional, dtype):
     [0,0,0]
   ]))
 
+@pytest.mark.parametrize("bidirectional", [ False, True ])
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+def test_dijkstra3d_3x3x3_6(bidirectional, dtype):
+  values = np.ones((3,3,3), dtype=dtype)
+
+  path = dijkstra3d.dijkstra(
+    values, (1,1,1), (1,1,1), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,1] ]))
+
+  path = dijkstra3d.dijkstra(
+    values, (0,0,0), (2,2,2), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 7
+  assert tuple(path[0]) == (0,0,0)
+  assert tuple(path[-1]) == (2,2,2)
+
+  path = dijkstra3d.dijkstra(
+    values, (2,2,2), (0,0,0), 
+    bidirectional=bidirectional, connectivity=6
+  )
+  assert len(path) == 7
+  assert tuple(path[0]) == (2,2,2)
+  assert tuple(path[-1]) == (0,0,0)
+
 def test_bidirectional():
   x = 20000
   values = np.array([
