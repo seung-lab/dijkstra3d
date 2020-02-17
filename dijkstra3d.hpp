@@ -488,6 +488,19 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
   ty = (target - (tz * sxy)) / fast_sx;
   tx = target - sx * (ty + tz * sy);
 
+  std::function<void(uint64_t)> xyzfn = [&x,&y,&z,power_of_two,xshift,yshift,sx,sy,sxy,fast_sx,fast_sxy](uint64_t l){
+    if (power_of_two) {
+      z = l >> (xshift + yshift);
+      y = (l - (z << (xshift + yshift))) >> xshift;
+      x = l - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = l / fast_sxy;
+      y = (l - (z * sxy)) / fast_sx;
+      x = l - sx * (y + z * sy);
+    }
+  };
+
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
@@ -496,16 +509,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
       continue;
     }
 
-    if (power_of_two) {
-      z = loc >> (xshift + yshift);
-      y = (loc - (z << (xshift + yshift))) >> xshift;
-      x = loc - ((y + (z << yshift)) << xshift);
-    }
-    else {
-      z = loc / fast_sxy;
-      y = (loc - (z * sxy)) / fast_sx;
-      x = loc - sx * (y + z * sy);
-    }
+    xyzfn(loc);
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
@@ -528,16 +532,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
           goto OUTSIDE;
         }
 
-        if (power_of_two) {
-          z = neighboridx >> (xshift + yshift);
-          y = (neighboridx - (z << (xshift + yshift))) >> xshift;
-          x = neighboridx - ((y + (z << yshift)) << xshift);
-        }
-        else {
-          z = neighboridx / fast_sxy;
-          y = (neighboridx - (z * sxy)) / fast_sx;
-          x = neighboridx - sx * (y + z * sy);
-        }
+        xyzfn(neighboridx);
 
         // Use Chebychev heuristic instead of Euclidean 
         // because we can only move voxel by voxel rather 
