@@ -145,7 +145,7 @@ path = dijkstra3d.dijkstra(field, source, target, compass=True) # red line
 ```
 
 <p style="font-style: italics;" align="center">
-<img height=480 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/multimethod.png" alt="Fig. 2: A benchmark of dijkstra.dijkstra run on a 50<sup>3</sup> voxel field of random integers of increasing variation from random source to random target. (blue/squares) unidirectional search (yellow/triangles) bidirectional search (red/diamonds) A* search aka .compass=True." /><br>
+<img height=512 src="https://raw.githubusercontent.com/seung-lab/dijkstra3d/master/multimethod.png" alt="Fig. 2: A benchmark of dijkstra.dijkstra run on a 50<sup>3</sup> voxel field of random integers of increasing variation from random source to random target. (blue/squares) unidirectional search (yellow/triangles) bidirectional search (red/diamonds) A* search aka .compass=True." /><br>
 Fig. 2: A benchmark of dijkstra.dijkstra run on a 50<sup>3</sup> voxel field of random integers of increasing variation from random source to random target. (blue/squares) unidirectional search (yellow/triangles) bidirectional search (red/diamonds) A* search aka <code>compass=True</code>.
 </p>
 
@@ -158,10 +158,13 @@ N = 250
 sx, sy, sz = 50, 50, 50
 
 def trial(bi, compass):
-  for n in range(1, 100, 1):
+  for n in range(0, 100, 1):
     accum = 0
     for i in range(N):
-      values = np.random.randint(1,n+1, size=(sx,sy,sz))
+      if n > 0:
+        values = np.random.randint(1,n+1, size=(sx,sy,sz))
+      else:
+        values = np.ones((sx,sy,sz))
       values = np.asfortranarray(values)
       start = np.random.randint(0,min(sx,sy,sz), size=(3,))
       target = np.random.randint(0,min(sx,sy,sz), size=(3,))  
