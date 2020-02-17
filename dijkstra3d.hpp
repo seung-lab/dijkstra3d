@@ -258,7 +258,7 @@ template <typename T>
 inline void bidirectional_core(
     const uint64_t loc, 
     T* field, float *dist, uint32_t* parents, 
-    int *neighborhood, const int connectivity, 
+    int *neighborhood, 
     std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> &queue
   ) {
   
@@ -394,15 +394,13 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
     if (forward) {
       bidirectional_core<T>(
         loc, field, dist_fwd, parents_fwd, 
-        neighborhood, connectivity, 
-        queue_fwd
+        neighborhood, queue_fwd
       );
     }
     else {
       bidirectional_core<T>(
         loc, field, dist_rev, parents_rev, 
-        neighborhood, connectivity, 
-        queue_rev
+        neighborhood, queue_rev
       );
     }
   }
