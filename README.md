@@ -68,6 +68,12 @@ vector<unsigned int> path = dijkstra::bidirectional_dijkstra3d<float>(
   source, target, /*connectivity=*/26 // 26 is default
 );
 
+// A* search using a distance to target heuristic
+vector<unsigned int> path = dijkstra::compass_guided_dijkstra3d<float>(
+  labels, /*sx=*/512, /*sy=*/512, /*sz=*/512,
+  source, target, /*connectivity=*/26 // 26 is default
+);
+
 uint32_t* parents = dijkstra::parental_field3d<float>(
   labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, 
   source, /*connectivity=*/26 // 26 is default
