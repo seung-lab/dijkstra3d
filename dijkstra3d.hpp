@@ -61,32 +61,15 @@ inline void compute_neighborhood(
   const uint64_t sx, const uint64_t sy, const uint64_t sz,
   const int connectivity = 26) {
 
-  for (int i = 0; i < NHOOD_SIZE; i++) {
-    neighborhood[i] = 0;
-  }
-
   const int sxy = sx * sy;
 
   // 6-hood
-
-  if (x > 0) {
-    neighborhood[0] = -1;
-  }
-  if (x < static_cast<int>(sx) - 1) {
-    neighborhood[1] = 1;
-  }
-  if (y > 0) {
-    neighborhood[2] = -static_cast<int>(sx);
-  }
-  if (y < static_cast<int>(sy) - 1) {
-    neighborhood[3] = static_cast<int>(sx);
-  }
-  if (z > 0) {
-    neighborhood[4] = -sxy;
-  }
-  if (z < static_cast<int>(sz) - 1) {
-    neighborhood[5] = sxy;
-  }
+  neighborhood[0] = -1 * (x > 0); // -x
+  neighborhood[1] = (x < (static_cast<int>(sx) - 1)); // +x
+  neighborhood[2] = -static_cast<int>(sx) * (y > 0); // -y
+  neighborhood[3] = static_cast<int>(sx) * (y < static_cast<int>(sy) - 1); // +y
+  neighborhood[4] = -sxy * static_cast<int>(z > 0); // -z
+  neighborhood[5] = sxy * (z < static_cast<int>(sz) - 1); // +z
 
   // 18-hood
 
@@ -231,7 +214,7 @@ std::vector<uint32_t> dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
@@ -406,7 +389,7 @@ std::vector<uint32_t> bidirectional_dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     if (forward) {
       bidirectional_core<T>(
@@ -515,7 +498,7 @@ uint32_t* parental_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
