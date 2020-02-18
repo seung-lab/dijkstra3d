@@ -35,7 +35,7 @@ from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-__VERSION__ = '1.3.0'
+__VERSION__ = '1.3.1'
 
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[uint32_t] dijkstra3d[T](
