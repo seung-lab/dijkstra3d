@@ -34,7 +34,7 @@ dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotro
 dist_field = dijkstra3d.distance_field(field, source=(0,0,0))
 ```
 
-Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel, 18 is faces and edges, 26 is faces, edges, and corners. For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be finite and non-negative (incl. negative zero).  
+Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel (L<sub>1</sub>: manhattan distance), 18 is faces and edges, 26 is faces, edges, and corners (L<sub>&infin;</sub>: chebyshev distance). For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be finite and non-negative (incl. negative zero).  
 
 ## What Problem does this Package Solve?
 
