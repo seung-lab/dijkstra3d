@@ -24,26 +24,23 @@ parents = dijkstra3d.parental_field(field, source=(0,0,0), connectivity=6) # def
 path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
 print(path.shape)
 
+# Given a boolean label "field" and a source vertex, compute 
+# the anisotropic euclidean distance from the source to all labeled vertices.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
+
+# Given a numerical field, for each directed edge from adjacent voxels A and B, 
+# use B as the edge weight. In this fashion, compute the distance from a source 
+# point for all finite voxels.
 dist_field = dijkstra3d.distance_field(field, source=(0,0,0))
 ```
 
-Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel, 18 is faces and edges, 26 is faces, edges, and corners. For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be non-negative (incl. negative zero).  
+Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel, 18 is faces and edges, 26 is faces, edges, and corners. For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be finite and non-negative (incl. negative zero).  
 
 ## What Problem does this Package Solve?
 
 This package was developed in the course of exploring TEASAR skeletonization of 3D image volumes (now available in [Kimimaro](https://github.com/seung-lab/kimimaro)). Other commonly available packages implementing Dijkstra used matricies or object graphs as their underlying implementation. In either case, these generic graph packages necessitate explicitly creating the graph's edges and vertices, which turned out to be a significant computational cost compared with the search time. Additionally, some implementations required memory quadratic in the number of vertices (e.g. an NxN matrix for N nodes) which becomes prohibitive for large arrays. In some cases, a compressed sparse matrix representation was used to remain within memory limits.  
 
 Neither of graph construction nor quadratic memory pressure are necessary for an image analysis application. The edges between voxels (3D pixels) are regular and implicit in the rectangular structure of the image. Additionally, the cost of each edge can be stored a single time instead of 26 times in contiguous uncompressed memory regions for faster performance.  
-
-## Available Dijkstra Variants
-
-The following variants are available in 2D and 3D:
-
-- **dijkstra** - Shortest path between source and target. Early termination on finding the target. Bidirectional version available.
-- **parental_field / query_shortest_path** - Compute shortest path between source and all targets. Use query_shortest_path to make repeated queries against the result set.  
-- **euclidean_distance_field** - Given a boolean label field and a source vertex, compute the anisotropic euclidean distance from the source to all labeled vertices.
-- **distance_field** - Given a numerical field, for each directed edge from adjacent voxels A and B, use B as the edge weight. In this fashion, compute the distance from a source point for all finite voxels.
 
 ## C++ Use 
 
