@@ -79,7 +79,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
   ) 
-
+  
 def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
@@ -217,16 +217,31 @@ def path_from_parents(parents, target):
 
   cdef size_t targ = target[0] + sx * (target[1] + sy * target[2])
 
-  cdef uint32_t[:,:,:] arr_memview32 = parents
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef vector[uint32_t] path32
+  cdef uint32_t* path_ptr32
+  cdef uint32_t[:] vec_view32
 
-  cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
-  cdef uint32_t* path_ptr = <uint32_t*>&path[0]
-  cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr
+  cdef uint64_t[:,:,:] arr_memview64
+  cdef vector[uint64_t] path64
+  cdef uint64_t* path_ptr64
+  cdef uint64_t[:] vec_view64
 
-  # This construct is required by python 2.
-  # Python 3 can just do np.frombuffer(vec_view, ...)
-  buf = bytearray(vec_view[:])
-  numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
+  if parents.dtype == np.uint64:
+    arr_memview64 = parents
+    path64 = query_shortest_path[uint64_t](&arr_memview64[0,0,0], targ)
+    path_ptr64 = <uint64_t*>&path64[0]
+    vec_view64 = <uint64_t[:path64.size()]>path_ptr64
+    buf = bytearray(vec_view64[:])
+    numpy_path = np.frombuffer(buf, dtype=np.uint64)[::-1]
+  else:
+    arr_memview32 = parents
+    path32 = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
+    path_ptr32 = <uint32_t*>&path32[0]
+    vec_view32 = <uint32_t[:path32.size()]>path_ptr32
+    buf = bytearray(vec_view32[:])
+    numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
+
   return _path_to_point_cloud(numpy_path, 3, sy, sx)
 
 def parental_field(data, source, connectivity=26):
