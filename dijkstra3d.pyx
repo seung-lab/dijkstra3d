@@ -64,10 +64,10 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     size_t sx, size_t sy, size_t sz,
     size_t source
   )
-  cdef uint32_t* parental_field3d[T](
+  cdef OUT* parental_field3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
-    size_t source, uint32_t* parents,
+    size_t source, OUT* parents,
     int connectivity
   )
   cdef float* euclidean_distance_field3d(
@@ -123,8 +123,8 @@ def dijkstra(
     source to target including source and target.
   """
   dims = len(data.shape)
-  if dims not in (2, 3):
-    raise DimensionError("Only 2 and 3 dimension arrays are supported.")
+  if dims not in (2,3):
+    raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
 
   if dims == 2:
     if connectivity == 4:
@@ -183,7 +183,8 @@ def distance_field(data, source):
     containing its distance from the source voxel.
   """
   dims = len(data.shape)
-  assert dims <= 3
+  if dims not in (2,3):
+    raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
 
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.float32)
@@ -264,7 +265,8 @@ def parental_field(data, source, connectivity=26):
     of a path has index 0.
   """
   dims = len(data.shape)
-  assert dims <= 3
+  if dims not in (2,3):
+    raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
 
   if dims == 2:
     if connectivity == 4:
@@ -770,61 +772,121 @@ def _execute_parental_field(data, source, connectivity):
 
   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
 
-  cdef cnp.ndarray[uint32_t, ndim=3] parents = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
+  sixtyfourbit = data.size > np.iinfo(np.uint32).max
+
+  cdef cnp.ndarray[uint32_t, ndim=3] parents32
+  cdef cnp.ndarray[uint64_t, ndim=3] parents64
+
+  if sixtyfourbit:
+    parents64 = np.zeros( (sx,sy,sz), dtype=np.uint64, order='F' )
+  else:
+    parents32 = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
+
   dtype = data.dtype
 
   if dtype == np.float32:
     arr_memviewfloat = data
-    parental_field3d[float](
-      &arr_memviewfloat[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[float,uint64_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[float,uint32_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   elif dtype == np.float64:
     arr_memviewdouble = data
-    parental_field3d[double](
-      &arr_memviewdouble[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[double,uint64_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[double,uint32_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
-    parental_field3d[uint64_t](
-      &arr_memview64[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[uint64_t,uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[uint64_t,uint32_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
-    parental_field3d[uint32_t](
-      &arr_memview32[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[uint32_t,uint64_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[uint32_t,uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
-    parental_field3d[uint16_t](
-      &arr_memview16[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[uint16_t,uint64_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[uint16_t,uint32_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
-    parental_field3d[uint8_t](
-      &arr_memview8[0,0,0],
-      sx, sy, sz,
-      src, &parents[0,0,0],
-      connectivity
-    )
+    if sixtyfourbit:
+      parental_field3d[uint8_t,uint64_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, &parents64[0,0,0],
+        connectivity
+      )
+    else:
+      parental_field3d[uint8_t,uint32_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, &parents32[0,0,0],
+        connectivity
+      )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  return parents
+  if sixtyfourbit:
+    return parents64
+  else:
+    return parents32
 
 def _execute_euclidean_distance_field(data, source, anisotropy):
   cdef uint8_t[:,:,:] arr_memview8
