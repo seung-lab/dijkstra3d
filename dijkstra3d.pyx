@@ -37,41 +37,44 @@ import numpy as np
 
 __VERSION__ = '1.3.1'
 
+class DimensionError(Exception):
+  pass
+
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef vector[uint32_t] dijkstra3d[T](
     T* field, 
-    int sx, int sy, int sz, 
-    int source, int target,
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, size_t target,
     int connectivity
   )
   cdef vector[uint32_t] bidirectional_dijkstra3d[T](
     T* field, 
-    int sx, int sy, int sz, 
-    int source, int target,
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, size_t target,
     int connectivity
   )
   cdef vector[uint32_t] compass_guided_dijkstra3d[T](
     T* field, 
-    int sx, int sy, int sz, 
-    int source, int target,
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, size_t target,
     int connectivity, float normalizer
   )
   cdef float* distance_field3d[T](
     T* field,
-    int sx, int sy, int sz,
-    int source
+    size_t sx, size_t sy, size_t sz,
+    size_t source
   )
   cdef uint32_t* parental_field3d[T](
     T* field, 
-    int sx, int sy, int sz, 
-    int source, uint32_t* parents,
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, uint32_t* parents,
     int connectivity
   )
   cdef float* euclidean_distance_field3d(
     uint8_t* field,
-    int sx, int sy, int sz,
+    size_t sx, size_t sy, size_t sz,
     float wx, float wy, float wz,
-    int source, float* dist
+    size_t source, float* dist
   )
   cdef vector[uint32_t] query_shortest_path(
     uint32_t* parents, uint32_t target
@@ -120,7 +123,8 @@ def dijkstra(
     source to target including source and target.
   """
   dims = len(data.shape)
-  assert dims in (2, 3)
+  if dims not in (2, 3):
+    raise DimensionError("Only 2 and 3 dimension arrays are supported.")
 
   if dims == 2:
     if connectivity == 4:
@@ -128,7 +132,7 @@ def dijkstra(
     elif connectivity == 8:
       connectivity = 18 # or 26 but 18 might be faster
 
-  if connectivity not in (6,18,26):
+  if connectivity not in (6, 18, 26):
     raise ValueError(
       "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
     )
@@ -146,9 +150,9 @@ def dijkstra(
 
   data = np.asfortranarray(data)
 
-  cdef int cols = data.shape[0]
-  cdef int rows = data.shape[1]
-  cdef int depth = data.shape[2]
+  cdef size_t cols = data.shape[0]
+  cdef size_t rows = data.shape[1]
+  cdef size_t depth = data.shape[2]
 
   if bidirectional:
     path = _execute_bidirectional_dijkstra(data, source, target, connectivity)
@@ -207,11 +211,11 @@ def distance_field(data, source):
   return field
 
 def path_from_parents(parents, target):
-  cdef int sx = parents.shape[0]
-  cdef int sy = parents.shape[1]
-  cdef int sz = parents.shape[2]
+  cdef size_t sx = parents.shape[0]
+  cdef size_t sy = parents.shape[1]
+  cdef size_t sz = parents.shape[2]
 
-  cdef int targ = target[0] + sx * (target[1] + sy * target[2])
+  cdef size_t targ = target[0] + sx * (target[1] + sy * target[2])
 
   cdef uint32_t[:,:,:] arr_memview32 = parents
 
@@ -347,7 +351,7 @@ def _validate_coord(data, coord):
 def _path_to_point_cloud(path, dims, rows, cols):
   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
 
-  cdef int sxy = rows * cols
+  cdef size_t sxy = rows * cols
 
   if dims == 3:
     for i, pt in enumerate(path):
@@ -372,12 +376,12 @@ def _execute_dijkstra(
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef int sx = data.shape[0]
-  cdef int sy = data.shape[1]
-  cdef int sz = data.shape[2]
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
 
-  cdef int src = source[0] + sx * (source[1] + sy * source[2])
-  cdef int sink = target[0] + sx * (target[1] + sy * target[2])
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+  cdef size_t sink = target[0] + sx * (target[1] + sy * target[2])
 
   cdef vector[uint32_t] output
 
@@ -562,11 +566,11 @@ def _execute_distance_field(data, source):
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef int sx = data.shape[0]
-  cdef int sy = data.shape[1]
-  cdef int sz = data.shape[2]
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
 
-  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
 
   cdef float* dist
 
@@ -617,7 +621,7 @@ def _execute_distance_field(data, source):
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  cdef int voxels = sx * sy * sz
+  cdef size_t voxels = sx * sy * sz
   cdef float[:] dist_view = <float[:voxels]>dist
 
   # This construct is required by python 2.
@@ -635,11 +639,11 @@ def _execute_parental_field(data, source, connectivity):
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
 
-  cdef int sx = data.shape[0]
-  cdef int sy = data.shape[1]
-  cdef int sz = data.shape[2]
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
 
-  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
 
   cdef cnp.ndarray[uint32_t, ndim=3] parents = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
   dtype = data.dtype
@@ -700,15 +704,15 @@ def _execute_parental_field(data, source, connectivity):
 def _execute_euclidean_distance_field(data, source, anisotropy):
   cdef uint8_t[:,:,:] arr_memview8
 
-  cdef int sx = data.shape[0]
-  cdef int sy = data.shape[1]
-  cdef int sz = data.shape[2]
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
 
   cdef float wx = anisotropy[0]
   cdef float wy = anisotropy[1]
   cdef float wz = anisotropy[2]
 
-  cdef int src = source[0] + sx * (source[1] + sy * source[2])
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
 
   cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
 

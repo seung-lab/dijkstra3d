@@ -155,32 +155,32 @@ struct HeapNodeCompare {
  * Returns: vector containing 1D indices of the path from
  *   source to target including source and target.
  */
-template <typename T>
-std::vector<uint32_t> dijkstra3d(
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> dijkstra3d(
     T* field, 
-    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, const uint64_t target,
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target,
     const int connectivity = 26
   ) {
 
   connectivity_check(connectivity);
 
   if (source == target) {
-    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+    return std::vector<OUT>{ static_cast<OUT>(source) };
   }
 
-  const uint64_t voxels = sx * sy * sz;
-  const uint64_t sxy = sx * sy;
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
   
-  const libdivide::divider<uint64_t> fast_sx(sx); 
-  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
   float *dist = new float[voxels]();
-  uint32_t *parents = new uint32_t[voxels]();
+  OUT *parents = new OUT[voxels]();
   fill(dist, +INFINITY, voxels);
   dist[source] = -0;
 
@@ -189,9 +189,9 @@ std::vector<uint32_t> dijkstra3d(
   std::priority_queue<HeapNode, std::vector<HeapNode>, HeapNodeCompare> queue;
   queue.emplace(0.0, source);
 
-  uint64_t loc;
+  size_t loc;
   float delta;
-  uint64_t neighboridx;
+  size_t neighboridx;
 
   int x, y, z;
 
@@ -247,7 +247,7 @@ std::vector<uint32_t> dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<uint32_t> path = query_shortest_path(parents, target);
+  std::vector<OUT> path = query_shortest_path(parents, target);
   delete [] parents;
 
   return path;
