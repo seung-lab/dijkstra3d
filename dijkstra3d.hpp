@@ -259,14 +259,14 @@ std::vector<OUT> dijkstra3d(
 // helper function for bidirectional_dijkstra
 template <typename T, typename OUT>
 inline void bidirectional_core(
-    const uint64_t loc, 
-    T* field, float *dist, uint32_t* parents, 
+    const size_t loc, 
+    T* field, float *dist, OUT* parents, 
     int *neighborhood, 
     std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> &queue
   ) {
   
   float delta;
-  uint64_t neighboridx;
+  size_t neighboridx;
 
   for (int i = 0; i < NHOOD_SIZE; i++) {
     if (neighborhood[i] == 0) {
@@ -292,8 +292,8 @@ inline void bidirectional_core(
 template <typename T, typename OUT = uint32_t>
 std::vector<OUT> bidirectional_dijkstra3d(
     T* field, 
-    const uint64_t sx, const uint64_t sy, const uint64_t sz, 
-    const uint64_t source, const uint64_t target,
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target,
     const int connectivity = 26
   ) {
 
@@ -303,11 +303,11 @@ std::vector<OUT> bidirectional_dijkstra3d(
     return std::vector<OUT>{ static_cast<OUT>(source) };
   }
 
-  const uint64_t voxels = sx * sy * sz;
-  const uint64_t sxy = sx * sy;
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
   
-  const libdivide::divider<uint64_t> fast_sx(sx); 
-  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
 
   const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
@@ -332,14 +332,14 @@ std::vector<OUT> bidirectional_dijkstra3d(
   std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue_rev;
   queue_rev.emplace(dist_rev[target], target);
 
-  uint64_t loc = source;
-  uint64_t final_loc = source;
+  size_t loc = source;
+  size_t final_loc = source;
   int x, y, z;
 
   bool forward = false;
   float cost = INFINITY;
 
-  std::function<float(uint64_t)> costfn = [field, target, dist_fwd, dist_rev](uint64_t loc) { 
+  std::function<float(size_t)> costfn = [field, target, dist_fwd, dist_rev](size_t loc) { 
     return abs(dist_rev[loc]) + abs(dist_fwd[loc]) + static_cast<float>(field[target]) - static_cast<float>(field[loc]);
   };
 
@@ -395,13 +395,13 @@ std::vector<OUT> bidirectional_dijkstra3d(
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
     if (forward) {
-      bidirectional_core<T>(
+      bidirectional_core<T,OUT>(
         loc, field, dist_fwd, parents_fwd, 
         neighborhood, queue_fwd
       );
     }
     else {
-      bidirectional_core<T>(
+      bidirectional_core<T,OUT>(
         loc, field, dist_rev, parents_rev, 
         neighborhood, queue_rev
       );
