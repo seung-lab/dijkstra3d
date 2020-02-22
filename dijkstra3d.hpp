@@ -435,7 +435,7 @@ std::vector<OUT> bidirectional_dijkstra3d(
 // is normalized to the field minimum which guarantees
 // correctness.
 template <typename T, typename OUT = uint32_t>
-std::vector<uint32_t> compass_guided_dijkstra3d(
+std::vector<OUT> compass_guided_dijkstra3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
@@ -445,7 +445,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
   connectivity_check(connectivity);
 
   if (source == target) {
-    return std::vector<uint32_t>{ static_cast<uint32_t>(source) };
+    return std::vector<OUT>{ static_cast<OUT>(source) };
   }
 
   const size_t voxels = sx * sy * sz;
@@ -459,7 +459,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
   const int yshift = std::log2(sy);
 
   float *dist = new float[voxels]();
-  uint32_t *parents = new uint32_t[voxels]();
+  OUT *parents = new OUT[voxels]();
   fill(dist, +INFINITY, voxels);
   dist[source] = 0;
 

@@ -41,7 +41,7 @@ class DimensionError(Exception):
   pass
 
 cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
-  cdef vector[uint32_t] dijkstra3d[T](
+  cdef vector[OUT] dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, size_t target,
@@ -53,7 +53,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     size_t source, size_t target,
     int connectivity
   )
-  cdef vector[uint32_t] compass_guided_dijkstra3d[T](
+  cdef vector[OUT] compass_guided_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, size_t target,
@@ -383,108 +383,210 @@ def _execute_dijkstra(
   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
   cdef size_t sink = target[0] + sx * (target[1] + sy * target[2])
 
-  cdef vector[uint32_t] output
+  cdef vector[uint32_t] output32
+  cdef vector[uint64_t] output64
 
+  sixtyfourbit = data.size > np.iinfo(np.uint32).max
+  
   dtype = data.dtype
 
   if dtype == np.float32:
     arr_memviewfloat = data
     if compass:
-      output = compass_guided_dijkstra3d[float](
-        &arr_memviewfloat[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[float, uint64_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[float, uint32_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[float](
-        &arr_memviewfloat[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[float, uint64_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[float, uint32_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
   elif dtype == np.float64:
     arr_memviewdouble = data
     if compass:
-      output = compass_guided_dijkstra3d[double](
-        &arr_memviewdouble[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[double, uint64_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[double, uint32_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[double](
-        &arr_memviewdouble[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[double, uint64_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[double, uint32_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     if compass:
-      output = compass_guided_dijkstra3d[uint64_t](
-        &arr_memview64[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[uint64_t, uint64_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[uint64_t, uint32_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[uint64_t](
-        &arr_memview64[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[uint64_t, uint64_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[uint64_t, uint32_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
     if compass:
-      output = compass_guided_dijkstra3d[uint32_t](
-        &arr_memview32[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[uint32_t, uint64_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[uint32_t, uint32_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[uint32_t](
-        &arr_memview32[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[uint32_t, uint64_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[uint32_t, uint32_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     if compass:
-      output = compass_guided_dijkstra3d[uint16_t](
-        &arr_memview16[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[uint16_t, uint64_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[uint16_t, uint32_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[uint16_t](
-        &arr_memview16[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[uint16_t, uint64_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[uint16_t, uint32_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     if compass:
-      output = compass_guided_dijkstra3d[uint8_t](
-        &arr_memview8[0,0,0],
-        sx, sy, sz,
-        src, sink, 
-        connectivity, compass_norm
-      )
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d[uint8_t, uint64_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
+      else:
+        output32 = compass_guided_dijkstra3d[uint8_t, uint32_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, 
+          connectivity, compass_norm
+        )
     else:
-      output = dijkstra3d[uint8_t](
-        &arr_memview8[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d[uint8_t, uint64_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
+      else:
+        output32 = dijkstra3d[uint8_t, uint32_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity
+        )
 
-  cdef uint32_t* output_ptr = <uint32_t*>&output[0]
-  cdef uint32_t[:] vec_view = <uint32_t[:output.size()]>output_ptr
+  cdef uint32_t* output_ptr32
+  cdef uint64_t* output_ptr64
 
-  # This construct is required by python 2.
-  # Python 3 can just do np.frombuffer(vec_view, ...)
-  buf = bytearray(vec_view[:])
-  return np.frombuffer(buf, dtype=np.uint32)[::-1]
+  cdef uint32_t[:] vec_view32
+  cdef uint64_t[:] vec_view64
+
+  if sixtyfourbit:
+    output_ptr64 = <uint64_t*>&output64[0]
+    vec_view64 = <uint64_t[:output64.size()]>output_ptr64
+    buf = bytearray(vec_view64[:])
+    return np.frombuffer(buf, dtype=np.uint64)[::-1]
+  else:
+    output_ptr32 = <uint32_t*>&output32[0]
+    vec_view32 = <uint32_t[:output32.size()]>output_ptr32
+    buf = bytearray(vec_view32[:])
+    return np.frombuffer(buf, dtype=np.uint32)[::-1]
 
 def _execute_bidirectional_dijkstra(data, source, target, connectivity):
   cdef uint8_t[:,:,:] arr_memview8
