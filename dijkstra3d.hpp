@@ -30,8 +30,8 @@
 
 namespace dijkstra {
 
-inline float* fill(float *arr, const float value, const uint64_t size) {
-  for (uint64_t i = 0; i < size; i++) {
+inline float* fill(float *arr, const float value, const size_t size) {
+  for (size_t i = 0; i < size; i++) {
     arr[i] = value;
   }
   return arr;
@@ -43,9 +43,10 @@ void connectivity_check(int connectivity) {
   }
 }
 
-inline std::vector<uint32_t> query_shortest_path(const uint32_t* parents, const uint32_t target) {
-  std::vector<uint32_t> path;
-  uint32_t loc = target;
+template <typename OUT = uint32_t>
+inline std::vector<OUT> query_shortest_path(const OUT* parents, const OUT target) {
+  std::vector<OUT> path;
+  OUT loc = target;
   while (parents[loc]) {
     path.push_back(loc);
     loc = parents[loc] - 1; // offset by 1 to disambiguate the 0th index
@@ -249,7 +250,7 @@ std::vector<OUT> dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path(parents, target);
+  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
   delete [] parents;
 
   return path;
@@ -417,9 +418,9 @@ std::vector<OUT> bidirectional_dijkstra3d(
 
   std::vector<OUT> path_fwd, path_rev;
 
-  path_rev = query_shortest_path(parents_rev, final_loc);
+  path_rev = query_shortest_path<OUT>(parents_rev, final_loc);
   delete [] parents_rev;
-  path_fwd = query_shortest_path(parents_fwd, final_loc);
+  path_fwd = query_shortest_path<OUT>(parents_fwd, final_loc);
   delete [] parents_fwd;
 
   std::reverse(path_fwd.begin(), path_fwd.end());
@@ -571,7 +572,7 @@ std::vector<uint32_t> compass_guided_dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path(parents, target);
+  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
   delete [] parents;
 
   return path;

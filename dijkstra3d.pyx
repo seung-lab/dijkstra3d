@@ -76,8 +76,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     float wx, float wy, float wz,
     size_t source, float* dist
   )
-  cdef vector[uint32_t] query_shortest_path(
-    uint32_t* parents, uint32_t target
+  cdef vector[T] query_shortest_path[T](
+    T* parents, T target
   ) 
 
 def dijkstra(
@@ -219,7 +219,7 @@ def path_from_parents(parents, target):
 
   cdef uint32_t[:,:,:] arr_memview32 = parents
 
-  cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)
+  cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
   cdef uint32_t* path_ptr = <uint32_t*>&path[0]
   cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr
 

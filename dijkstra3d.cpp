@@ -4806,7 +4806,7 @@ static PyObject *__pyx_pf_10dijkstra3d_4path_from_parents(CYTHON_UNUSED PyObject
  * 
  *   cdef uint32_t[:,:,:] arr_memview32 = parents             # <<<<<<<<<<<<<<
  * 
- *   cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)
+ *   cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
  */
   __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_parents, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 220, __pyx_L1_error)
   __pyx_v_arr_memview32 = __pyx_t_8;
@@ -4816,7 +4816,7 @@ static PyObject *__pyx_pf_10dijkstra3d_4path_from_parents(CYTHON_UNUSED PyObject
   /* "dijkstra3d.pyx":222
  *   cdef uint32_t[:,:,:] arr_memview32 = parents
  * 
- *   cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)             # <<<<<<<<<<<<<<
+ *   cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)             # <<<<<<<<<<<<<<
  *   cdef uint32_t* path_ptr = <uint32_t*>&path[0]
  *   cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr
  */
@@ -4840,11 +4840,11 @@ static PyObject *__pyx_pf_10dijkstra3d_4path_from_parents(CYTHON_UNUSED PyObject
     __Pyx_RaiseBufferIndexError(__pyx_t_12);
     __PYX_ERR(0, 222, __pyx_L1_error)
   }
-  __pyx_v_path = dijkstra::query_shortest_path((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_9 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_10 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_11 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_targ);
+  __pyx_v_path = ((std::vector<uint32_t> )dijkstra::query_shortest_path<uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_9 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_10 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_11 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_targ));
 
   /* "dijkstra3d.pyx":223
  * 
- *   cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)
+ *   cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
  *   cdef uint32_t* path_ptr = <uint32_t*>&path[0]             # <<<<<<<<<<<<<<
  *   cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr
  * 
@@ -4852,7 +4852,7 @@ static PyObject *__pyx_pf_10dijkstra3d_4path_from_parents(CYTHON_UNUSED PyObject
   __pyx_v_path_ptr = ((uint32_t *)(&(__pyx_v_path[0])));
 
   /* "dijkstra3d.pyx":224
- *   cdef vector[uint32_t] path = query_shortest_path(&arr_memview32[0,0,0], targ)
+ *   cdef vector[uint32_t] path = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
  *   cdef uint32_t* path_ptr = <uint32_t*>&path[0]
  *   cdef uint32_t[:] vec_view = <uint32_t[:path.size()]>path_ptr             # <<<<<<<<<<<<<<
  * 
