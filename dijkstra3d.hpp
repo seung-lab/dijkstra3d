@@ -870,7 +870,7 @@ float* euclidean_distance_field3d(
     dist[loc] *= -1;
   }
 
-  for (unsigned int i = 0; i < voxels; i++) {
+  for (size_t i = 0; i < voxels; i++) {
     dist[i] = std::fabs(dist[i]);
   }
 
