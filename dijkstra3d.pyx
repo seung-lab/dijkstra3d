@@ -35,7 +35,7 @@ from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-__VERSION__ = '1.4.1'
+__VERSION__ = '1.4.2'
 
 class DimensionError(Exception):
   pass
