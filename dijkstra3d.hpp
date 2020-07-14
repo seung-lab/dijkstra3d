@@ -919,7 +919,7 @@ float* euclidean_distance_field3d_free_space(
         float dyz = std::min(dy, dz);
         float dxz = std::min(dx, dz);
 
-        dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz) * (sqrt(2.0) - 2.0); 
+        dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
       }
     }
   }
