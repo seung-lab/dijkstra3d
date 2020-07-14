@@ -914,12 +914,25 @@ float* euclidean_distance_field3d_free_space(
         // Pretty different from established metric
         // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
 
+        // Easily understandable
+        // float corners = std::min(std::min(dx, dy), dz);
+        // float edge_xy = std::min(dx, dy) - corners;
+        // float edge_yz = std::min(dy, dz) - corners;
+        // float edge_xz = std::min(dx, dz) - corners;
+        // float edges = edge_xy + edge_yz + edge_xz;
+
+        // float faces = (dx + dy + dz) - 2 * edges - 3 * corners;
+
+        // dist[loc] = corners * sqrt(3) + edges * sqrt(2) + faces;
+
+        // Mathed out
         float dxyz = std::min(std::min(dx, dy), dz);
         float dxy = std::min(dx, dy);
         float dyz = std::min(dy, dz);
         float dxz = std::min(dx, dz);
 
-        dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
+        // dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
+        dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
       }
     }
   }
