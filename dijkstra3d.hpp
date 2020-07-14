@@ -878,6 +878,54 @@ float* euclidean_distance_field3d(
 }
 
 
+float* euclidean_distance_field3d_free_space(
+    uint8_t* field, // really a boolean field
+    const int64_t sx, const int64_t sy, const int64_t sz, 
+    const float wx, const float wy, const float wz, 
+    const int64_t source, float* dist = NULL
+  ) {
+
+  const int64_t voxels = sx * sy * sz;
+  const int64_t sxy = sx * sy;
+
+  int64_t src_z = source / sxy;
+  int64_t src_y = (source - (src_z * sxy)) / sx;
+  int64_t src_x = source - sx * (src_y + src_z * sy);
+
+  if (dist == NULL) {
+    dist = new float[voxels]();
+  }
+  fill(dist, +INFINITY, voxels);
+  dist[source] = 0;
+
+  int64_t loc = 0;
+  for (int64_t z = 0; z < sz; z++) {
+    for (int64_t y = 0; y < sy; y++) {
+      for (int64_t x = 0; x < sx; x++) {
+        loc = x + sx * (y + sy * z);
+
+        float dx = std::abs(static_cast<float>(x - src_x) * wx);
+        float dy = std::abs(static_cast<float>(y - src_y) * wy);
+        float dz = std::abs(static_cast<float>(z - src_z) * wz);
+
+        // works for 2D
+        // dist[loc] = dx + dy + std::min(dx, dy) * (sqrt(2) - 2);
+
+        // Pretty different from established metric
+        // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
+
+        float dxyz = std::min(std::min(dx, dy), dz);
+        float dxy = std::min(dx, dy);
+        float dyz = std::min(dy, dz);
+        float dxz = std::min(dx, dz);
+
+        dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz) * (sqrt(2.0) - 2.0); 
+      }
+    }
+  }
+
+  return dist;
+}
 
 }; // namespace dijkstra3d
 

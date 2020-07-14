@@ -76,6 +76,12 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     float wx, float wy, float wz,
     size_t source, float* dist
   )
+  cdef float* euclidean_distance_field3d_free_space(
+    uint8_t* field,
+    int64_t sx, int64_t sy, int64_t sz,
+    float wx, float wy, float wz,
+    int64_t source, float* dist
+  )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
   ) 
@@ -342,6 +348,32 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
   data = np.asfortranarray(data)
 
   field = _execute_euclidean_distance_field(data, source, anisotropy)
+  if dims < 3:
+    field = np.squeeze(field, axis=2)
+  if dims < 2:
+    field = np.squeeze(field, axis=1)
+
+  return field
+
+def edf_free_space_eqn(data, source, anisotropy=(1,1,1)):
+  dims = len(data.shape)
+  assert dims <= 3
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.float32)
+
+  if dims == 1:
+    data = data[:, np.newaxis, np.newaxis]
+    source = ( source[0], 0, 0 )
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = ( source[0], source[1], 0 )
+
+  _validate_coord(data, source)
+
+  data = np.asfortranarray(data)
+
+  field = _execute_euclidean_distance_field_free_space_eqn(data, source, anisotropy)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -908,6 +940,36 @@ def _execute_euclidean_distance_field(data, source, anisotropy):
   if dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     euclidean_distance_field3d(
+      &arr_memview8[0,0,0],
+      sx, sy, sz,
+      wx, wy, wz,
+      src, &dist[0,0,0]
+    )
+  else:
+    raise TypeError("Type {} not currently supported.".format(dtype))
+
+  return dist
+
+def _execute_euclidean_distance_field_free_space_eqn(data, source, anisotropy):
+  cdef uint8_t[:,:,:] arr_memview8
+
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
+
+  cdef float wx = anisotropy[0]
+  cdef float wy = anisotropy[1]
+  cdef float wz = anisotropy[2]
+
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+
+  cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
+
+  dtype = data.dtype
+
+  if dtype in (np.int8, np.uint8, np.bool):
+    arr_memview8 = data.astype(np.uint8)
+    euclidean_distance_field3d_free_space(
       &arr_memview8[0,0,0],
       sx, sy, sz,
       wx, wy, wz,
