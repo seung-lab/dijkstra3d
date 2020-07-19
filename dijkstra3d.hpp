@@ -904,12 +904,13 @@ float* euclidean_distance_field3d_free_space(
       for (int64_t x = 0; x < sx; x++) {
         loc = x + sx * (y + sy * z);
 
-        float dx = std::abs(static_cast<float>(x - src_x) * wx);
-        float dy = std::abs(static_cast<float>(y - src_y) * wy);
-        float dz = std::abs(static_cast<float>(z - src_z) * wz);
+        float dx = std::abs(static_cast<float>(x - src_x));
+        float dy = std::abs(static_cast<float>(y - src_y));
+        float dz = std::abs(static_cast<float>(z - src_z));
 
         // works for 2D
         // dist[loc] = dx + dy + std::min(dx, dy) * (sqrt(2) - 2);
+        // dist[loc] = wx * dx + wy * dy + std::min(dx, dy) * (sqrt(wx * wx + wy * wy) - wx - wy);
 
         // Pretty different from established metric
         // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
@@ -932,7 +933,12 @@ float* euclidean_distance_field3d_free_space(
         float dxz = std::min(dx, dz);
 
         // dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
-        dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
+        // dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
+        dist[loc] = dxyz * sqrt(wx * wx + wy * wy + wz * wz) 
+         + wx * (dx - dxyz) + wy * (dy - dxyz) + wz * (dz - dxyz)
+         + (dxy - dxyz) * (sqrt(wx * wx + wy * wy) - wx - wy)
+         + (dxz - dxyz) * (sqrt(wx * wx + wz * wz) - wx - wz)
+         + (dyz - dxyz) * (sqrt(wy * wy + wz * wz) - wy - wz);
       }
     }
   }
