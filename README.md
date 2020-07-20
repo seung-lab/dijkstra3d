@@ -196,4 +196,4 @@ Early on, I anticipated using decrease key in my heap and implemented a pairing 
 
 1. E. W. Dijkstra. "A Note on Two Problems in Connexion with Graphs" Numerische Mathematik 1. pp. 269-271. (1959)  
 2. E. W. Dijkstra. "Go To Statement Considered Harmful". Communications of the ACM. Vol. 11, No. 3, pp. 147-148. (1968)
-3. Pohl, Ira. "Bi-directional Search", in Meltzer, Bernard; Michie, Donald (eds.), Machine Intelligence, 6, Edinburgh University Press, pp. 127–140. (1971)
+3. Pohl, Ira. "Bi-directional Search", in Meltzer, Bernard; Michie, Donald (eds.), Machine Intelligence, 6, Edinburgh University Press, pp. 127-140. (1971)
