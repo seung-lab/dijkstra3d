@@ -28,6 +28,13 @@ print(path.shape)
 # the anisotropic euclidean distance from the source to all labeled vertices.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
 
+# To make the EDF go faster add the free_space_radius parameter. It's only
+# safe to use if you know that some distance around the source point
+# is unobstructed space. For that region, we use an equation instead
+# of dijkstra's algorithm. Hybrid algorithm! free_space_radius is a physical
+# distance, meaning you must account for anisotropy in setting it.
+dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40), free_space_radius=300) 
+
 # Given a numerical field, for each directed edge from adjacent voxels A and B, 
 # use B as the edge weight. In this fashion, compute the distance from a source 
 # point for all finite voxels.
@@ -82,7 +89,7 @@ float* field = dijkstra::euclidean_distance_field3d<float>(
   labels, 
   /*sx=*/512, /*sy=*/512, /*sz=*/512, 
   /*wx=*/4, /*wy=*/4, /*wz=*/40, 
-  source
+  source, /*free_space_radius=*/0 // set to > 0 to switch on
 );
 
 float* field = dijkstra::distance_field3d<float>(labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, source);

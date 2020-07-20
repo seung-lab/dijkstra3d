@@ -563,7 +563,8 @@ def test_distance_field_2d_asymmetric(dtype):
   field = dijkstra3d.distance_field(values, (0,1))
   assert np.all(field == answer)
 
-def test_euclidean_distance_field_2d():
+@pytest.mark.parametrize('free_space_radius', (0,1,2,3,4,5,10))
+def test_euclidean_distance_field_2d(free_space_radius):
   values = np.ones((2, 2), dtype=bool)
 
   sq2 = sqrt(2)
@@ -574,7 +575,7 @@ def test_euclidean_distance_field_2d():
     [1, sq2],
   ], dtype=np.float32)
 
-  field = dijkstra3d.euclidean_distance_field(values, (0,0))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0), free_space_radius=free_space_radius)
   assert np.all(np.abs(field - answer) < 0.00001)
 
   values = np.ones((5, 5), dtype=bool)
@@ -587,7 +588,7 @@ def test_euclidean_distance_field_2d():
      [4,        4.4142137 , 4.8284273, 5.2426405 , 5.656854 ]], 
   dtype=np.float32)
 
-  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1), free_space_radius=free_space_radius)
   assert np.all(np.abs(field - answer) < 0.00001) 
 
   answer = np.array([
@@ -602,11 +603,11 @@ def test_euclidean_distance_field_2d():
   ], dtype=np.float32)
 
   values = np.ones((2, 2, 2), dtype=bool)
-  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1), free_space_radius=free_space_radius)
   assert np.all(np.abs(field - answer) < 0.00001)   
 
   values = np.ones((2, 2, 2), dtype=bool)
-  field = dijkstra3d.euclidean_distance_field(values, (1,1,1), (1,1,1))
+  field = dijkstra3d.euclidean_distance_field(values, (1,1,1), (1,1,1), free_space_radius=free_space_radius)
 
   answer = np.array([
     [
@@ -621,6 +622,15 @@ def test_euclidean_distance_field_2d():
 
   assert np.all(np.abs(field - answer) < 0.00001)   
 
+@pytest.mark.parametrize('point', (np.random.randint(0,256, size=(3,)),))
+def test_euclidean_distance_field_3d_free_space_eqn(point):
+  point = tuple(point)
+  print(point)
+  values = np.ones((256, 256, 256), dtype=bool)
+  field_dijk = dijkstra3d.euclidean_distance_field(values, point, free_space_radius=0) # free space off
+  field_free = dijkstra3d.euclidean_distance_field(values, point, free_space_radius=10000) # free space 100% on
+
+  assert np.all(np.abs(field_free - field_dijk) < 0.001) # there's some difference below this
 
 def test_compass():
   field = np.array([

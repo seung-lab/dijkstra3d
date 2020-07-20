@@ -74,7 +74,9 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint8_t* field,
     size_t sx, size_t sy, size_t sz,
     float wx, float wy, float wz,
-    size_t source, float* dist
+    size_t source,  
+    float free_space_radius,
+    float* dist
   )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
@@ -301,7 +303,7 @@ def parental_field(data, source, connectivity=26):
 
   return field
 
-def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
+def euclidean_distance_field(data, source, anisotropy=(1,1,1), free_space_radius=0):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
@@ -320,6 +322,10 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
    data: Input weights in a 2D or 3D numpy array. 
    source: (x,y,z) coordinate of starting voxel
    anisotropy: (wx,wy,wz) weights for each axial direction.
+   free_space_radius: (float, optional) if you know that the 
+    region surrounding the source is free space, we can use
+    a much faster algorithm to fill in that volume. Value
+    is physical radius (can get this from the EDT). 
   
   Returns: 2D or 3D numpy array with each index
     containing its distance from the source voxel.
@@ -341,7 +347,7 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1)):
 
   data = np.asfortranarray(data)
 
-  field = _execute_euclidean_distance_field(data, source, anisotropy)
+  field = _execute_euclidean_distance_field(data, source, anisotropy, free_space_radius)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -888,7 +894,7 @@ def _execute_parental_field(data, source, connectivity):
   else:
     return parents32
 
-def _execute_euclidean_distance_field(data, source, anisotropy):
+def _execute_euclidean_distance_field(data, source, anisotropy, float free_space_radius = 0):
   cdef uint8_t[:,:,:] arr_memview8
 
   cdef size_t sx = data.shape[0]
@@ -911,7 +917,8 @@ def _execute_euclidean_distance_field(data, source, anisotropy):
       &arr_memview8[0,0,0],
       sx, sy, sz,
       wx, wy, wz,
-      src, &dist[0,0,0]
+      src, free_space_radius,
+      &dist[0,0,0]
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
