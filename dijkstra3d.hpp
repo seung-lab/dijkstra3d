@@ -769,16 +769,57 @@ float* distance_field3d(
   return dist;
 }
 
-// helper function to compute 2D anisotropy ("_s" = "square")
-inline float _s(const float wa, const float wb) {
-  return std::sqrt(wa * wa + wb * wb);
-}
+/*  For the euclidean distance field calculation, it is 
+    1-2 orders of magnitude faster to compute the distance field
+    using an equation instead of dijkstra's method, but the eqn
+    only works in free space (straight line of sight from the source).
 
-// helper function to compute 3D anisotropy ("_c" = "cube")
-inline float _c(const float wa, const float wb, const float wc) {
-  return std::sqrt(wa * wa + wb * wb + wc * wc);
-}
+    Therefore, when we have outside information that some distance 
+    around the source point is free space, we can use a hybrid approach
+    and use the equation to label the "safe" region and use dijkstra
+    for the rest. It may be possible to extend the use of the equation
+    with further development of this hybrid approach.
 
+    Here's an unoptimized version of the equation that works for 
+    <1,1,1> isotropic volumes only, but is easier to understand.
+    The equation in actual use below is adapted for anisotropic 
+    volumes.
+
+    It works by starting with the manhattan distance between the
+    source and the target point and then subtracts 3D diagonals,
+    then 2D diagonals and adds their contribution back in. This works
+    on the principle that the shortest distance between the source and 
+    target requires that the maximum number of corner directions be 
+    taken. Note that this equation sees distance the way the dijkstra
+    approach would, it is quite different from a simple euclidean distance.
+
+        float corners = std::min(std::min(dx, dy), dz);
+        float edge_xy = std::min(dx, dy) - corners;
+        float edge_yz = std::min(dy, dz) - corners;
+        float edge_xz = std::min(dx, dz) - corners;
+        float edges = edge_xy + edge_yz + edge_xz;
+
+        float faces = (dx + dy + dz) - 2 * edges - 3 * corners;
+
+        dist[loc] = corners * sqrt(3) + edges * sqrt(2) + faces;
+
+    In order to integrate with the following dijkstra method, the 
+    fringe of the free space is pushed onto the dijkstra priority 
+    queue. The non-fringe free-space is negated (x -1) in order to
+    mark it as visited. Dijkstra will then find the minimum of the 
+    fringe and proceed normally.
+
+    For reference, in a 512^3, dijkstra's method appears to work at 
+    about 1 MVx/sec while this method is about 85 MVx/sec on the same
+    hardware. Tests of a simpler version of the equation (no radius testing,
+    less support for anisotropy) were working at 210 MVx/sec so some room
+    for optimization is likely.
+
+    In a field test in Kimimaro on a cell body starting from the point of
+    maximum distance from the boundary, the timing improved from 20 sec to
+    10 sec, so a 2x overall performance increase for a single use of the 
+    free space eqn.
+ */
 float* edf_free_space(
     uint8_t* field, float* dist,
     std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> &queue,
@@ -795,7 +836,7 @@ float* edf_free_space(
 
   int64_t loc = 0;
   float radius = 0;
-  float corner_increment = sqrt(sq(wx) + sq(wy) + sq(wz));
+  float corner_increment = std::sqrt(sq(wx) + sq(wy) + sq(wz));
 
   for (int64_t z = 0; z < sz; z++) {
     for (int64_t y = 0; y < sy; y++) {
@@ -806,7 +847,7 @@ float* edf_free_space(
           continue;
         }
 
-        radius = sqrt(sq(wx * (x - src_x)) + sq(wy * (y - src_y)) + sq(wz * (z - src_z)));
+        radius = std::sqrt(sq(wx * (x - src_x)) + sq(wy * (y - src_y)) + sq(wz * (z - src_z)));
         if (radius > safe_radius) {
           continue;
         }
@@ -815,45 +856,22 @@ float* edf_free_space(
         float dy = std::abs(static_cast<float>(y - src_y));
         float dz = std::abs(static_cast<float>(z - src_z));
 
-        // works for 2D
-        // dist[loc] = dx + dy + std::min(dx, dy) * (sqrt(2) - 2);
-        // dist[loc] = wx * dx + wy * dy + std::min(dx, dy) * (sqrt(wx * wx + wy * wy) - wx - wy);
-
-        // Pretty different from established metric
-        // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
-
-        // Easily understandable
-        // float corners = std::min(std::min(dx, dy), dz);
-        // float edge_xy = std::min(dx, dy) - corners;
-        // float edge_yz = std::min(dy, dz) - corners;
-        // float edge_xz = std::min(dx, dz) - corners;
-        // float edges = edge_xy + edge_yz + edge_xz;
-
-        // float faces = (dx + dy + dz) - 2 * edges - 3 * corners;
-
-        // dist[loc] = corners * sqrt(3) + edges * sqrt(2) + faces;
-
-        // Mathed out
         float dxyz = std::min(std::min(dx, dy), dz);
         float dxy = std::min(dx, dy);
         float dyz = std::min(dy, dz);
         float dxz = std::min(dx, dz);
 
-        // dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
-        // dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
-        dist[loc] = (dxyz * sqrt(wx * wx + wy * wy + wz * wz) 
+        dist[loc] = (dxyz * std::sqrt(wx * wx + wy * wy + wz * wz) 
            + wx * (dx - dxyz) + wy * (dy - dxyz) + wz * (dz - dxyz)
-           + (dxy - dxyz) * (sqrt(wx * wx + wy * wy) - wx - wy)
-           + (dxz - dxyz) * (sqrt(wx * wx + wz * wz) - wx - wz)
-           + (dyz - dxyz) * (sqrt(wy * wy + wz * wz) - wy - wz)
+           + (dxy - dxyz) * (std::sqrt(wx * wx + wy * wy) - wx - wy)
+           + (dxz - dxyz) * (std::sqrt(wx * wx + wz * wz) - wx - wz)
+           + (dyz - dxyz) * (std::sqrt(wy * wy + wz * wz) - wy - wz)
         );
 
         if (radius + corner_increment > safe_radius) {
-          // printf("placing x: %d y: %d z: %d dist: %.2f\n", x,y,z,dist[loc]);
           queue.emplace(dist[loc], loc);  
         }
         else {
-          // printf("r %.2f\n", radius);
           dist[loc] *= -1;
         }
       }
@@ -861,6 +879,16 @@ float* edf_free_space(
   }
 
   return dist;
+}
+
+// helper function to compute 2D anisotropy ("_s" = "square")
+inline float _s(const float wa, const float wb) {
+  return std::sqrt(wa * wa + wb * wb);
+}
+
+// helper function to compute 3D anisotropy ("_c" = "cube")
+inline float _c(const float wa, const float wb, const float wc) {
+  return std::sqrt(wa * wa + wb * wb + wc * wc);
 }
 
 float* euclidean_distance_field3d(
@@ -939,8 +967,6 @@ float* euclidean_distance_field3d(
       y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
-
-    // printf("x: %d y: %d z: %d dist: %.2f\n", x,y,z,dist[loc]);
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
