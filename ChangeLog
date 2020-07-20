@@ -1,6 +1,31 @@
 CHANGES
 =======
 
+1.5.0
+-----
+
+* release(1.5.0): adds free\_space\_radius to EDF
+* chore: more requirements\_dev.txt changes
+* chore: create requirements\_dev.txt
+* chore: add tox.ini for mac builds
+* chore: add appveyor.yml for windows builds
+* chore: update to production/stable and update python versions to tested ones
+* test: add 3.8 to travis
+* perf: euclidean distance field acceleration (#11)
+
+1.4.2
+-----
+
+* release(1.4.2): fix 64-bit addressable in euclidean distance field
+* fix: ensure index is large enough for large images
+
+1.4.1
+-----
+
+* release(1.4.1): update libdivide to support clang compilation
+* chore: update libdivide.h
+* chore: update Changelog
+
 1.4.0
 -----
 
