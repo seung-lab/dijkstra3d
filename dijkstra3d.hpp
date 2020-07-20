@@ -30,6 +30,8 @@
 
 namespace dijkstra {
 
+#define sq(x) ((x) * (x))
+
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
     arr[i] = value;
@@ -777,11 +779,96 @@ inline float _c(const float wa, const float wb, const float wc) {
   return std::sqrt(wa * wa + wb * wb + wc * wc);
 }
 
+float* edf_free_space(
+    uint8_t* field, float* dist,
+    std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> &queue,
+    const int64_t source, const float safe_radius,
+    const int64_t sx, const int64_t sy, const int64_t sz, 
+    const float wx, const float wy, const float wz
+  ) {
+
+  const int64_t sxy = sx * sy;
+
+  int64_t src_z = source / sxy;
+  int64_t src_y = (source - (src_z * sxy)) / sx;
+  int64_t src_x = source - sx * (src_y + src_z * sy);
+
+  int64_t loc = 0;
+  float radius = 0;
+  float corner_increment = sqrt(sq(wx) + sq(wy) + sq(wz));
+
+  for (int64_t z = 0; z < sz; z++) {
+    for (int64_t y = 0; y < sy; y++) {
+      for (int64_t x = 0; x < sx; x++) {
+        loc = x + sx * (y + sy * z);
+
+        if (field[loc] == 0) {
+          continue;
+        }
+
+        radius = sqrt(sq(wx * (x - src_x)) + sq(wy * (y - src_y)) + sq(wz * (z - src_z)));
+        if (radius > safe_radius) {
+          continue;
+        }
+
+        float dx = std::abs(static_cast<float>(x - src_x));
+        float dy = std::abs(static_cast<float>(y - src_y));
+        float dz = std::abs(static_cast<float>(z - src_z));
+
+        // works for 2D
+        // dist[loc] = dx + dy + std::min(dx, dy) * (sqrt(2) - 2);
+        // dist[loc] = wx * dx + wy * dy + std::min(dx, dy) * (sqrt(wx * wx + wy * wy) - wx - wy);
+
+        // Pretty different from established metric
+        // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
+
+        // Easily understandable
+        // float corners = std::min(std::min(dx, dy), dz);
+        // float edge_xy = std::min(dx, dy) - corners;
+        // float edge_yz = std::min(dy, dz) - corners;
+        // float edge_xz = std::min(dx, dz) - corners;
+        // float edges = edge_xy + edge_yz + edge_xz;
+
+        // float faces = (dx + dy + dz) - 2 * edges - 3 * corners;
+
+        // dist[loc] = corners * sqrt(3) + edges * sqrt(2) + faces;
+
+        // Mathed out
+        float dxyz = std::min(std::min(dx, dy), dz);
+        float dxy = std::min(dx, dy);
+        float dyz = std::min(dy, dz);
+        float dxz = std::min(dx, dz);
+
+        // dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
+        // dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
+        dist[loc] = (dxyz * sqrt(wx * wx + wy * wy + wz * wz) 
+           + wx * (dx - dxyz) + wy * (dy - dxyz) + wz * (dz - dxyz)
+           + (dxy - dxyz) * (sqrt(wx * wx + wy * wy) - wx - wy)
+           + (dxz - dxyz) * (sqrt(wx * wx + wz * wz) - wx - wz)
+           + (dyz - dxyz) * (sqrt(wy * wy + wz * wz) - wy - wz)
+        );
+
+        if (radius + corner_increment > safe_radius) {
+          // printf("placing x: %d y: %d z: %d dist: %.2f\n", x,y,z,dist[loc]);
+          queue.emplace(dist[loc], loc);  
+        }
+        else {
+          // printf("r %.2f\n", radius);
+          dist[loc] *= -1;
+        }
+      }
+    }
+  }
+
+  return dist;
+}
+
 float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
     const size_t sx, const size_t sy, const size_t sz, 
     const float wx, const float wy, const float wz, 
-    const size_t source, float* dist = NULL
+    const size_t source, float* dist = NULL, 
+    const float free_space_radius = 0
   ) {
 
   const size_t voxels = sx * sy * sz;
@@ -819,6 +906,15 @@ float* euclidean_distance_field3d(
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
   queue.emplace(0.0, source);
 
+  if (free_space_radius > 0) {
+    edf_free_space(
+      field, dist, queue, 
+      source, free_space_radius,
+      sx, sy, sz,
+      wx, wy, wz
+    );
+  }
+
   size_t loc;
   float new_dist;
   size_t neighboridx;
@@ -843,6 +939,8 @@ float* euclidean_distance_field3d(
       y = (loc - (z * sxy)) / fast_sx;
       x = loc - sx * (y + z * sy);
     }
+
+    // printf("x: %d y: %d z: %d dist: %.2f\n", x,y,z,dist[loc]);
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
@@ -872,75 +970,6 @@ float* euclidean_distance_field3d(
 
   for (size_t i = 0; i < voxels; i++) {
     dist[i] = std::fabs(dist[i]);
-  }
-
-  return dist;
-}
-
-
-float* euclidean_distance_field3d_free_space(
-    uint8_t* field, // really a boolean field
-    const int64_t sx, const int64_t sy, const int64_t sz, 
-    const float wx, const float wy, const float wz, 
-    const int64_t source, float* dist = NULL
-  ) {
-
-  const int64_t voxels = sx * sy * sz;
-  const int64_t sxy = sx * sy;
-
-  int64_t src_z = source / sxy;
-  int64_t src_y = (source - (src_z * sxy)) / sx;
-  int64_t src_x = source - sx * (src_y + src_z * sy);
-
-  if (dist == NULL) {
-    dist = new float[voxels]();
-  }
-  fill(dist, +INFINITY, voxels);
-  dist[source] = 0;
-
-  int64_t loc = 0;
-  for (int64_t z = 0; z < sz; z++) {
-    for (int64_t y = 0; y < sy; y++) {
-      for (int64_t x = 0; x < sx; x++) {
-        loc = x + sx * (y + sy * z);
-
-        float dx = std::abs(static_cast<float>(x - src_x));
-        float dy = std::abs(static_cast<float>(y - src_y));
-        float dz = std::abs(static_cast<float>(z - src_z));
-
-        // works for 2D
-        // dist[loc] = dx + dy + std::min(dx, dy) * (sqrt(2) - 2);
-        // dist[loc] = wx * dx + wy * dy + std::min(dx, dy) * (sqrt(wx * wx + wy * wy) - wx - wy);
-
-        // Pretty different from established metric
-        // dist[loc] = sqrt(dx * dx + dy * dy + dz * dz);
-
-        // Easily understandable
-        // float corners = std::min(std::min(dx, dy), dz);
-        // float edge_xy = std::min(dx, dy) - corners;
-        // float edge_yz = std::min(dy, dz) - corners;
-        // float edge_xz = std::min(dx, dz) - corners;
-        // float edges = edge_xy + edge_yz + edge_xz;
-
-        // float faces = (dx + dy + dz) - 2 * edges - 3 * corners;
-
-        // dist[loc] = corners * sqrt(3) + edges * sqrt(2) + faces;
-
-        // Mathed out
-        float dxyz = std::min(std::min(dx, dy), dz);
-        float dxy = std::min(dx, dy);
-        float dyz = std::min(dy, dz);
-        float dxz = std::min(dx, dz);
-
-        // dist[loc] = dx + dy + dz + dxyz * (sqrt(3.0) - 3.0) + (dxy + dyz + dxz - 3 * dxyz) * (sqrt(2.0) - 2.0); 
-        // dist[loc] = dxyz * (sqrt(3) - 3 * sqrt(2) + 3) + (dxy + dxz + dyz) * (sqrt(2) - 2) + dx + dy + dz;
-        dist[loc] = dxyz * sqrt(wx * wx + wy * wy + wz * wz) 
-         + wx * (dx - dxyz) + wy * (dy - dxyz) + wz * (dz - dxyz)
-         + (dxy - dxyz) * (sqrt(wx * wx + wy * wy) - wx - wy)
-         + (dxz - dxyz) * (sqrt(wx * wx + wz * wz) - wx - wz)
-         + (dyz - dxyz) * (sqrt(wy * wy + wz * wz) - wy - wz);
-      }
-    }
   }
 
   return dist;
