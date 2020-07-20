@@ -74,8 +74,9 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint8_t* field,
     size_t sx, size_t sy, size_t sz,
     float wx, float wy, float wz,
-    size_t source, float* dist, 
-    float free_space_radius
+    size_t source,  
+    float free_space_radius,
+    float* dist
   )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
@@ -916,8 +917,8 @@ def _execute_euclidean_distance_field(data, source, anisotropy, float free_space
       &arr_memview8[0,0,0],
       sx, sy, sz,
       wx, wy, wz,
-      src, &dist[0,0,0],
-      free_space_radius
+      src, free_space_radius,
+      &dist[0,0,0]
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))

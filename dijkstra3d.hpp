@@ -895,8 +895,9 @@ float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
     const size_t sx, const size_t sy, const size_t sz, 
     const float wx, const float wy, const float wz, 
-    const size_t source, float* dist = NULL, 
-    const float free_space_radius = 0
+    const size_t source, 
+    const float free_space_radius = 0,
+    float* dist = NULL
   ) {
 
   const size_t voxels = sx * sy * sz;
