@@ -1,9 +1,16 @@
 CHANGES
 =======
 
+1.5.1
+-----
+
+* release(1.5.1): fix broken py38 release for MacOS
+* chore: update changelog
+
 1.5.0
 -----
 
+* release(1.5.0): adds free\_space\_radius to EDF
 * release(1.5.0): adds free\_space\_radius to EDF
 * chore: more requirements\_dev.txt changes
 * chore: create requirements\_dev.txt
