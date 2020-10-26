@@ -221,7 +221,7 @@ std::vector<OUT> dijkstra3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
