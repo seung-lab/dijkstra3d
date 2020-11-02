@@ -1012,9 +1012,9 @@ float* euclidean_distance_field3d(
       size_t stencil_y_max = std::min(y + 2, sy);
       size_t stencil_z_max = std::min(z + 2, sz);
 
-      for (size_t stencil_z = stencil_x_min; stencil_z <= stencil_z_max; stencil_z++) {
+      for (size_t stencil_z = stencil_z_min; stencil_z <= stencil_z_max; stencil_z++) {
         for (size_t stencil_y = stencil_y_min; stencil_y <= stencil_y_max; stencil_y++) {
-          for (size_t stencil_x = stencil_z_min; stencil_x <= stencil_x_max; stencil_x++) {
+          for (size_t stencil_x = stencil_x_min; stencil_x <= stencil_x_max; stencil_x++) {
             size_t stencil_loc = stencil_x + sx * stencil_y + sxy * stencil_z;
             if (dist[stencil_loc] == 0 || std::signbit(dist[stencil_loc])) {
               continue;
