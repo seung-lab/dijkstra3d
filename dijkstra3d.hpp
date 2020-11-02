@@ -950,6 +950,8 @@ float* euclidean_distance_field3d(
 
   size_t x, y, z;
 
+  bool any_black = false;
+
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
@@ -971,24 +973,81 @@ float* euclidean_distance_field3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
+    any_black = false;
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
-        continue;
+        any_black = true;
+        break;
       }
+    }
 
-      neighboridx = loc + neighborhood[i];
-      if (field[neighboridx] == 0) {
-        continue;
+    if (any_black) {
+      for (int i = 0; i < NHOOD_SIZE; i++) {
+        if (neighborhood[i] == 0) {
+          continue;
+        }
+
+        neighboridx = loc + neighborhood[i];
+        if (field[neighboridx] == 0) {
+          continue;
+        }
+
+        new_dist = dist[loc] + neighbor_multiplier[i];
+        
+        // Visited nodes are negative and thus the current node
+        // will always be less than as field is filled with non-negative
+        // integers.
+        if (new_dist < dist[neighboridx]) { 
+          dist[neighboridx] = new_dist;
+          queue.emplace(new_dist, neighboridx);
+        }
       }
+    }
+    else {
+      size_t stencil_x_min = std::max(x - 2, static_cast<size_t>(0L));
+      size_t stencil_y_min = std::max(y - 2, static_cast<size_t>(0L));
+      size_t stencil_z_min = std::max(z - 2, static_cast<size_t>(0L));
 
-      new_dist = dist[loc] + neighbor_multiplier[i];
-      
-      // Visited nodes are negative and thus the current node
-      // will always be less than as field is filled with non-negative
-      // integers.
-      if (new_dist < dist[neighboridx]) { 
-        dist[neighboridx] = new_dist;
-        queue.emplace(new_dist, neighboridx);
+      size_t stencil_x_max = std::min(x + 2, sx);
+      size_t stencil_y_max = std::min(y + 2, sy);
+      size_t stencil_z_max = std::min(z + 2, sz);
+
+      for (size_t stencil_z = stencil_x_min; stencil_z <= stencil_z_max; stencil_z++) {
+        for (size_t stencil_y = stencil_y_min; stencil_y <= stencil_y_max; stencil_y++) {
+          for (size_t stencil_x = stencil_z_min; stencil_x <= stencil_x_max; stencil_x++) {
+            size_t stencil_loc = stencil_x + sx * stencil_y + sxy * stencil_z;
+            if (dist[stencil_loc] == 0 || std::signbit(dist[stencil_loc])) {
+              continue;
+            }
+
+            float dx = std::abs(static_cast<float>(x - stencil_x));
+            float dy = std::abs(static_cast<float>(y - stencil_y));
+            float dz = std::abs(static_cast<float>(z - stencil_z));
+
+            float dxyz = std::min(std::min(dx, dy), dz);
+            float dxy = std::min(dx, dy);
+            float dyz = std::min(dy, dz);
+            float dxz = std::min(dx, dz);
+
+            new_dist = dist[loc] + (dxyz * std::sqrt(wx * wx + wy * wy + wz * wz) 
+               + wx * (dx - dxyz) + wy * (dy - dxyz) + wz * (dz - dxyz)
+               + (dxy - dxyz) * (std::sqrt(wx * wx + wy * wy) - wx - wy)
+               + (dxz - dxyz) * (std::sqrt(wx * wx + wz * wz) - wx - wz)
+               + (dyz - dxyz) * (std::sqrt(wy * wy + wz * wz) - wy - wz)
+            );
+
+            if (new_dist < dist[stencil_loc]) {
+              dist[stencil_loc] = new_dist;
+              if (
+                   stencil_x == stencil_x_min || stencil_x == stencil_x_max
+                || stencil_y == stencil_y_min || stencil_y == stencil_x_max
+                || stencil_z == stencil_z_min || stencil_z == stencil_z_max
+              ) {
+                queue.emplace(new_dist, stencil_loc);
+              }
+            }
+          }
+        }
       }
     }
 
