@@ -5,7 +5,7 @@ ADD . /dijkstra3d
 
 WORKDIR "/dijkstra3d"
 
-ENV CC "g++"
+ENV CXX "g++"
 
 RUN rm -rf *.so build __pycache__ dist 
 
