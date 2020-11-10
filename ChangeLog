@@ -1,6 +1,15 @@
 CHANGES
 =======
 
+1.6.0
+-----
+
+* release(1.6.0): faster 6 and 18-way dijkstra
+* fix: CC -> CXX
+* chore: add py39 to build
+* perf: improve speed for dijkstra 6-way and 18-way
+* chore(build): add infrastructure for building manylinux2010 & 2014
+
 1.5.1
 -----
 
