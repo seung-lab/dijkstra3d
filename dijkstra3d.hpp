@@ -20,6 +20,7 @@
 #include <cstdint>
 #include <queue>
 #include <vector>
+#include <xmmintrin.h>
 
 #include "./libdivide.h"
 
@@ -202,11 +203,34 @@ std::vector<OUT> dijkstra3d(
 
   while (!queue.empty()) {
     loc = queue.top().value;
+    _mm_prefetch(&dist[loc - 1], _MM_HINT_T0);
     queue.pop();
     
     if (std::signbit(dist[loc])) {
       continue;
     }
+
+    // As early as possible, start fetching the
+    // data from RAM b/c the annotated lines below
+    // have 30-50% cache miss.
+    _mm_prefetch(&field[loc - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc + sxy - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc - sxy - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc + sxy + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc + sxy - sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc - sxy + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc - sxy - sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&field[loc - sx - 1], _MM_HINT_T0);
+
+    _mm_prefetch(&dist[loc + sxy - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc - sxy - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc + sxy + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc + sxy - sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc - sxy + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc - sxy - sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc + sx - 1], _MM_HINT_T0);
+    _mm_prefetch(&dist[loc - sx - 1], _MM_HINT_T0);
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
@@ -227,12 +251,12 @@ std::vector<OUT> dijkstra3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = static_cast<float>(field[neighboridx]);
+      delta = static_cast<float>(field[neighboridx]); // high cache miss
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (dist[loc] + delta < dist[neighboridx]) { 
+      if (dist[loc] + delta < dist[neighboridx]) { // high cache miss
         dist[neighboridx] = dist[loc] + delta;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
