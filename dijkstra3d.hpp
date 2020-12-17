@@ -137,6 +137,17 @@ struct HeapNodeCompare {
   }
 };
 
+#define DIJKSTRA_3D_PREFETCH_26WAY(field) \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sx - 1]), _MM_HINT_T0);
+
 /* Perform dijkstra's shortest path algorithm
  * on a 3D image grid. Vertices are voxels and
  * edges are the 26 nearest neighbors (except
@@ -203,7 +214,6 @@ std::vector<OUT> dijkstra3d(
 
   while (!queue.empty()) {
     loc = queue.top().value;
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - 1]), _MM_HINT_T0);
     queue.pop();
     
     if (std::signbit(dist[loc])) {
@@ -213,25 +223,9 @@ std::vector<OUT> dijkstra3d(
     // As early as possible, start fetching the
     // data from RAM b/c the annotated lines below
     // have 30-50% cache miss.
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sx - 1]), _MM_HINT_T0);
-
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sx - 1]), _MM_HINT_T0);
-
+    DIJKSTRA_3D_PREFETCH_26WAY(field)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist)
+    
     if (power_of_two) {
       z = loc >> (xshift + yshift);
       y = (loc - (z << (xshift + yshift))) >> xshift;
@@ -976,7 +970,6 @@ float* euclidean_distance_field3d(
 
   while (!queue.empty()) {
     loc = queue.top().value;
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - 1]), _MM_HINT_T0);
     queue.pop();
 
     if (std::signbit(dist[loc])) {
@@ -986,24 +979,8 @@ float* euclidean_distance_field3d(
     // As early as possible, start fetching the
     // data from RAM b/c the annotated lines below
     // have 30-50% cache miss.
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&field[loc - sx - 1]), _MM_HINT_T0);
-
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sxy - sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc + sx - 1]), _MM_HINT_T0);
-    _mm_prefetch(reinterpret_cast<char*>(&dist[loc - sx - 1]), _MM_HINT_T0);
+    DIJKSTRA_3D_PREFETCH_26WAY(field)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist)
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
@@ -1048,6 +1025,8 @@ float* euclidean_distance_field3d(
 
   return dist;
 }
+
+#undef DIJKSTRA_3D_PREFETCH_26WAY
 
 }; // namespace dijkstra3d
 
