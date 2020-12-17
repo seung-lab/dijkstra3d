@@ -15,6 +15,19 @@ def edf():
     mvx = N * sx * sy * sz / accum / 1000000
     print(f"{mvx:.3f} MVx/sec ({accum:.3f} sec)")  
 
+def bidiagonal_ones():
+  print("Running bidiagonal_ones.")
+  N = 1
+  sx, sy, sz = 512, 512, 512
+  values = np.ones((sx,sy,sz), dtype=np.uint32)
+  s = time.time()
+  dijkstra3d.dijkstra(values, (0,0,0), (sx-1,sy-1,sz-1), bidirectional=True)
+  e = time.time()
+  accum = e-s
+  mvx = N * sx * sy * sz / accum / 1000000
+  print(f"{mvx:.3f} MVx/sec ({accum:.3f} sec)")
+
+
 def diagonal_ones():
   print("Running diagonal_ones.")
   N = 1
@@ -47,12 +60,12 @@ def random_paths():
       target = np.random.randint(0,min(sx,sy,sz), size=(3,))  
 
       s = time.time()
-      path_orig = dijkstra3d.dijkstra(values, start, target, compass=False)
+      path_orig = dijkstra3d.dijkstra(values, start, target, bidirectional=True)
       accum += (time.time() - s)
 
     mvx = N * sx * sy * sz / accum / 1000000
     print(f"{n} {mvx:.3f} MVx/sec ({accum:.3f} sec)")
 
-edf()
-# diagonal_ones()
-# random_paths()
+# edf()
+bidiagonal_ones()
+random_paths()
