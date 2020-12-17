@@ -401,6 +401,15 @@ std::vector<OUT> bidirectional_dijkstra3d(
       }
     }
 
+    DIJKSTRA_3D_PREFETCH_26WAY(field)
+
+    if (forward) {
+      DIJKSTRA_3D_PREFETCH_26WAY(dist_fwd)
+    }
+    else {
+      DIJKSTRA_3D_PREFETCH_26WAY(dist_rev)
+    }
+
     if (power_of_two) {
       z = loc >> (xshift + yshift);
       y = (loc - (z << (xshift + yshift))) >> xshift;
@@ -531,6 +540,9 @@ std::vector<OUT> compass_guided_dijkstra3d(
     if (std::signbit(dist[loc])) {
       continue;
     }
+
+    DIJKSTRA_3D_PREFETCH_26WAY(field)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist)
 
     xyzfn(loc);
 
@@ -666,6 +678,9 @@ OUT* parental_field3d(
     if (std::signbit(dist[loc])) {
       continue;
     }
+
+    DIJKSTRA_3D_PREFETCH_26WAY(field)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist)
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
