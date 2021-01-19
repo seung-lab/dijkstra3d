@@ -748,7 +748,7 @@ float* distance_field3d(
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  size_t loc, next_loc;
   float delta;
   size_t neighboridx;
 
@@ -760,6 +760,18 @@ float* distance_field3d(
 
     if (std::signbit(dist[loc])) {
       continue;
+    }
+
+    if (!queue.empty()) {
+      next_loc = queue.top().value;
+      if (!std::signbit(dist[next_loc])) {
+
+        // As early as possible, start fetching the
+        // data from RAM b/c the annotated lines below
+        // have 30-50% cache miss.
+        DIJKSTRA_3D_PREFETCH_26WAY(field, next_loc)
+        DIJKSTRA_3D_PREFETCH_26WAY(dist, next_loc)
+      }
     }
 
     if (power_of_two) {
