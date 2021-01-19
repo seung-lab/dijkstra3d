@@ -726,8 +726,10 @@ template <typename T>
 float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source
+    const size_t source, const size_t connectivity=26
   ) {
+
+  connectivity_check(connectivity);
 
   const size_t voxels = sx * sy * sz;
   const size_t sxy = sx * sy;
@@ -775,7 +777,7 @@ float* distance_field3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
-    for (int i = 0; i < NHOOD_SIZE; i++) {
+    for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }

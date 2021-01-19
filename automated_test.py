@@ -1,8 +1,10 @@
 import pytest 
 
-import dijkstra3d
-import numpy as np
 from math import sqrt
+
+import numpy as np
+
+import dijkstra3d
 
 TEST_TYPES = (
   np.float32, np.float64,
@@ -499,8 +501,10 @@ def test_distance_field_2d(dtype):
   ]))
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_distance_field_2d_asymmetric(dtype):
-  values = np.ones((5, 10), dtype=dtype)
+def test_distance_field_2d_symmetric(dtype):
+  values = np.ones((5, 5), dtype=dtype)
+
+  field = dijkstra3d.distance_field(values, (0,0))
 
   assert np.all(field == np.array([
     [
@@ -588,7 +592,9 @@ def test_euclidean_distance_field_2d(free_space_radius):
      [4,        4.4142137 , 4.8284273, 5.2426405 , 5.656854 ]], 
   dtype=np.float32)
 
-  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1), free_space_radius=free_space_radius)
+  field = dijkstra3d.euclidean_distance_field(
+    values, (0,0,0), (1,1,1), free_space_radius=free_space_radius
+  )
   assert np.all(np.abs(field - answer) < 0.00001) 
 
   answer = np.array([
@@ -741,5 +747,5 @@ def test_dijkstra_parental(dtype, compass):
 
     assert path_len(path, values) == path_len(path_orig, values)
 
-    if compass == False:
+    if not compass:
       assert np.all(path == path_orig)
