@@ -137,16 +137,16 @@ struct HeapNodeCompare {
   }
 };
 
-#define DIJKSTRA_3D_PREFETCH_26WAY(field) \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sxy - sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sxy - sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[loc - sx - 1]), _MM_HINT_T0);
+#define DIJKSTRA_3D_PREFETCH_26WAY(field, loc) \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy - sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy - sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sx - 1]), _MM_HINT_T0); \
+  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sx - 1]), _MM_HINT_T0);
 
 /* Perform dijkstra's shortest path algorithm
  * on a 3D image grid. Vertices are voxels and
@@ -223,9 +223,9 @@ std::vector<OUT> dijkstra3d(
     // As early as possible, start fetching the
     // data from RAM b/c the annotated lines below
     // have 30-50% cache miss.
-    DIJKSTRA_3D_PREFETCH_26WAY(field)
-    DIJKSTRA_3D_PREFETCH_26WAY(dist)
-    
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
     if (power_of_two) {
       z = loc >> (xshift + yshift);
       y = (loc - (z << (xshift + yshift))) >> xshift;
@@ -401,13 +401,13 @@ std::vector<OUT> bidirectional_dijkstra3d(
       }
     }
 
-    DIJKSTRA_3D_PREFETCH_26WAY(field)
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
 
     if (forward) {
-      DIJKSTRA_3D_PREFETCH_26WAY(dist_fwd)
+      DIJKSTRA_3D_PREFETCH_26WAY(dist_fwd, loc)
     }
     else {
-      DIJKSTRA_3D_PREFETCH_26WAY(dist_rev)
+      DIJKSTRA_3D_PREFETCH_26WAY(dist_rev, loc)
     }
 
     if (power_of_two) {
@@ -541,8 +541,8 @@ std::vector<OUT> compass_guided_dijkstra3d(
       continue;
     }
 
-    DIJKSTRA_3D_PREFETCH_26WAY(field)
-    DIJKSTRA_3D_PREFETCH_26WAY(dist)
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
 
     xyzfn(loc);
 
@@ -679,8 +679,8 @@ OUT* parental_field3d(
       continue;
     }
 
-    DIJKSTRA_3D_PREFETCH_26WAY(field)
-    DIJKSTRA_3D_PREFETCH_26WAY(dist)
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
@@ -748,7 +748,7 @@ float* distance_field3d(
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
   queue.emplace(0.0, source);
 
-  size_t loc;
+  size_t loc, next_loc;
   float delta;
   size_t neighboridx;
 
@@ -760,6 +760,18 @@ float* distance_field3d(
 
     if (std::signbit(dist[loc])) {
       continue;
+    }
+
+    if (!queue.empty()) {
+      next_loc = queue.top().value;
+      if (!std::signbit(dist[next_loc])) {
+
+        // As early as possible, start fetching the
+        // data from RAM b/c the annotated lines below
+        // have 30-50% cache miss.
+        DIJKSTRA_3D_PREFETCH_26WAY(field, next_loc)
+        DIJKSTRA_3D_PREFETCH_26WAY(dist, next_loc)
+      }
     }
 
     if (power_of_two) {
@@ -977,7 +989,7 @@ float* euclidean_distance_field3d(
     );
   }
 
-  size_t loc;
+  size_t loc, next_loc;
   float new_dist;
   size_t neighboridx;
 
@@ -991,11 +1003,17 @@ float* euclidean_distance_field3d(
       continue;
     }
 
-    // As early as possible, start fetching the
-    // data from RAM b/c the annotated lines below
-    // have 30-50% cache miss.
-    DIJKSTRA_3D_PREFETCH_26WAY(field)
-    DIJKSTRA_3D_PREFETCH_26WAY(dist)
+    if (!queue.empty()) {
+      next_loc = queue.top().value;
+      if (!std::signbit(dist[next_loc])) {
+
+        // As early as possible, start fetching the
+        // data from RAM b/c the annotated lines below
+        // have 30-50% cache miss.
+        DIJKSTRA_3D_PREFETCH_26WAY(field, next_loc)
+        DIJKSTRA_3D_PREFETCH_26WAY(dist, next_loc)
+      }
+    }
 
     if (power_of_two) {
       z = loc >> (xshift + yshift);
