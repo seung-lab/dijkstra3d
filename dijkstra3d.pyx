@@ -62,7 +62,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef float* distance_field3d[T](
     T* field,
     size_t sx, size_t sy, size_t sz,
-    size_t source
+    size_t source, size_t connectivity
   )
   cdef OUT* parental_field3d[T,OUT](
     T* field, 
@@ -163,7 +163,7 @@ def dijkstra(
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
-def distance_field(data, source):
+def distance_field(data, source, connectivity=26):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
@@ -178,8 +178,9 @@ def distance_field(data, source):
   negative zero).
   
   Parameters:
-   Data: Input weights in a 2D or 3D numpy array. 
+   data: Input weights in a 2D or 3D numpy array. 
    source: (x,y,z) coordinate of starting voxel
+   connectivity: 26, 18, or 6 connected.
   
   Returns: 2D or 3D numpy array with each index
     containing its distance from the source voxel.
@@ -188,6 +189,17 @@ def distance_field(data, source):
   if dims not in (2,3):
     raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
 
+  if dims == 2:
+    if connectivity == 4:
+      connectivity = 6
+    elif connectivity == 8:
+      connectivity = 18 # or 26 but 18 might be faster
+
+  if connectivity not in (6, 18, 26):
+    raise ValueError(
+      "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
+    )
+  
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.float32)
 
@@ -202,7 +214,7 @@ def distance_field(data, source):
 
   data = np.asfortranarray(data)
 
-  field = _execute_distance_field(data, source)
+  field = _execute_distance_field(data, source, connectivity)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -691,7 +703,7 @@ def _execute_dijkstra(
   else:
     return output[::-1]
 
-def _execute_distance_field(data, source):
+def _execute_distance_field(data, source, connectivity):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -714,42 +726,42 @@ def _execute_distance_field(data, source):
     dist = distance_field3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     dist = distance_field3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     dist = distance_field3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
     dist = distance_field3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     dist = distance_field3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src
+      src, connectivity
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
