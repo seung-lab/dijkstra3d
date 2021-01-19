@@ -501,7 +501,7 @@ def test_distance_field_2d(dtype):
   ]))
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
-def test_distance_field_2d_symmetric(dtype):
+def test_distance_field_2d_symmetric_26(dtype):
   values = np.ones((5, 5), dtype=dtype)
 
   field = dijkstra3d.distance_field(values, (0,0))
@@ -549,6 +549,58 @@ def test_distance_field_2d_symmetric(dtype):
       [4, 2, 0, 2, 4],
       [4, 2, 2, 2, 4],
       [4, 4, 4, 4, 4],
+    ]
+  ]))
+
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+def test_distance_field_2d_symmetric_4(dtype):
+  values = np.ones((5, 5), dtype=dtype)
+
+  field = dijkstra3d.distance_field(values, (0,0), connectivity=4)
+
+  assert np.all(field == np.array([
+    [
+      [0, 1, 2, 3, 4],
+      [1, 2, 3, 4, 5],
+      [2, 3, 4, 5, 6],
+      [3, 4, 5, 6, 7],
+      [4, 5, 6, 7, 8],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (4,4), connectivity=4)
+
+  assert np.all(field == np.array([
+    [
+      [8, 7, 6, 5, 4],
+      [7, 6, 5, 4, 3],
+      [6, 5, 4, 3, 2],
+      [5, 4, 3, 2, 1],
+      [4, 3, 2, 1, 0],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, (2,2), connectivity=4)
+
+  assert np.all(field == np.array([
+    [
+      [4, 3, 2, 3, 4],
+      [3, 2, 1, 2, 3],
+      [2, 1, 0, 1, 2],
+      [3, 2, 1, 2, 3],
+      [4, 3, 2, 3, 4],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values * 2, (2,2), connectivity=4)
+
+  assert np.all(field == np.array([
+    [
+      [8, 6, 4, 6, 8],
+      [6, 4, 2, 4, 6],
+      [4, 2, 0, 2, 4],
+      [6, 4, 2, 4, 6],
+      [8, 6, 4, 6, 8],
     ]
   ]))
 

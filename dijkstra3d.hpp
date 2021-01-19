@@ -777,7 +777,7 @@ float* distance_field3d(
 
     compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
 
-    for (int i = 0; i < connectivity; i++) {
+    for (size_t i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
         continue;
       }
