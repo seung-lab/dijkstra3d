@@ -20,6 +20,14 @@ path = dijkstra3d.dijkstra(field, source, target, bidirectional=True) # 2x memor
 # Does nothing if bidirectional=True (it's just not implemented)
 path = dijkstra3d.dijkstra(field, source, target, compass=True) 
 
+# parental_field is a performance optimization on dijkstra for when you
+# want to return many target paths from a single source instead of
+# a single path to a single target. `parents` is a field of parent voxels
+# which can then be rapidly traversed to yield a path from the source. 
+# The initial run is slower as we cannot stop early when a target is found
+# but computing many paths is much faster. The unsigned parental field is 
+# increased by 1 so we can represent background as zero. So a value means
+# voxel+1. Use path_from_parents to compute a path from the source to a target.
 parents = dijkstra3d.parental_field(field, source=(0,0,0), connectivity=6) # default is 26 connected
 path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
 print(path.shape)
