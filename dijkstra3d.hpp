@@ -21,7 +21,7 @@
 #include <queue>
 #include <vector>
 
-#include "./headly.h"
+#include "./hedly.h"
 #include "./libdivide.h"
 
 #ifndef DIJKSTRA3D_HPP
