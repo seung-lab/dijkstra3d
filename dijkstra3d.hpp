@@ -20,8 +20,8 @@
 #include <cstdint>
 #include <queue>
 #include <vector>
-#include <xmmintrin.h>
 
+#include "./headly.h"
 #include "./libdivide.h"
 
 #ifndef DIJKSTRA3D_HPP
@@ -138,15 +138,15 @@ struct HeapNodeCompare {
 };
 
 #define DIJKSTRA_3D_PREFETCH_26WAY(field, loc) \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sxy - sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sxy - sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) + sx - 1]), _MM_HINT_T0); \
-  _mm_prefetch(reinterpret_cast<char*>(&field[(loc) - sx - 1]), _MM_HINT_T0);
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) + sxy - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - sxy - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) + sxy + sx - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) + sxy - sx - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - sxy + sx - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - sxy - sx - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) + sx - 1]), 0, 1); \
+  HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - sx - 1]), 0, 1);
 
 /* Perform dijkstra's shortest path algorithm
  * on a 3D image grid. Vertices are voxels and
