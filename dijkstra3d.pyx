@@ -45,30 +45,32 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, size_t target,
-    int connectivity
+    int connectivity, uint32_t* voxel_graph
   )
   cdef vector[OUT] bidirectional_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, size_t target,
-    int connectivity
+    int connectivity, uint32_t* voxel_graph
   )
   cdef vector[OUT] compass_guided_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, size_t target,
-    int connectivity, float normalizer
+    int connectivity, float normalizer,
+    uint32_t* voxel_graph
   )
   cdef float* distance_field3d[T](
     T* field,
     size_t sx, size_t sy, size_t sz,
-    size_t source, size_t connectivity
+    size_t source, size_t connectivity,
+    uint32_t* voxel_graph
   )
   cdef OUT* parental_field3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
     size_t source, OUT* parents,
-    int connectivity
+    int connectivity, uint32_t* voxel_graph
   )
   cdef float* euclidean_distance_field3d(
     uint8_t* field,
@@ -76,7 +78,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     float wx, float wy, float wz,
     size_t source,  
     float free_space_radius,
-    float* dist
+    float* dist, 
+    uint32_t* voxel_graph
   )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
@@ -85,7 +88,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
 def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
-  compass=False, compass_norm=-1
+  compass=False, compass_norm=-1,
+  voxel_graph=None
 ):
   """
   Perform dijkstra's shortest path algorithm
@@ -120,6 +124,10 @@ def dijkstra(
     means the norm will be the field minimum, but you 
     can choose whatever you want if you know what you're
     doing.
+   voxel_graph: a bitwise representation of the premitted
+    directions of travel between voxels. Generated from
+    cc3d.voxel_connectivity_graph. 
+    (See https://github.com/seung-lab/connected-components-3d)
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
@@ -158,12 +166,13 @@ def dijkstra(
 
   path = _execute_dijkstra(
     data, source, target, connectivity, 
-    bidirectional, compass, compass_norm
+    bidirectional, compass, compass_norm,
+    voxel_graph
   )
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
-def distance_field(data, source, connectivity=26):
+def distance_field(data, source, connectivity=26, voxel_graph=None):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
@@ -214,7 +223,7 @@ def distance_field(data, source, connectivity=26):
 
   data = np.asfortranarray(data)
 
-  field = _execute_distance_field(data, source, connectivity)
+  field = _execute_distance_field(data, source, connectivity, voxel_graph)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -256,7 +265,7 @@ def path_from_parents(parents, target):
 
   return _path_to_point_cloud(numpy_path, 3, sy, sx)
 
-def parental_field(data, source, connectivity=26):
+def parental_field(data, source, connectivity=26, voxel_graph=None):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate field of
@@ -307,7 +316,7 @@ def parental_field(data, source, connectivity=26):
 
   data = np.asfortranarray(data)
 
-  field = _execute_parental_field(data, source, connectivity)
+  field = _execute_parental_field(data, source, connectivity, voxel_graph)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -315,7 +324,10 @@ def parental_field(data, source, connectivity=26):
 
   return field
 
-def euclidean_distance_field(data, source, anisotropy=(1,1,1), free_space_radius=0):
+def euclidean_distance_field(
+  data, source, anisotropy=(1,1,1), 
+  free_space_radius=0, voxel_graph=None
+):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
@@ -359,7 +371,10 @@ def euclidean_distance_field(data, source, anisotropy=(1,1,1), free_space_radius
 
   data = np.asfortranarray(data)
 
-  field = _execute_euclidean_distance_field(data, source, anisotropy, free_space_radius)
+  field = _execute_euclidean_distance_field(
+    data, source, anisotropy, 
+    free_space_radius, voxel_graph
+  )
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
@@ -399,7 +414,8 @@ def _path_to_point_cloud(path, dims, rows, cols):
 
 def _execute_dijkstra(
   data, source, target, int connectivity, 
-  bidirectional, compass, float compass_norm=-1
+  bidirectional, compass, float compass_norm=-1,
+  voxel_graph=None
 ):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
@@ -407,6 +423,12 @@ def _execute_dijkstra(
   cdef uint64_t[:,:,:] arr_memview64
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
   cdef size_t sx = data.shape[0]
   cdef size_t sy = data.shape[1]
@@ -429,13 +451,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[float, uint64_t](
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[float, uint32_t](
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -443,27 +467,31 @@ def _execute_dijkstra(
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[float, uint32_t](
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[float, uint64_t](
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[float, uint32_t](
           &arr_memviewfloat[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
   elif dtype == np.float64:
     arr_memviewdouble = data
@@ -472,13 +500,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[double, uint64_t](
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[double, uint32_t](
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -486,27 +516,31 @@ def _execute_dijkstra(
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[double, uint32_t](
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[double, uint64_t](
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[double, uint32_t](
           &arr_memviewdouble[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
@@ -515,13 +549,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[uint64_t, uint64_t](
           &arr_memview64[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[uint64_t, uint32_t](
           &arr_memview64[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -529,27 +565,31 @@ def _execute_dijkstra(
           &arr_memview64[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[uint64_t, uint32_t](
           &arr_memview64[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[uint64_t, uint64_t](
           &arr_memview64[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[uint64_t, uint32_t](
           &arr_memview64[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.astype(np.uint32)
@@ -558,13 +598,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[uint32_t, uint64_t](
           &arr_memview32[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[uint32_t, uint32_t](
           &arr_memview32[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -572,27 +614,31 @@ def _execute_dijkstra(
           &arr_memview32[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[uint32_t, uint32_t](
           &arr_memview32[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[uint32_t, uint64_t](
           &arr_memview32[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[uint32_t, uint32_t](
           &arr_memview32[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
@@ -601,13 +647,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[uint16_t, uint64_t](
           &arr_memview16[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[uint16_t, uint32_t](
           &arr_memview16[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -615,27 +663,31 @@ def _execute_dijkstra(
           &arr_memview16[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[uint16_t, uint32_t](
           &arr_memview16[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[uint16_t, uint64_t](
           &arr_memview16[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[uint16_t, uint32_t](
           &arr_memview16[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
@@ -644,13 +696,15 @@ def _execute_dijkstra(
         output64 = bidirectional_dijkstra3d[uint8_t, uint64_t](
           &arr_memview8[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = bidirectional_dijkstra3d[uint8_t, uint32_t](
           &arr_memview8[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
     elif compass:
       if sixtyfourbit:
@@ -658,27 +712,31 @@ def _execute_dijkstra(
           &arr_memview8[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
       else:
         output32 = compass_guided_dijkstra3d[uint8_t, uint32_t](
           &arr_memview8[0,0,0],
           sx, sy, sz,
           src, sink, 
-          connectivity, compass_norm
+          connectivity, compass_norm,
+          voxel_graph_ptr
         )
     else:
       if sixtyfourbit:
         output64 = dijkstra3d[uint8_t, uint64_t](
           &arr_memview8[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
       else:
         output32 = dijkstra3d[uint8_t, uint32_t](
           &arr_memview8[0,0,0],
           sx, sy, sz,
-          src, sink, connectivity
+          src, sink, connectivity,
+          voxel_graph_ptr
         )
 
   cdef uint32_t* output_ptr32
@@ -703,13 +761,19 @@ def _execute_dijkstra(
   else:
     return output[::-1]
 
-def _execute_distance_field(data, source, connectivity):
+def _execute_distance_field(data, source, connectivity, voxel_graph):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
   cdef uint64_t[:,:,:] arr_memview64
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
   cdef size_t sx = data.shape[0]
   cdef size_t sy = data.shape[1]
@@ -726,42 +790,48 @@ def _execute_distance_field(data, source, connectivity):
     dist = distance_field3d[float](
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
     dist = distance_field3d[double](
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
     dist = distance_field3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
     dist = distance_field3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
     dist = distance_field3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
-      src, connectivity
+      src, connectivity,
+      voxel_graph_ptr
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -776,13 +846,19 @@ def _execute_distance_field(data, source, connectivity):
   # I don't actually understand why order F works, but it does.
   return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
 
-def _execute_parental_field(data, source, connectivity):
+def _execute_parental_field(data, source, connectivity, voxel_graph):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
   cdef uint64_t[:,:,:] arr_memview64
   cdef float[:,:,:] arr_memviewfloat
   cdef double[:,:,:] arr_memviewdouble
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
   cdef size_t sx = data.shape[0]
   cdef size_t sy = data.shape[1]
@@ -809,14 +885,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memviewfloat[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[float,uint32_t](
         &arr_memviewfloat[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   elif dtype == np.float64:
     arr_memviewdouble = data
@@ -825,14 +903,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memviewdouble[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[double,uint32_t](
         &arr_memviewdouble[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
@@ -841,14 +921,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memview64[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[uint64_t,uint32_t](
         &arr_memview64[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
@@ -857,14 +939,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memview32[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[uint32_t,uint32_t](
         &arr_memview32[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
@@ -873,14 +957,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memview16[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[uint16_t,uint32_t](
         &arr_memview16[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   elif dtype in (np.int8, np.uint8, np.bool):
     arr_memview8 = data.astype(np.uint8)
@@ -889,14 +975,16 @@ def _execute_parental_field(data, source, connectivity):
         &arr_memview8[0,0,0],
         sx, sy, sz,
         src, &parents64[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
     else:
       parental_field3d[uint8_t,uint32_t](
         &arr_memview8[0,0,0],
         sx, sy, sz,
         src, &parents32[0,0,0],
-        connectivity
+        connectivity,
+        voxel_graph_ptr
       )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -906,8 +994,17 @@ def _execute_parental_field(data, source, connectivity):
   else:
     return parents32
 
-def _execute_euclidean_distance_field(data, source, anisotropy, float free_space_radius = 0):
+def _execute_euclidean_distance_field(
+  data, source, anisotropy, float free_space_radius=0,
+  voxel_graph=None
+):
   cdef uint8_t[:,:,:] arr_memview8
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
   cdef size_t sx = data.shape[0]
   cdef size_t sy = data.shape[1]
@@ -930,7 +1027,8 @@ def _execute_euclidean_distance_field(data, source, anisotropy, float free_space
       sx, sy, sz,
       wx, wy, wz,
       src, free_space_radius,
-      &dist[0,0,0]
+      &dist[0,0,0],
+      voxel_graph_ptr
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
