@@ -689,7 +689,7 @@ def _execute_dijkstra(
           src, sink, connectivity,
           voxel_graph_ptr
         )
-  elif dtype in (np.int8, np.uint8, np.bool):
+  elif dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
     if bidirectional:
       if sixtyfourbit:
@@ -825,7 +825,7 @@ def _execute_distance_field(data, source, connectivity, voxel_graph):
       src, connectivity,
       voxel_graph_ptr
     )
-  elif dtype in (np.int8, np.uint8, np.bool):
+  elif dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
@@ -968,7 +968,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
         connectivity,
         voxel_graph_ptr
       )
-  elif dtype in (np.int8, np.uint8, np.bool):
+  elif dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
     if sixtyfourbit:
       parental_field3d[uint8_t,uint64_t](
@@ -1020,7 +1020,7 @@ def _execute_euclidean_distance_field(
 
   dtype = data.dtype
 
-  if dtype in (np.int8, np.uint8, np.bool):
+  if dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
     euclidean_distance_field3d(
       &arr_memview8[0,0,0],

@@ -10,7 +10,7 @@ TEST_TYPES = (
   np.float32, np.float64,
   np.uint64, np.uint32, np.uint16, np.uint8,
   np.int64, np.int32, np.int16, np.int8,
-  np.bool
+  bool
 )
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)

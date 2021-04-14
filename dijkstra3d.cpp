@@ -2543,7 +2543,6 @@ static const char __pyx_k_sxy[] = "sxy";
 static const char __pyx_k_sys[] = "sys";
 static const char __pyx_k_axis[] = "axis";
 static const char __pyx_k_base[] = "base";
-static const char __pyx_k_bool[] = "bool";
 static const char __pyx_k_cols[] = "cols";
 static const char __pyx_k_data[] = "data";
 static const char __pyx_k_dict[] = "__dict__";
@@ -2774,7 +2773,6 @@ static PyObject *__pyx_n_s_astype;
 static PyObject *__pyx_n_s_axis;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_bidirectional;
-static PyObject *__pyx_n_s_bool;
 static PyObject *__pyx_n_s_buf;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
@@ -10508,7 +10506,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
   /* "dijkstra3d.pyx":692
  *           voxel_graph_ptr
  *         )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     if bidirectional:
  */
@@ -10542,13 +10540,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
     __pyx_t_16 = __pyx_t_1;
     goto __pyx_L31_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_bool); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
   __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
   __pyx_t_16 = __pyx_t_1;
@@ -10559,7 +10551,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
 
     /* "dijkstra3d.pyx":693
  *         )
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)             # <<<<<<<<<<<<<<
  *     if bidirectional:
  *       if sixtyfourbit:
@@ -10594,7 +10586,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
     __pyx_t_19.data = NULL;
 
     /* "dijkstra3d.pyx":694
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     if bidirectional:             # <<<<<<<<<<<<<<
  *       if sixtyfourbit:
@@ -10709,7 +10701,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
       __pyx_L35:;
 
       /* "dijkstra3d.pyx":694
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     if bidirectional:             # <<<<<<<<<<<<<<
  *       if sixtyfourbit:
@@ -10954,7 +10946,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
     /* "dijkstra3d.pyx":692
  *           voxel_graph_ptr
  *         )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     if bidirectional:
  */
@@ -12117,7 +12109,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
   /* "dijkstra3d.pyx":828
  *       voxel_graph_ptr
  *     )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     dist = distance_field3d[uint8_t](
  */
@@ -12151,13 +12143,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
     __pyx_t_16 = __pyx_t_1;
     goto __pyx_L11_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_bool); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
   __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
   __pyx_t_16 = __pyx_t_1;
@@ -12168,7 +12154,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
 
     /* "dijkstra3d.pyx":829
  *     )
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)             # <<<<<<<<<<<<<<
  *     dist = distance_field3d[uint8_t](
  *       &arr_memview8[0,0,0],
@@ -12240,7 +12226,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
     __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 833, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":830
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     dist = distance_field3d[uint8_t](             # <<<<<<<<<<<<<<
  *       &arr_memview8[0,0,0],
@@ -12251,7 +12237,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
     /* "dijkstra3d.pyx":828
  *       voxel_graph_ptr
  *     )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     dist = distance_field3d[uint8_t](
  */
@@ -14212,7 +14198,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
   /* "dijkstra3d.pyx":971
  *         voxel_graph_ptr
  *       )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     if sixtyfourbit:
  */
@@ -14246,13 +14232,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
     __pyx_t_24 = __pyx_t_1;
     goto __pyx_L17_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_bool); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
   __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
   __pyx_t_24 = __pyx_t_1;
@@ -14263,7 +14243,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
 
     /* "dijkstra3d.pyx":972
  *       )
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)             # <<<<<<<<<<<<<<
  *     if sixtyfourbit:
  *       parental_field3d[uint8_t,uint64_t](
@@ -14298,7 +14278,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
     __pyx_t_27.data = NULL;
 
     /* "dijkstra3d.pyx":973
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     if sixtyfourbit:             # <<<<<<<<<<<<<<
  *       parental_field3d[uint8_t,uint64_t](
@@ -14382,7 +14362,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
       (void)(dijkstra::parental_field3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":973
- *   elif dtype in (np.int8, np.uint8, np.bool):
+ *   elif dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     if sixtyfourbit:             # <<<<<<<<<<<<<<
  *       parental_field3d[uint8_t,uint64_t](
@@ -14479,7 +14459,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
     /* "dijkstra3d.pyx":971
  *         voxel_graph_ptr
  *       )
- *   elif dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   elif dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     if sixtyfourbit:
  */
@@ -15055,7 +15035,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   dtype = data.dtype             # <<<<<<<<<<<<<<
  * 
- *   if dtype in (np.int8, np.uint8, np.bool):
+ *   if dtype in (np.int8, np.uint8, bool):
  */
   __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1021, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
@@ -15065,7 +15045,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
   /* "dijkstra3d.pyx":1023
  *   dtype = data.dtype
  * 
- *   if dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   if dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     euclidean_distance_field3d(
  */
@@ -15099,13 +15079,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
     __pyx_t_1 = __pyx_t_16;
     goto __pyx_L5_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_bool); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __pyx_t_11 = PyObject_RichCompare(__pyx_t_13, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
   __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   __pyx_t_1 = __pyx_t_16;
@@ -15116,7 +15090,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
 
     /* "dijkstra3d.pyx":1024
  * 
- *   if dtype in (np.int8, np.uint8, np.bool):
+ *   if dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)             # <<<<<<<<<<<<<<
  *     euclidean_distance_field3d(
  *       &arr_memview8[0,0,0],
@@ -15207,7 +15181,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
     }
 
     /* "dijkstra3d.pyx":1025
- *   if dtype in (np.int8, np.uint8, np.bool):
+ *   if dtype in (np.int8, np.uint8, bool):
  *     arr_memview8 = data.astype(np.uint8)
  *     euclidean_distance_field3d(             # <<<<<<<<<<<<<<
  *       &arr_memview8[0,0,0],
@@ -15218,7 +15192,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
     /* "dijkstra3d.pyx":1023
  *   dtype = data.dtype
  * 
- *   if dtype in (np.int8, np.uint8, np.bool):             # <<<<<<<<<<<<<<
+ *   if dtype in (np.int8, np.uint8, bool):             # <<<<<<<<<<<<<<
  *     arr_memview8 = data.astype(np.uint8)
  *     euclidean_distance_field3d(
  */
@@ -31164,7 +31138,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_axis, __pyx_k_axis, sizeof(__pyx_k_axis), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_bidirectional, __pyx_k_bidirectional, sizeof(__pyx_k_bidirectional), 0, 0, 1, 1},
-  {&__pyx_n_s_bool, __pyx_k_bool, sizeof(__pyx_k_bool), 0, 0, 1, 1},
   {&__pyx_n_s_buf, __pyx_k_buf, sizeof(__pyx_k_buf), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
