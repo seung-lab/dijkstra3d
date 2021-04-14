@@ -108,6 +108,62 @@ inline void compute_neighborhood(
   neighborhood[25] = (connectivity > 18) * (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
 }
 
+inline void compute_neighborhood(
+  int *neighborhood, 
+  const int x, const int y, const int z,
+  const uint64_t sx, const uint64_t sy, const uint64_t sz,
+  const int connectivity = 26, const uint32_t* voxel_connectivity_graph) {
+
+  compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+
+  uint64_t loc = x + sx * (y + sy * z);
+  uint32_t graph = voxel_connectivity_graph[loc];
+
+  // graph conventions are defined here:
+  // https://github.com/seung-lab/connected-components-3d/blob/3.2.0/cc3d_graphs.hpp#L73-L92
+
+  // 6-hood
+  neighborhood[0] = neighborhood[0] && (graph & 0b000010); // -x
+  neighborhood[1] = neighborhood[1] && (graph & 0b000001); // +x
+  neighborhood[2] = neighborhood[2] && (graph & 0b001000); // -y
+  neighborhood[3] = neighborhood[3] && (graph & 0b000100); // +y
+  neighborhood[4] = neighborhood[4] && (graph & 0b100000); // -z
+  neighborhood[5] = neighborhood[5] && (graph & 0b010000); // +z
+
+  // 18-hood
+
+  // xy diagonals
+  neighborhood[6] = neighborhood[6] && (graph & 0b1000000000); // up-left
+  neighborhood[7] = neighborhood[7] && (graph & 0b0100000000); // up-right
+  neighborhood[8] = neighborhood[8] && (graph & 0b0010000000); // down-left
+  neighborhood[9] = neighborhood[9] && (graph & 0b0001000000); // down-right
+
+  // yz diagonals
+  neighborhood[10] = neighborhood[10] && (graph & 0b100000000000000000); // up-left
+  neighborhood[11] = neighborhood[11] && (graph & 0b010000000000000000); // up-right
+  neighborhood[12] = neighborhood[12] && (graph & 0b000010000000000000); // down-left
+  neighborhood[13] = neighborhood[13] && (graph & 0b000001000000000000); // down-right
+
+  // xz diagonals
+  neighborhood[14] = neighborhood[14] && (graph & 0b001000000000000000); // up-left
+  neighborhood[15] = neighborhood[15] && (graph & 0b000100000000000000); // up-right
+  neighborhood[16] = neighborhood[16] && (graph & 0b000000100000000000); // down-left
+  neighborhood[17] = neighborhood[17] && (graph & 0b000000010000000000); // down-right
+
+  // 26-hood
+
+  // Now the eight corners of the cube
+  neighborhood[18] = neighborhood[18] && (graph & 0b10000000000000000000000000);
+  neighborhood[19] = neighborhood[19] && (graph & 0b01000000000000000000000000);
+  neighborhood[20] = neighborhood[20] && (graph & 0b00100000000000000000000000);
+  neighborhood[21] = neighborhood[21] && (graph & 0b00001000000000000000000000);
+  neighborhood[22] = neighborhood[22] && (graph & 0b00010000000000000000000000);
+  neighborhood[23] = neighborhood[23] && (graph & 0b00000100000000000000000000);
+  neighborhood[24] = neighborhood[24] && (graph & 0b00000010000000000000000000);
+  neighborhood[25] = neighborhood[25] && (graph & 0b00000001000000000000000000);
+}
+
+
 template <typename T = uint32_t>
 class HeapNode {
 public:
