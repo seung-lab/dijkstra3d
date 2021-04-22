@@ -1,3 +1,5 @@
+connected-components-3d
 cython
+pillow
 pytest
 tox

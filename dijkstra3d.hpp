@@ -59,7 +59,7 @@ inline std::vector<OUT> query_shortest_path(const OUT* parents, const OUT target
   return path;
 }
 
-inline void compute_neighborhood(
+inline void compute_neighborhood_helper(
   int *neighborhood, 
   const int x, const int y, const int z,
   const uint64_t sx, const uint64_t sy, const uint64_t sz,
@@ -107,6 +107,66 @@ inline void compute_neighborhood(
   neighborhood[24] = (connectivity > 18) * (neighborhood[0] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
   neighborhood[25] = (connectivity > 18) * (neighborhood[1] + neighborhood[3] + neighborhood[5]) * (neighborhood[3] && neighborhood[5]);
 }
+
+inline void compute_neighborhood(
+  int *neighborhood, 
+  const int x, const int y, const int z,
+  const uint64_t sx, const uint64_t sy, const uint64_t sz,
+  const int connectivity = 26, const uint32_t* voxel_connectivity_graph = NULL) {
+
+  compute_neighborhood_helper(neighborhood, x, y, z, sx, sy, sz, connectivity);
+
+  if (voxel_connectivity_graph == NULL) {
+    return;
+  }
+
+  uint64_t loc = x + sx * (y + sy * z);
+  uint32_t graph = voxel_connectivity_graph[loc];
+
+  // graph conventions are defined here:
+  // https://github.com/seung-lab/connected-components-3d/blob/3.2.0/cc3d_graphs.hpp#L73-L92
+
+  // 6-hood
+  neighborhood[0] *= ((graph & 0b000010) > 0); // -x
+  neighborhood[1] *= ((graph & 0b000001) > 0); // +x
+  neighborhood[2] *= ((graph & 0b001000) > 0); // -y
+  neighborhood[3] *= ((graph & 0b000100) > 0); // +y
+  neighborhood[4] *= ((graph & 0b100000) > 0); // -z
+  neighborhood[5] *= ((graph & 0b010000) > 0); // +z
+
+  // 18-hood
+
+  // xy diagonals
+  neighborhood[6] *= ((graph & 0b1000000000) > 0); // up-left
+  neighborhood[7] *= ((graph & 0b0100000000) > 0); // up-right
+  neighborhood[8] *= ((graph & 0b0010000000) > 0); // down-left
+  neighborhood[9] *= ((graph & 0b0001000000) > 0); // down-right
+
+  // yz diagonals
+  neighborhood[10] *= ((graph & 0b100000000000000000) > 0); // up-left
+  neighborhood[11] *= ((graph & 0b010000000000000000) > 0); // up-right
+  neighborhood[12] *= ((graph & 0b000010000000000000) > 0); // down-left
+  neighborhood[13] *= ((graph & 0b000001000000000000) > 0); // down-right
+
+  // xz diagonals
+  neighborhood[14] *= ((graph & 0b001000000000000000) > 0); // up-left
+  neighborhood[15] *= ((graph & 0b000100000000000000) > 0); // up-right
+  neighborhood[16] *= ((graph & 0b000000100000000000) > 0); // down-left
+  neighborhood[17] *= ((graph & 0b000000010000000000) > 0); // down-right
+
+  // 26-hood
+
+  // Now the eight corners of the cube
+  neighborhood[18] *= ((graph & 0b10000000000000000000000000) > 0);
+  neighborhood[19] *= ((graph & 0b01000000000000000000000000) > 0);
+  neighborhood[20] *= ((graph & 0b00100000000000000000000000) > 0);
+  neighborhood[21] *= ((graph & 0b00001000000000000000000000) > 0);
+  neighborhood[22] *= ((graph & 0b00010000000000000000000000) > 0);
+  neighborhood[23] *= ((graph & 0b00000100000000000000000000) > 0);
+  neighborhood[24] *= ((graph & 0b00000010000000000000000000) > 0);
+  neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0);
+}
+
 
 template <typename T = uint32_t>
 class HeapNode {
@@ -177,7 +237,8 @@ std::vector<OUT> dijkstra3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
-    const int connectivity = 26
+    const int connectivity = 26, 
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   connectivity_check(connectivity);
@@ -237,7 +298,7 @@ std::vector<OUT> dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
 
     for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
@@ -314,7 +375,8 @@ std::vector<OUT> bidirectional_dijkstra3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
-    const int connectivity = 26
+    const int connectivity = 26,
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   connectivity_check(connectivity);
@@ -421,7 +483,7 @@ std::vector<OUT> bidirectional_dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
 
     if (forward) {
       bidirectional_core<T,OUT>(
@@ -468,7 +530,8 @@ std::vector<OUT> compass_guided_dijkstra3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
-    const int connectivity = 26, float normalizer = -1
+    const int connectivity = 26, float normalizer = -1,
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   connectivity_check(connectivity);
@@ -546,7 +609,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
 
     xyzfn(loc);
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
 
     for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
@@ -636,7 +699,8 @@ OUT* parental_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, OUT* parents = NULL,
-    const int connectivity = 26
+    const int connectivity = 26,
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   connectivity_check(connectivity);
@@ -693,7 +757,7 @@ OUT* parental_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
 
     for (int i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
@@ -726,7 +790,8 @@ template <typename T>
 float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source, const size_t connectivity=26
+    const size_t source, const size_t connectivity=26,
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   connectivity_check(connectivity);
@@ -787,7 +852,7 @@ float* distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, 26, voxel_connectivity_graph);
 
     for (size_t i = 0; i < connectivity; i++) {
       if (neighborhood[i] == 0) {
@@ -944,7 +1009,8 @@ float* euclidean_distance_field3d(
     const float wx, const float wy, const float wz, 
     const size_t source, 
     const float free_space_radius = 0,
-    float* dist = NULL
+    float* dist = NULL,
+    const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
   const size_t voxels = sx * sy * sz;
@@ -1028,7 +1094,7 @@ float* euclidean_distance_field3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, 26, voxel_connectivity_graph);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {

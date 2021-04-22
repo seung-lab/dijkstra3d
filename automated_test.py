@@ -10,7 +10,7 @@ TEST_TYPES = (
   np.float32, np.float64,
   np.uint64, np.uint32, np.uint16, np.uint8,
   np.int64, np.int32, np.int16, np.int8,
-  np.bool
+  bool
 )
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
@@ -801,3 +801,29 @@ def test_dijkstra_parental(dtype, compass):
 
     if not compass:
       assert np.all(path == path_orig)
+
+def test_voxel_connectivity_graph():
+  from PIL import Image
+  import cc3d
+
+  img = Image.open("./multi-color-self-touch.png")
+  img = np.array(img)
+  root_img = img > 0
+  root_img = root_img.astype(np.float32)
+  root_img[root_img == 0] = np.inf
+
+  boundary_x = 106
+
+  graph = np.zeros(img.shape, dtype=np.uint8, order="F")
+  graph[:boundary_x] = cc3d.voxel_connectivity_graph(img[:boundary_x], connectivity=6)
+  graph[boundary_x:] =cc3d.voxel_connectivity_graph(img[boundary_x:], connectivity=6)
+
+  path = dijkstra3d.dijkstra(root_img, (199,199), (173,170), connectivity=8, voxel_graph=graph)
+
+  assert len(path) == 528
+
+  
+
+
+
+
