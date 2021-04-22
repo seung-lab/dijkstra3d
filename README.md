@@ -47,6 +47,20 @@ dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotro
 # use B as the edge weight. In this fashion, compute the distance from a source 
 # point for all finite voxels.
 dist_field = dijkstra3d.distance_field(field, source=(0,0,0))
+
+# You can also provide a voxel connectivity graph to provide customized
+# constraints on the permissible directions of travel. The graph is a
+# uint32 image of equal size that contains a bitfield in each voxel 
+# where each of the first 26-bits describes whether a direction is 
+# passable. The description of this field can be seen here: 
+# https://github.com/seung-lab/connected-components-3d/blob/3.2.0/cc3d_graphs.hpp#L73-L92
+#
+# The motivation for this feature is handling self-touching labels, but there
+# are many possible ways of using this.
+graph = np.zeros(field.shape, dtype=np.uint32)
+graph += 0xffffffff # all directions are permissible
+graph[5,5,5] = graph[5,5,5] & 0xfffffffe # sets +x direction as impassable at this voxel
+path = dijkstra.dijkstra(..., voxel_graph=graph)
 ```
 
 Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxels and edges are the nearest neighbors. For 6 connected images, these are the faces of the voxel (L<sub>1</sub>: manhattan distance), 18 is faces and edges, 26 is faces, edges, and corners (L<sub>&infin;</sub>: chebyshev distance). For given input voxels A and B, the edge weight from A to B is B and from B to A is A. All weights must be finite and non-negative (incl. negative zero).  
