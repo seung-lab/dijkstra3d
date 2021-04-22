@@ -426,7 +426,7 @@ def _execute_dijkstra(
 
   cdef uint32_t[:,:,:] voxel_graph_memview
   cdef uint32_t* voxel_graph_ptr = NULL
-  if voxel_graph:
+  if voxel_graph is not None:
     voxel_graph_memview = voxel_graph
     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
@@ -771,7 +771,7 @@ def _execute_distance_field(data, source, connectivity, voxel_graph):
 
   cdef uint32_t[:,:,:] voxel_graph_memview
   cdef uint32_t* voxel_graph_ptr = NULL
-  if voxel_graph:
+  if voxel_graph is not None:
     voxel_graph_memview = voxel_graph
     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
@@ -856,7 +856,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
 
   cdef uint32_t[:,:,:] voxel_graph_memview
   cdef uint32_t* voxel_graph_ptr = NULL
-  if voxel_graph:
+  if voxel_graph is not None:
     voxel_graph_memview = voxel_graph
     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 
@@ -1002,7 +1002,7 @@ def _execute_euclidean_distance_field(
 
   cdef uint32_t[:,:,:] voxel_graph_memview
   cdef uint32_t* voxel_graph_ptr = NULL
-  if voxel_graph:
+  if voxel_graph is not None:
     voxel_graph_memview = voxel_graph
     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
 

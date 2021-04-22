@@ -8108,21 +8108,21 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_3;
+  int __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_6;
+  int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  size_t __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  size_t __pyx_t_10;
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  __Pyx_memviewslice __pyx_t_14 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_14 = NULL;
   __Pyx_memviewslice __pyx_t_15 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_16;
+  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_17 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_18 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_19 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -8138,7 +8138,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL             # <<<<<<<<<<<<<<
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  */
   __pyx_v_voxel_graph_ptr = NULL;
@@ -8146,58 +8146,59 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
   /* "dijkstra3d.pyx":429
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_voxel_graph); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 429, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_1 = (__pyx_v_voxel_graph != Py_None);
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":430
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph             # <<<<<<<<<<<<<<
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 430, __pyx_L1_error)
-    __pyx_v_voxel_graph_memview = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 430, __pyx_L1_error)
+    __pyx_v_voxel_graph_memview = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":431
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t sx = data.shape[0]
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_voxel_graph_memview.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_voxel_graph_memview.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 431, __pyx_L1_error)
     }
-    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_3 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[2]) )))));
+    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_6 * __pyx_v_voxel_graph_memview.strides[2]) )))));
 
     /* "dijkstra3d.pyx":429
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
@@ -8210,14 +8211,14 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *   cdef size_t sy = data.shape[1]
  *   cdef size_t sz = data.shape[2]
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 433, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 433, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 433, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 433, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 433, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sx = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 433, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sx = __pyx_t_10;
 
   /* "dijkstra3d.pyx":434
  * 
@@ -8226,14 +8227,14 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *   cdef size_t sz = data.shape[2]
  * 
  */
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 434, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 434, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_9, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 434, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_8, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 434, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 434, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_7); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 434, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_sy = __pyx_t_9;
+  __pyx_v_sy = __pyx_t_10;
 
   /* "dijkstra3d.pyx":435
  *   cdef size_t sx = data.shape[0]
@@ -8242,14 +8243,14 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 435, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 435, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 435, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 435, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 435, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sz = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 435, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sz = __pyx_t_10;
 
   /* "dijkstra3d.pyx":437
  *   cdef size_t sz = data.shape[2]
@@ -8258,35 +8259,35 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *   cdef size_t sink = target[0] + sx * (target[1] + sy * target[2])
  * 
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 437, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 437, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 437, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 437, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_12); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 437, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_v_src = __pyx_t_9;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_9, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_13); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 437, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_v_src = __pyx_t_10;
 
   /* "dijkstra3d.pyx":438
  * 
@@ -8295,35 +8296,35 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   cdef vector[uint32_t] output32
  */
-  __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_target, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_GetItemInt(__pyx_v_target, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 438, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_target, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_target, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 438, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_target, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = PyNumber_Multiply(__pyx_t_7, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_GetItemInt(__pyx_v_target, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Add(__pyx_t_8, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_12 = PyNumber_Multiply(__pyx_t_8, __pyx_t_11); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyNumber_Multiply(__pyx_t_13, __pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __pyx_t_11 = PyNumber_Add(__pyx_t_9, __pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyNumber_Multiply(__pyx_t_14, __pyx_t_11); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 438, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = PyNumber_Add(__pyx_t_13, __pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Add(__pyx_t_12, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_11); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 438, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_10); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 438, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_v_sink = __pyx_t_9;
+  __pyx_v_sink = __pyx_t_10;
 
   /* "dijkstra3d.pyx":443
  *   cdef vector[uint64_t] output64
@@ -8332,42 +8333,42 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   dtype = data.dtype
  */
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_size); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_iinfo); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_size); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
-    __pyx_t_12 = PyMethod_GET_SELF(__pyx_t_13);
-    if (likely(__pyx_t_12)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-      __Pyx_INCREF(__pyx_t_12);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_iinfo); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
+    __pyx_t_13 = PyMethod_GET_SELF(__pyx_t_14);
+    if (likely(__pyx_t_13)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+      __Pyx_INCREF(__pyx_t_13);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_13, function);
+      __Pyx_DECREF_SET(__pyx_t_14, function);
     }
   }
-  __pyx_t_11 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_12, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_max); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_12 = (__pyx_t_13) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_13, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_max); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 443, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_t_11, __pyx_t_14, Py_GT); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_10, __pyx_t_13, Py_GT); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 443, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_v_sixtyfourbit = __pyx_t_11;
-  __pyx_t_11 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_v_sixtyfourbit = __pyx_t_12;
+  __pyx_t_12 = 0;
 
   /* "dijkstra3d.pyx":445
  *   sixtyfourbit = data.size > np.iinfo(np.uint32).max
@@ -8376,10 +8377,10 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   if dtype == np.float32:
  */
-  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 445, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_v_dtype = __pyx_t_11;
-  __pyx_t_11 = 0;
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 445, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_v_dtype = __pyx_t_12;
+  __pyx_t_12 = 0;
 
   /* "dijkstra3d.pyx":447
  *   dtype = data.dtype
@@ -8388,16 +8389,16 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     arr_memviewfloat = data
  *     if bidirectional:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_float32); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 447, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (__pyx_t_1) {
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_float32); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_14, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 447, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":448
  * 
@@ -8406,10 +8407,10 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 448, __pyx_L1_error)
-    __pyx_v_arr_memviewfloat = __pyx_t_14;
-    __pyx_t_14.memview = NULL;
-    __pyx_t_14.data = NULL;
+    __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 448, __pyx_L1_error)
+    __pyx_v_arr_memviewfloat = __pyx_t_15;
+    __pyx_t_15.memview = NULL;
+    __pyx_t_15.data = NULL;
 
     /* "dijkstra3d.pyx":449
  *   if dtype == np.float32:
@@ -8418,8 +8419,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[float, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 449, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 449, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":450
  *     arr_memviewfloat = data
@@ -8428,8 +8429,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[float, uint64_t](
  *           &arr_memviewfloat[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 450, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 450, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":452
  *       if sixtyfourbit:
@@ -8438,24 +8439,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 452, __pyx_L1_error)
         }
 
@@ -8466,7 +8467,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":450
  *     arr_memviewfloat = data
@@ -8494,24 +8495,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 459, __pyx_L1_error)
         }
 
@@ -8522,7 +8523,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L6:;
 
@@ -8543,8 +8544,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[float, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 464, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":465
  *         )
@@ -8553,8 +8554,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[float, uint64_t](
  *           &arr_memviewfloat[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 465, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 465, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":467
  *       if sixtyfourbit:
@@ -8563,24 +8564,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 467, __pyx_L1_error)
         }
 
@@ -8591,7 +8592,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":465
  *         )
@@ -8619,24 +8620,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 475, __pyx_L1_error)
         }
 
@@ -8647,7 +8648,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L7:;
 
@@ -8669,8 +8670,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 482, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 482, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":484
  *       if sixtyfourbit:
@@ -8679,24 +8680,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 484, __pyx_L1_error)
         }
 
@@ -8707,7 +8708,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":482
  *         )
@@ -8735,24 +8736,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 491, __pyx_L1_error)
         }
 
@@ -8763,7 +8764,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewfloat[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L8:;
     }
@@ -8786,16 +8787,16 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     arr_memviewdouble = data
  *     if bidirectional:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 496, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_float64); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 496, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 496, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (__pyx_t_1) {
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_float64); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_14, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 496, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":497
  *         )
@@ -8804,10 +8805,10 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 497, __pyx_L1_error)
-    __pyx_v_arr_memviewdouble = __pyx_t_15;
-    __pyx_t_15.memview = NULL;
-    __pyx_t_15.data = NULL;
+    __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 497, __pyx_L1_error)
+    __pyx_v_arr_memviewdouble = __pyx_t_16;
+    __pyx_t_16.memview = NULL;
+    __pyx_t_16.data = NULL;
 
     /* "dijkstra3d.pyx":498
  *   elif dtype == np.float64:
@@ -8816,8 +8817,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[double, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 498, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 498, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":499
  *     arr_memviewdouble = data
@@ -8826,8 +8827,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[double, uint64_t](
  *           &arr_memviewdouble[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 499, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 499, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":501
  *       if sixtyfourbit:
@@ -8836,24 +8837,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 501, __pyx_L1_error)
         }
 
@@ -8864,7 +8865,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":499
  *     arr_memviewdouble = data
@@ -8892,24 +8893,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 508, __pyx_L1_error)
         }
 
@@ -8920,7 +8921,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L10:;
 
@@ -8941,8 +8942,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[double, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 513, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 513, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":514
  *         )
@@ -8951,8 +8952,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[double, uint64_t](
  *           &arr_memviewdouble[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 514, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 514, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":516
  *       if sixtyfourbit:
@@ -8961,24 +8962,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 516, __pyx_L1_error)
         }
 
@@ -8989,7 +8990,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":514
  *         )
@@ -9017,24 +9018,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 524, __pyx_L1_error)
         }
 
@@ -9045,7 +9046,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L11:;
 
@@ -9067,8 +9068,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 531, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 531, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":533
  *       if sixtyfourbit:
@@ -9077,24 +9078,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 533, __pyx_L1_error)
         }
 
@@ -9105,7 +9106,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":531
  *         )
@@ -9133,24 +9134,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 540, __pyx_L1_error)
         }
 
@@ -9161,7 +9162,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memviewdouble[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L12:;
     }
@@ -9185,35 +9186,35 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_11 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int64); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_10, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_16) {
+  __pyx_t_12 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int64); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_11, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L13_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint64); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_10, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __pyx_t_16;
-  __pyx_L13_bool_binop_done:;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint64); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_11, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_16 = (__pyx_t_1 != 0);
-  if (__pyx_t_16) {
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __pyx_t_1;
+  __pyx_L13_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":546
  *         )
@@ -9222,31 +9223,31 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 546, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 546, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_uint64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 546, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_10)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_10);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_uint64); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_11 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_11)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_11);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_11 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_10, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 546, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_11, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 546, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_12 = (__pyx_t_11) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_11, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 546, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview64 = __pyx_t_17;
     __pyx_t_17.memview = NULL;
     __pyx_t_17.data = NULL;
@@ -9258,8 +9259,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[uint64_t, uint64_t](
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 547, __pyx_L1_error)
-    if (__pyx_t_16) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 547, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":548
  *     arr_memview64 = data.astype(np.uint64)
@@ -9268,8 +9269,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[uint64_t, uint64_t](
  *           &arr_memview64[0,0,0],
  */
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 548, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 548, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":550
  *       if sixtyfourbit:
@@ -9278,24 +9279,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 550, __pyx_L1_error)
         }
 
@@ -9306,7 +9307,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_5 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_6 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":548
  *     arr_memview64 = data.astype(np.uint64)
@@ -9334,24 +9335,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 557, __pyx_L1_error)
         }
 
@@ -9362,7 +9363,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_3 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_4 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L16:;
 
@@ -9383,8 +9384,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[uint64_t, uint64_t](
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 562, __pyx_L1_error)
-    if (__pyx_t_16) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 562, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":563
  *         )
@@ -9393,8 +9394,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[uint64_t, uint64_t](
  *           &arr_memview64[0,0,0],
  */
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 563, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 563, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":565
  *       if sixtyfourbit:
@@ -9403,24 +9404,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 565, __pyx_L1_error)
         }
 
@@ -9431,7 +9432,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_5 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_6 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":563
  *         )
@@ -9459,24 +9460,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 573, __pyx_L1_error)
         }
 
@@ -9487,7 +9488,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_3 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_4 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L17:;
 
@@ -9509,8 +9510,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  */
     /*else*/ {
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 580, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":582
  *       if sixtyfourbit:
@@ -9519,24 +9520,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 582, __pyx_L1_error)
         }
 
@@ -9547,7 +9548,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_5 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_6 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":580
  *         )
@@ -9575,24 +9576,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview64.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview64.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview64.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview64.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 589, __pyx_L1_error)
         }
 
@@ -9603,7 +9604,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview64[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_3 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_4 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L18:;
     }
@@ -9627,35 +9628,35 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_11 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __pyx_t_12 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L19_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_16 = __pyx_t_1;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = __pyx_t_2;
   __pyx_L19_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_1 = (__pyx_t_16 != 0);
-  if (__pyx_t_1) {
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":595
  *         )
@@ -9664,34 +9665,34 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 595, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 595, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint32); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 595, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_8);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint32); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_11 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_10) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_10);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 595, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_11, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __pyx_t_12 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_9, __pyx_t_11) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_11);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_v_arr_memview32 = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 595, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_v_arr_memview32 = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":596
  *   elif dtype in (np.int32, np.uint32):
@@ -9700,8 +9701,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[uint32_t, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 596, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 596, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":597
  *     arr_memview32 = data.astype(np.uint32)
@@ -9710,8 +9711,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[uint32_t, uint64_t](
  *           &arr_memview32[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 597, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 597, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":599
  *       if sixtyfourbit:
@@ -9720,24 +9721,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 599, __pyx_L1_error)
         }
 
@@ -9748,7 +9749,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_5 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_6 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":597
  *     arr_memview32 = data.astype(np.uint32)
@@ -9776,24 +9777,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 606, __pyx_L1_error)
         }
 
@@ -9804,7 +9805,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_3 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_4 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L22:;
 
@@ -9825,8 +9826,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[uint32_t, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 611, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 611, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":612
  *         )
@@ -9835,8 +9836,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[uint32_t, uint64_t](
  *           &arr_memview32[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":614
  *       if sixtyfourbit:
@@ -9845,24 +9846,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 614, __pyx_L1_error)
         }
 
@@ -9873,7 +9874,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_5 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_6 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":612
  *         )
@@ -9901,24 +9902,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 622, __pyx_L1_error)
         }
 
@@ -9929,7 +9930,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_3 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_4 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L23:;
 
@@ -9951,8 +9952,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 629, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 629, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":631
  *       if sixtyfourbit:
@@ -9961,24 +9962,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 631, __pyx_L1_error)
         }
 
@@ -9989,7 +9990,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_5 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_6 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":629
  *         )
@@ -10017,24 +10018,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview32.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview32.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview32.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview32.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 638, __pyx_L1_error)
         }
 
@@ -10045,7 +10046,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview32[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_3 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_4 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L24:;
     }
@@ -10069,35 +10070,35 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_11 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int16); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_10, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_16) {
+  __pyx_t_12 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int16); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_11, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L25_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint16); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_10, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 643, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __pyx_t_16;
-  __pyx_L25_bool_binop_done:;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint16); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_11, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 643, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_16 = (__pyx_t_1 != 0);
-  if (__pyx_t_16) {
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 643, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __pyx_t_1;
+  __pyx_L25_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":644
  *         )
@@ -10106,31 +10107,31 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_uint16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_10 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_10)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_10);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_uint16); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_11 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_11 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_11)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_11);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_11 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_10, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 644, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_11, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 644, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_12 = (__pyx_t_11) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_11, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview16 = __pyx_t_18;
     __pyx_t_18.memview = NULL;
     __pyx_t_18.data = NULL;
@@ -10142,8 +10143,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[uint16_t, uint64_t](
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 645, __pyx_L1_error)
-    if (__pyx_t_16) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 645, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":646
  *     arr_memview16 = data.astype(np.uint16)
@@ -10152,8 +10153,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[uint16_t, uint64_t](
  *           &arr_memview16[0,0,0],
  */
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":648
  *       if sixtyfourbit:
@@ -10162,24 +10163,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 648, __pyx_L1_error)
         }
 
@@ -10190,7 +10191,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_5 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_6 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":646
  *     arr_memview16 = data.astype(np.uint16)
@@ -10218,24 +10219,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 655, __pyx_L1_error)
         }
 
@@ -10246,7 +10247,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_3 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_4 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L28:;
 
@@ -10267,8 +10268,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[uint16_t, uint64_t](
  */
-    __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 660, __pyx_L1_error)
-    if (__pyx_t_16) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 660, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":661
  *         )
@@ -10277,8 +10278,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[uint16_t, uint64_t](
  *           &arr_memview16[0,0,0],
  */
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 661, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 661, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":663
  *       if sixtyfourbit:
@@ -10287,24 +10288,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 663, __pyx_L1_error)
         }
 
@@ -10315,7 +10316,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_5 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_6 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":661
  *         )
@@ -10343,24 +10344,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 671, __pyx_L1_error)
         }
 
@@ -10371,7 +10372,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_3 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_4 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L29:;
 
@@ -10393,8 +10394,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  */
     /*else*/ {
-      __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 678, __pyx_L1_error)
-      if (__pyx_t_16) {
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 678, __pyx_L1_error)
+      if (__pyx_t_1) {
 
         /* "dijkstra3d.pyx":680
  *       if sixtyfourbit:
@@ -10403,24 +10404,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 680, __pyx_L1_error)
         }
 
@@ -10431,7 +10432,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_5 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_6 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":678
  *         )
@@ -10459,24 +10460,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview16.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview16.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview16.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview16.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 687, __pyx_L1_error)
         }
 
@@ -10487,7 +10488,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview16[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_3 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_4 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L30:;
     }
@@ -10511,43 +10512,43 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_11 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __pyx_t_12 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L31_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L31_bool_binop_done;
   }
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_11, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_16 = __pyx_t_1;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_12, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = __pyx_t_2;
   __pyx_L31_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_1 = (__pyx_t_16 != 0);
-  if (__pyx_t_1) {
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":693
  *         )
@@ -10556,31 +10557,31 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     if bidirectional:
  *       if sixtyfourbit:
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 693, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 693, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 693, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_8);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint8); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_11 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_10) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_10);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 693, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_19 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_11, PyBUF_WRITABLE); if (unlikely(!__pyx_t_19.memview)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __pyx_t_12 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_9, __pyx_t_11) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_11);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_19 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_19.memview)) __PYX_ERR(0, 693, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview8 = __pyx_t_19;
     __pyx_t_19.memview = NULL;
     __pyx_t_19.data = NULL;
@@ -10592,8 +10593,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = bidirectional_dijkstra3d[uint8_t, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 694, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 694, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":695
  *     arr_memview8 = data.astype(np.uint8)
@@ -10602,8 +10603,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = bidirectional_dijkstra3d[uint8_t, uint64_t](
  *           &arr_memview8[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 695, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 695, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":697
  *       if sixtyfourbit:
@@ -10612,24 +10613,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 697, __pyx_L1_error)
         }
 
@@ -10640,7 +10641,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::bidirectional_dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_6 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":695
  *     arr_memview8 = data.astype(np.uint8)
@@ -10668,24 +10669,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 704, __pyx_L1_error)
         }
 
@@ -10696,7 +10697,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_3 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::bidirectional_dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_4 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L35:;
 
@@ -10717,8 +10718,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *       if sixtyfourbit:
  *         output64 = compass_guided_dijkstra3d[uint8_t, uint64_t](
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 709, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_compass); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 709, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":710
  *         )
@@ -10727,8 +10728,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *         output64 = compass_guided_dijkstra3d[uint8_t, uint64_t](
  *           &arr_memview8[0,0,0],
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 710, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 710, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":712
  *       if sixtyfourbit:
@@ -10737,24 +10738,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 712, __pyx_L1_error)
         }
 
@@ -10765,7 +10766,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::compass_guided_dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_6 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":710
  *         )
@@ -10793,24 +10794,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 720, __pyx_L1_error)
         }
 
@@ -10821,7 +10822,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_3 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::compass_guided_dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_4 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_compass_norm, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L36:;
 
@@ -10843,8 +10844,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  */
     /*else*/ {
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 727, __pyx_L1_error)
-      if (__pyx_t_1) {
+      __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 727, __pyx_L1_error)
+      if (__pyx_t_2) {
 
         /* "dijkstra3d.pyx":729
  *       if sixtyfourbit:
@@ -10853,24 +10854,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
+        __pyx_t_6 = 0;
         __pyx_t_5 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_3 = 0;
-        __pyx_t_6 = -1;
+        __pyx_t_7 = -1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 729, __pyx_L1_error)
         }
 
@@ -10881,7 +10882,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output64 = ((std::vector<uint64_t> )dijkstra::dijkstra3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_6 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
 
         /* "dijkstra3d.pyx":727
  *         )
@@ -10909,24 +10910,24 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           sx, sy, sz,
  *           src, sink, connectivity,
  */
-        __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_5 = 0;
-        __pyx_t_6 = -1;
-        if (__pyx_t_3 < 0) {
-          __pyx_t_3 += __pyx_v_arr_memview8.shape[0];
-          if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-        } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = -1;
         if (__pyx_t_4 < 0) {
-          __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-          if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
+          __pyx_t_4 += __pyx_v_arr_memview8.shape[0];
+          if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+        } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
         if (__pyx_t_5 < 0) {
-          __pyx_t_5 += __pyx_v_arr_memview8.shape[2];
-          if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-        if (unlikely(__pyx_t_6 != -1)) {
-          __Pyx_RaiseBufferIndexError(__pyx_t_6);
+          __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+          if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+        } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
+        if (__pyx_t_6 < 0) {
+          __pyx_t_6 += __pyx_v_arr_memview8.shape[2];
+          if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+        } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+        if (unlikely(__pyx_t_7 != -1)) {
+          __Pyx_RaiseBufferIndexError(__pyx_t_7);
           __PYX_ERR(0, 736, __pyx_L1_error)
         }
 
@@ -10937,7 +10938,7 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *           &arr_memview8[0,0,0],
  *           sx, sy, sz,
  */
-        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_3 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
+        __pyx_v_output32 = ((std::vector<uint32_t> )dijkstra::dijkstra3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_4 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_v_sink, __pyx_v_connectivity, __pyx_v_voxel_graph_ptr));
       }
       __pyx_L37:;
     }
@@ -10960,8 +10961,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     output_ptr64 = <uint64_t*>&output64[0]
  *     vec_view64 = <uint64_t[:output64.size()]>output_ptr64
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 748, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 748, __pyx_L1_error)
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":749
  * 
@@ -10983,15 +10984,15 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
       PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
       __PYX_ERR(0, 750, __pyx_L1_error)
     }
-    __pyx_t_13 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn_uint64_t); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 750, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_11 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_output64.size())); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 750, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_20 = __pyx_array_new(__pyx_t_11, sizeof(uint64_t), PyBytes_AS_STRING(__pyx_t_13), (char *) "c", (char *) __pyx_v_output_ptr64);
+    __pyx_t_14 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn_uint64_t); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 750, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_12 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_output64.size())); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 750, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_20 = __pyx_array_new(__pyx_t_12, sizeof(uint64_t), PyBytes_AS_STRING(__pyx_t_14), (char *) "c", (char *) __pyx_v_output_ptr64);
     if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 750, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_20);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint64_t(((PyObject *)__pyx_t_20), PyBUF_WRITABLE); if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 750, __pyx_L1_error)
     __Pyx_DECREF(((PyObject *)__pyx_t_20)); __pyx_t_20 = 0;
     __pyx_v_vec_view64 = __pyx_t_21;
@@ -11005,13 +11006,13 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     output = np.frombuffer(buf, dtype=np.uint64)
  *   else:
  */
-    __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_vec_view64, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint64_t, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 751, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_11 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 751, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_v_buf = ((PyObject*)__pyx_t_11);
-    __pyx_t_11 = 0;
+    __pyx_t_14 = __pyx_memoryview_fromslice(__pyx_v_vec_view64, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint64_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint64_t, 0);; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 751, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_14); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 751, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_v_buf = ((PyObject*)__pyx_t_12);
+    __pyx_t_12 = 0;
 
     /* "dijkstra3d.pyx":752
  *     vec_view64 = <uint64_t[:output64.size()]>output_ptr64
@@ -11020,32 +11021,32 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *   else:
  *     output_ptr32 = <uint32_t*>&output32[0]
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_buf);
     __Pyx_GIVEREF(__pyx_v_buf);
-    PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_v_buf);
-    __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint64); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_dtype, __pyx_t_12) < 0) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_11, __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 752, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_v_buf);
+    __pyx_t_11 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint64); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_dtype, __pyx_t_13) < 0) __PYX_ERR(0, 752, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_12, __pyx_t_11); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 752, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_v_output = __pyx_t_12;
-    __pyx_t_12 = 0;
+    __pyx_v_output = __pyx_t_13;
+    __pyx_t_13 = 0;
 
     /* "dijkstra3d.pyx":748
  *   cdef uint64_t[:] vec_view64
@@ -11078,15 +11079,15 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
       PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
       __PYX_ERR(0, 755, __pyx_L1_error)
     }
-    __pyx_t_10 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn_uint32_t); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 755, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_12 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_output32.size())); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 755, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_20 = __pyx_array_new(__pyx_t_12, sizeof(uint32_t), PyBytes_AS_STRING(__pyx_t_10), (char *) "c", (char *) __pyx_v_output_ptr32);
+    __pyx_t_11 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_nn_uint32_t); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 755, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_13 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_output32.size())); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 755, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_20 = __pyx_array_new(__pyx_t_13, sizeof(uint32_t), PyBytes_AS_STRING(__pyx_t_11), (char *) "c", (char *) __pyx_v_output_ptr32);
     if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 755, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_20);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     __pyx_t_22 = __Pyx_PyObject_to_MemoryviewSlice_ds_nn_uint32_t(((PyObject *)__pyx_t_20), PyBUF_WRITABLE); if (unlikely(!__pyx_t_22.memview)) __PYX_ERR(0, 755, __pyx_L1_error)
     __Pyx_DECREF(((PyObject *)__pyx_t_20)); __pyx_t_20 = 0;
     __pyx_v_vec_view32 = __pyx_t_22;
@@ -11100,13 +11101,13 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     output = np.frombuffer(buf, dtype=np.uint32)
  * 
  */
-    __pyx_t_10 = __pyx_memoryview_fromslice(__pyx_v_vec_view32, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 756, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_12 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 756, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_v_buf = ((PyObject*)__pyx_t_12);
-    __pyx_t_12 = 0;
+    __pyx_t_11 = __pyx_memoryview_fromslice(__pyx_v_vec_view32, 1, (PyObject *(*)(char *)) __pyx_memview_get_nn_uint32_t, (int (*)(char *, PyObject *)) __pyx_memview_set_nn_uint32_t, 0);; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 756, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_13 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_11); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 756, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_v_buf = ((PyObject*)__pyx_t_13);
+    __pyx_t_13 = 0;
 
     /* "dijkstra3d.pyx":757
  *     vec_view32 = <uint32_t[:output32.size()]>output_ptr32
@@ -11115,32 +11116,32 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  * 
  *   if bidirectional:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_INCREF(__pyx_v_buf);
-    __Pyx_GIVEREF(__pyx_v_buf);
-    PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_v_buf);
-    __pyx_t_11 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 757, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_dtype, __pyx_t_8) < 0) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_12, __pyx_t_11); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 757, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_INCREF(__pyx_v_buf);
+    __Pyx_GIVEREF(__pyx_v_buf);
+    PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_v_buf);
+    __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_13, __pyx_t_12); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 757, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_v_output = __pyx_t_8;
-    __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_v_output = __pyx_t_9;
+    __pyx_t_9 = 0;
   }
   __pyx_L38:;
 
@@ -11151,8 +11152,8 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  *     return output
  *   else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 759, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_bidirectional); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 759, __pyx_L1_error)
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":760
  * 
@@ -11184,10 +11185,10 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
  */
   /*else*/ {
     __Pyx_XDECREF(__pyx_r);
-    __pyx_t_8 = __Pyx_PyObject_GetItem(__pyx_v_output, __pyx_slice__3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 762, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __pyx_r = __pyx_t_8;
-    __pyx_t_8 = 0;
+    __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_output, __pyx_slice__3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 762, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_r = __pyx_t_9;
+    __pyx_t_9 = 0;
     goto __pyx_L0;
   }
 
@@ -11201,15 +11202,15 @@ static PyObject *__pyx_pf_10dijkstra3d_14_execute_dijkstra(CYTHON_UNUSED PyObjec
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
-  __Pyx_XDECREF(__pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 1);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
+  __Pyx_XDECREF(__pyx_t_14);
   __PYX_XDEC_MEMVIEW(&__pyx_t_15, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_16, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_17, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_18, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_19, 1);
@@ -11353,21 +11354,21 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_3;
+  int __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_6;
+  int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  size_t __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  size_t __pyx_t_10;
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  __Pyx_memviewslice __pyx_t_14 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_14 = NULL;
   __Pyx_memviewslice __pyx_t_15 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_16;
+  __Pyx_memviewslice __pyx_t_16 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_17 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_18 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_19 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -11382,7 +11383,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  * 
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL             # <<<<<<<<<<<<<<
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  */
   __pyx_v_voxel_graph_ptr = NULL;
@@ -11390,58 +11391,59 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
   /* "dijkstra3d.pyx":774
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_voxel_graph); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 774, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_1 = (__pyx_v_voxel_graph != Py_None);
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":775
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph             # <<<<<<<<<<<<<<
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 775, __pyx_L1_error)
-    __pyx_v_voxel_graph_memview = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 775, __pyx_L1_error)
+    __pyx_v_voxel_graph_memview = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":776
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t sx = data.shape[0]
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_voxel_graph_memview.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_voxel_graph_memview.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 776, __pyx_L1_error)
     }
-    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_3 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[2]) )))));
+    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_6 * __pyx_v_voxel_graph_memview.strides[2]) )))));
 
     /* "dijkstra3d.pyx":774
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
@@ -11454,14 +11456,14 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *   cdef size_t sy = data.shape[1]
  *   cdef size_t sz = data.shape[2]
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 778, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 778, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 778, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 778, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sx = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 778, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sx = __pyx_t_10;
 
   /* "dijkstra3d.pyx":779
  * 
@@ -11470,14 +11472,14 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *   cdef size_t sz = data.shape[2]
  * 
  */
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 779, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 779, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_9, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 779, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_8, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 779, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 779, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_7); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 779, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_sy = __pyx_t_9;
+  __pyx_v_sy = __pyx_t_10;
 
   /* "dijkstra3d.pyx":780
  *   cdef size_t sx = data.shape[0]
@@ -11486,14 +11488,14 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  * 
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 780, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 780, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 780, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 780, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 780, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sz = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 780, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sz = __pyx_t_10;
 
   /* "dijkstra3d.pyx":782
  *   cdef size_t sz = data.shape[2]
@@ -11502,35 +11504,35 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  * 
  *   cdef float* dist
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 782, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 782, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 782, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 782, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_12); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 782, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_v_src = __pyx_t_9;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_9, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_13); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 782, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_v_src = __pyx_t_10;
 
   /* "dijkstra3d.pyx":786
  *   cdef float* dist
@@ -11539,10 +11541,10 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  * 
  *   if dtype == np.float32:
  */
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 786, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_v_dtype = __pyx_t_12;
-  __pyx_t_12 = 0;
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 786, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_v_dtype = __pyx_t_13;
+  __pyx_t_13 = 0;
 
   /* "dijkstra3d.pyx":788
  *   dtype = data.dtype
@@ -11551,16 +11553,16 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     arr_memviewfloat = data
  *     dist = distance_field3d[float](
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 788, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_float32); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 788, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 788, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 788, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_float32); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 788, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 788, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (__pyx_t_1) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_14, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 788, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 788, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":789
  * 
@@ -11569,10 +11571,10 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[float](
  *       &arr_memviewfloat[0,0,0],
  */
-    __pyx_t_14 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_14.memview)) __PYX_ERR(0, 789, __pyx_L1_error)
-    __pyx_v_arr_memviewfloat = __pyx_t_14;
-    __pyx_t_14.memview = NULL;
-    __pyx_t_14.data = NULL;
+    __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 789, __pyx_L1_error)
+    __pyx_v_arr_memviewfloat = __pyx_t_15;
+    __pyx_t_15.memview = NULL;
+    __pyx_t_15.data = NULL;
 
     /* "dijkstra3d.pyx":791
  *     arr_memviewfloat = data
@@ -11581,24 +11583,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
+    __pyx_t_6 = 0;
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_3 = 0;
-    __pyx_t_6 = -1;
+    __pyx_t_7 = -1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[0];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[0];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+      __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[2];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[2];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 791, __pyx_L1_error)
     }
 
@@ -11609,7 +11611,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 793, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 793, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":790
  *   if dtype == np.float32:
@@ -11618,7 +11620,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memviewfloat[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<float>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<float>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":788
  *   dtype = data.dtype
@@ -11637,16 +11639,16 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     arr_memviewdouble = data
  *     dist = distance_field3d[double](
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 796, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_float64); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 796, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 796, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 796, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_float64); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 796, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 796, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (__pyx_t_1) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_14, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 796, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 796, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":797
  *     )
@@ -11655,10 +11657,10 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[double](
  *       &arr_memviewdouble[0,0,0],
  */
-    __pyx_t_15 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_15.memview)) __PYX_ERR(0, 797, __pyx_L1_error)
-    __pyx_v_arr_memviewdouble = __pyx_t_15;
-    __pyx_t_15.memview = NULL;
-    __pyx_t_15.data = NULL;
+    __pyx_t_16 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_16.memview)) __PYX_ERR(0, 797, __pyx_L1_error)
+    __pyx_v_arr_memviewdouble = __pyx_t_16;
+    __pyx_t_16.memview = NULL;
+    __pyx_t_16.data = NULL;
 
     /* "dijkstra3d.pyx":799
  *     arr_memviewdouble = data
@@ -11667,24 +11669,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 799, __pyx_L1_error)
     }
 
@@ -11695,7 +11697,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 801, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 801, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":798
  *   elif dtype == np.float64:
@@ -11704,7 +11706,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memviewdouble[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<double>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<double>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":796
  *       voxel_graph_ptr
@@ -11724,35 +11726,35 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint64_t](
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_12 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_16) {
+  __pyx_t_13 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int64); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L5_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 804, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __pyx_t_16;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint64); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __pyx_t_1;
   __pyx_L5_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_16 = (__pyx_t_1 != 0);
-  if (__pyx_t_16) {
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":805
  *     )
@@ -11761,31 +11763,31 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint64_t](
  *       &arr_memview64[0,0,0],
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 805, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 805, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint64); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 805, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_12 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_7);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 805, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_13 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_9, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 805, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 805, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview64 = __pyx_t_17;
     __pyx_t_17.memview = NULL;
     __pyx_t_17.data = NULL;
@@ -11797,24 +11799,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
+    __pyx_t_6 = 0;
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_3 = 0;
-    __pyx_t_6 = -1;
+    __pyx_t_7 = -1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memview64.shape[0];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memview64.shape[0];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+      __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memview64.shape[2];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_4 += __pyx_v_arr_memview64.shape[2];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 807, __pyx_L1_error)
     }
 
@@ -11825,7 +11827,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 809, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 809, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":806
  *   elif dtype in (np.int64, np.uint64):
@@ -11834,7 +11836,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memview64[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_5 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_6 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":804
  *       voxel_graph_ptr
@@ -11854,35 +11856,35 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint32_t](
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_12 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint32); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __pyx_t_13 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L7_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int32); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 812, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_16 = __pyx_t_1;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 812, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = __pyx_t_2;
   __pyx_L7_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = (__pyx_t_16 != 0);
-  if (__pyx_t_1) {
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":813
  *     )
@@ -11891,34 +11893,34 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint32_t](
  *       &arr_memview32[0,0,0],
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 813, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 813, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 813, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 813, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 813, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 813, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 813, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_13 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 813, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 813, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 813, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_v_arr_memview32 = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_v_arr_memview32 = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":815
  *     arr_memview32 = data.astype(np.uint32)
@@ -11927,24 +11929,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memview32.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_arr_memview32.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memview32.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memview32.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 815, __pyx_L1_error)
     }
 
@@ -11955,7 +11957,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 817, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 817, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":814
  *   elif dtype in (np.uint32, np.int32):
@@ -11964,7 +11966,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memview32[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_3 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_4 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":812
  *       voxel_graph_ptr
@@ -11984,35 +11986,35 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint16_t](
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_12 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_16) {
+  __pyx_t_13 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int16); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L9_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 820, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = __pyx_t_16;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint16); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 820, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = __pyx_t_1;
   __pyx_L9_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_16 = (__pyx_t_1 != 0);
-  if (__pyx_t_16) {
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":821
  *     )
@@ -12021,31 +12023,31 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint16_t](
  *       &arr_memview16[0,0,0],
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 821, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 821, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 821, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 821, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint16); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 821, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_12 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_7);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 821, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_13 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_9, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 821, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 821, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview16 = __pyx_t_18;
     __pyx_t_18.memview = NULL;
     __pyx_t_18.data = NULL;
@@ -12057,24 +12059,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
+    __pyx_t_6 = 0;
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_3 = 0;
-    __pyx_t_6 = -1;
+    __pyx_t_7 = -1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memview16.shape[0];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memview16.shape[0];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+      __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memview16.shape[2];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_4 += __pyx_v_arr_memview16.shape[2];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 823, __pyx_L1_error)
     }
 
@@ -12085,7 +12087,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 825, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 825, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":822
  *   elif dtype in (np.int16, np.uint16):
@@ -12094,7 +12096,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memview16[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<uint16_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_5 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<uint16_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_6 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":820
  *       voxel_graph_ptr
@@ -12114,43 +12116,43 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint8_t](
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_12 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __pyx_t_13 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_int8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L11_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (!__pyx_t_1) {
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_16 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L11_bool_binop_done;
   }
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_16 = __pyx_t_1;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 828, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = __pyx_t_2;
   __pyx_L11_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = (__pyx_t_16 != 0);
-  if (likely(__pyx_t_1)) {
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (likely(__pyx_t_2)) {
 
     /* "dijkstra3d.pyx":829
  *     )
@@ -12159,31 +12161,31 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *     dist = distance_field3d[uint8_t](
  *       &arr_memview8[0,0,0],
  */
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 829, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 829, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 829, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 829, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 829, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 829, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 829, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_13 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 829, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_19 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_19.memview)) __PYX_ERR(0, 829, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_19 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_12, PyBUF_WRITABLE); if (unlikely(!__pyx_t_19.memview)) __PYX_ERR(0, 829, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_arr_memview8 = __pyx_t_19;
     __pyx_t_19.memview = NULL;
     __pyx_t_19.data = NULL;
@@ -12195,24 +12197,24 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       sx, sy, sz,
  *       src, connectivity,
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memview8.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_arr_memview8.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memview8.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memview8.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 831, __pyx_L1_error)
     }
 
@@ -12223,7 +12225,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       voxel_graph_ptr
  *     )
  */
-    __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 833, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_v_connectivity); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 833, __pyx_L1_error)
 
     /* "dijkstra3d.pyx":830
  *   elif dtype in (np.int8, np.uint8, bool):
@@ -12232,7 +12234,7 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *       &arr_memview8[0,0,0],
  *       sx, sy, sz,
  */
-    __pyx_v_dist = dijkstra::distance_field3d<uint8_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_3 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_9, __pyx_v_voxel_graph_ptr);
+    __pyx_v_dist = dijkstra::distance_field3d<uint8_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_4 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_6 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, __pyx_t_10, __pyx_v_voxel_graph_ptr);
 
     /* "dijkstra3d.pyx":828
  *       voxel_graph_ptr
@@ -12252,28 +12254,28 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *   cdef size_t voxels = sx * sy * sz
  */
   /*else*/ {
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 837, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
-        __Pyx_INCREF(__pyx_t_8);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 837, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_14))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_14);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_13, function);
+        __Pyx_DECREF_SET(__pyx_t_14, function);
       }
     }
-    __pyx_t_12 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_v_dtype);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 837, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 837, __pyx_L1_error)
+    __pyx_t_13 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_9, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_v_dtype);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __Pyx_Raise(__pyx_t_13, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 837, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_Raise(__pyx_t_14, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __PYX_ERR(0, 837, __pyx_L1_error)
   }
   __pyx_L4:;
@@ -12298,15 +12300,15 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
     PyErr_SetString(PyExc_ValueError,"Cannot create cython.array from NULL pointer");
     __PYX_ERR(0, 840, __pyx_L1_error)
   }
-  __pyx_t_12 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_float); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 840, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_voxels)); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_13 = __pyx_format_from_typeinfo(&__Pyx_TypeInfo_float); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 840, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_20 = __pyx_array_new(__pyx_t_13, sizeof(float), PyBytes_AS_STRING(__pyx_t_12), (char *) "c", (char *) __pyx_v_dist);
+  __pyx_t_14 = Py_BuildValue((char*) "("  __PYX_BUILD_PY_SSIZE_T  ")", ((Py_ssize_t)__pyx_v_voxels)); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_20 = __pyx_array_new(__pyx_t_14, sizeof(float), PyBytes_AS_STRING(__pyx_t_13), (char *) "c", (char *) __pyx_v_dist);
   if (unlikely(!__pyx_t_20)) __PYX_ERR(0, 840, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_20);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
   __pyx_t_21 = __Pyx_PyObject_to_MemoryviewSlice_ds_float(((PyObject *)__pyx_t_20), PyBUF_WRITABLE); if (unlikely(!__pyx_t_21.memview)) __PYX_ERR(0, 840, __pyx_L1_error)
   __Pyx_DECREF(((PyObject *)__pyx_t_20)); __pyx_t_20 = 0;
   __pyx_v_dist_view = __pyx_t_21;
@@ -12320,13 +12322,13 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  *   free(dist)
  *   # I don't actually understand why order F works, but it does.
  */
-  __pyx_t_12 = __pyx_memoryview_fromslice(__pyx_v_dist_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_float, (int (*)(char *, PyObject *)) __pyx_memview_set_float, 0);; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 844, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_dist_view, 1, (PyObject *(*)(char *)) __pyx_memview_get_float, (int (*)(char *, PyObject *)) __pyx_memview_set_float, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 844, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_v_buf = ((PyObject*)__pyx_t_13);
-  __pyx_t_13 = 0;
+  __pyx_t_14 = __Pyx_PyObject_CallOneArg(((PyObject *)(&PyByteArray_Type)), __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 844, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_v_buf = ((PyObject*)__pyx_t_14);
+  __pyx_t_14 = 0;
 
   /* "dijkstra3d.pyx":845
  *   # Python 3 can just do np.frombuffer(vec_view, ...)
@@ -12345,50 +12347,50 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
  * def _execute_parental_field(data, source, connectivity, voxel_graph):
  */
   __Pyx_XDECREF(__pyx_r);
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_frombuffer); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyTuple_New(1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_INCREF(__pyx_v_buf);
   __Pyx_GIVEREF(__pyx_v_buf);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_v_buf);
-  __pyx_t_8 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 847, __pyx_L1_error)
+  PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_v_buf);
+  __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 847, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_float32); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_dtype, __pyx_t_10) < 0) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_13, __pyx_t_8); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_float32); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_reshape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_dtype, __pyx_t_11) < 0) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_14, __pyx_t_9); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_reshape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __pyx_t_14 = PyTuple_New(1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_GIVEREF(__pyx_t_11);
+  PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_11);
+  __pyx_t_11 = 0;
+  __pyx_t_11 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 847, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_14, __pyx_t_11); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_10);
-  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_10);
-  __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 847, __pyx_L1_error)
-  __pyx_t_12 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_13, __pyx_t_10); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 847, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_r = __pyx_t_12;
-  __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  __pyx_r = __pyx_t_13;
+  __pyx_t_13 = 0;
   goto __pyx_L0;
 
   /* "dijkstra3d.pyx":764
@@ -12401,15 +12403,15 @@ static PyObject *__pyx_pf_10dijkstra3d_16_execute_distance_field(CYTHON_UNUSED P
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
-  __Pyx_XDECREF(__pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 1);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_14, 1);
+  __Pyx_XDECREF(__pyx_t_14);
   __PYX_XDEC_MEMVIEW(&__pyx_t_15, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_16, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_17, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_18, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_19, 1);
@@ -12552,29 +12554,29 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_3;
+  int __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_6;
+  int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  size_t __pyx_t_9;
-  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  size_t __pyx_t_10;
   PyObject *__pyx_t_11 = NULL;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
-  PyArrayObject *__pyx_t_14 = NULL;
-  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyArrayObject *__pyx_t_15 = NULL;
   PyObject *__pyx_t_16 = NULL;
   PyObject *__pyx_t_17 = NULL;
-  PyArrayObject *__pyx_t_18 = NULL;
-  __Pyx_memviewslice __pyx_t_19 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_20;
+  PyObject *__pyx_t_18 = NULL;
+  PyArrayObject *__pyx_t_19 = NULL;
+  __Pyx_memviewslice __pyx_t_20 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_21;
   Py_ssize_t __pyx_t_22;
-  __Pyx_memviewslice __pyx_t_23 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  int __pyx_t_24;
+  Py_ssize_t __pyx_t_23;
+  __Pyx_memviewslice __pyx_t_24 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_25 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_26 = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_t_27 = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -12595,7 +12597,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  * 
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL             # <<<<<<<<<<<<<<
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  */
   __pyx_v_voxel_graph_ptr = NULL;
@@ -12603,58 +12605,59 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
   /* "dijkstra3d.pyx":859
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_voxel_graph); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 859, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_1 = (__pyx_v_voxel_graph != Py_None);
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":860
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph             # <<<<<<<<<<<<<<
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
-    __pyx_v_voxel_graph_memview = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 860, __pyx_L1_error)
+    __pyx_v_voxel_graph_memview = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":861
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t sx = data.shape[0]
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_voxel_graph_memview.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_voxel_graph_memview.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 861, __pyx_L1_error)
     }
-    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_3 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[2]) )))));
+    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_6 * __pyx_v_voxel_graph_memview.strides[2]) )))));
 
     /* "dijkstra3d.pyx":859
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
@@ -12667,14 +12670,14 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *   cdef size_t sy = data.shape[1]
  *   cdef size_t sz = data.shape[2]
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 863, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 863, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 863, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 863, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 863, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sx = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 863, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sx = __pyx_t_10;
 
   /* "dijkstra3d.pyx":864
  * 
@@ -12683,14 +12686,14 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *   cdef size_t sz = data.shape[2]
  * 
  */
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_9, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 864, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_8, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 864, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 864, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_7); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 864, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_sy = __pyx_t_9;
+  __pyx_v_sy = __pyx_t_10;
 
   /* "dijkstra3d.pyx":865
  *   cdef size_t sx = data.shape[0]
@@ -12699,14 +12702,14 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  * 
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 865, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 865, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 865, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 865, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 865, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sz = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 865, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sz = __pyx_t_10;
 
   /* "dijkstra3d.pyx":867
  *   cdef size_t sz = data.shape[2]
@@ -12715,35 +12718,35 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  * 
  *   sixtyfourbit = data.size > np.iinfo(np.uint32).max
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 867, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 867, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 867, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_11, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 867, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_10, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Multiply(__pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyNumber_Add(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyNumber_Multiply(__pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_12); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 867, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_v_src = __pyx_t_9;
+  __pyx_t_13 = PyNumber_Add(__pyx_t_9, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_13); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 867, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_v_src = __pyx_t_10;
 
   /* "dijkstra3d.pyx":869
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
@@ -12752,42 +12755,42 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  * 
  *   cdef cnp.ndarray[uint32_t, ndim=3] parents32
  */
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_size); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_size); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_iinfo); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 869, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_iinfo); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint32); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_10);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_8 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
-    __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_7);
-    if (likely(__pyx_t_8)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_7);
-      __Pyx_INCREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint32); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_9 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
+    __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_8);
+    if (likely(__pyx_t_9)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_8);
+      __Pyx_INCREF(__pyx_t_9);
       __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_7, function);
+      __Pyx_DECREF_SET(__pyx_t_8, function);
     }
   }
-  __pyx_t_13 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_8, __pyx_t_10) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_10);
-  __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_max); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_14 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_9, __pyx_t_11) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+  if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_max); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 869, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_GT); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 869, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_t_12, __pyx_t_7, Py_GT); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 869, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_sixtyfourbit = __pyx_t_13;
-  __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_v_sixtyfourbit = __pyx_t_14;
+  __pyx_t_14 = 0;
 
   /* "dijkstra3d.pyx":874
  *   cdef cnp.ndarray[uint64_t, ndim=3] parents64
@@ -12796,8 +12799,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     parents64 = np.zeros( (sx,sy,sz), dtype=np.uint64, order='F' )
  *   else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 874, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 874, __pyx_L1_error)
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":875
  * 
@@ -12806,70 +12809,70 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *   else:
  *     parents32 = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
  */
+    __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_zeros); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_14 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_11 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_14);
+    PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_14);
+    __Pyx_GIVEREF(__pyx_t_13);
+    PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_13);
+    __Pyx_GIVEREF(__pyx_t_11);
+    PyTuple_SET_ITEM(__pyx_t_9, 2, __pyx_t_11);
+    __pyx_t_14 = 0;
+    __pyx_t_13 = 0;
+    __pyx_t_11 = 0;
+    __pyx_t_11 = PyTuple_New(1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __Pyx_GIVEREF(__pyx_t_9);
+    PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_9);
+    __pyx_t_9 = 0;
+    __pyx_t_9 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 875, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint64); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_12 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_10 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GIVEREF(__pyx_t_13);
-    PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_13);
-    __Pyx_GIVEREF(__pyx_t_12);
-    PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_12);
-    __Pyx_GIVEREF(__pyx_t_10);
-    PyTuple_SET_ITEM(__pyx_t_8, 2, __pyx_t_10);
-    __pyx_t_13 = 0;
-    __pyx_t_12 = 0;
-    __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_GIVEREF(__pyx_t_8);
-    PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_8);
-    __pyx_t_8 = 0;
-    __pyx_t_8 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint64); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_dtype, __pyx_t_13) < 0) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    if (PyDict_SetItem(__pyx_t_8, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 875, __pyx_L1_error)
-    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_7, __pyx_t_10, __pyx_t_8); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 875, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_dtype, __pyx_t_14) < 0) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 875, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_11, __pyx_t_9); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 875, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (!(likely(((__pyx_t_13) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_13, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 875, __pyx_L1_error)
-    __pyx_t_14 = ((PyArrayObject *)__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (!(likely(((__pyx_t_14) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_14, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 875, __pyx_L1_error)
+    __pyx_t_15 = ((PyArrayObject *)__pyx_t_14);
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_parents64.rcbuffer->pybuffer);
-      __pyx_t_6 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents64.rcbuffer->pybuffer, (PyObject*)__pyx_t_14, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack);
-      if (unlikely(__pyx_t_6 < 0)) {
-        PyErr_Fetch(&__pyx_t_15, &__pyx_t_16, &__pyx_t_17);
+      __pyx_t_7 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents64.rcbuffer->pybuffer, (PyObject*)__pyx_t_15, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack);
+      if (unlikely(__pyx_t_7 < 0)) {
+        PyErr_Fetch(&__pyx_t_16, &__pyx_t_17, &__pyx_t_18);
         if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents64.rcbuffer->pybuffer, (PyObject*)__pyx_v_parents64, &__Pyx_TypeInfo_nn_uint64_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) {
-          Py_XDECREF(__pyx_t_15); Py_XDECREF(__pyx_t_16); Py_XDECREF(__pyx_t_17);
+          Py_XDECREF(__pyx_t_16); Py_XDECREF(__pyx_t_17); Py_XDECREF(__pyx_t_18);
           __Pyx_RaiseBufferFallbackError();
         } else {
-          PyErr_Restore(__pyx_t_15, __pyx_t_16, __pyx_t_17);
+          PyErr_Restore(__pyx_t_16, __pyx_t_17, __pyx_t_18);
         }
-        __pyx_t_15 = __pyx_t_16 = __pyx_t_17 = 0;
+        __pyx_t_16 = __pyx_t_17 = __pyx_t_18 = 0;
       }
       __pyx_pybuffernd_parents64.diminfo[0].strides = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_parents64.diminfo[0].shape = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_parents64.diminfo[1].strides = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_parents64.diminfo[1].shape = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_parents64.diminfo[2].strides = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_parents64.diminfo[2].shape = __pyx_pybuffernd_parents64.rcbuffer->pybuffer.shape[2];
-      if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 875, __pyx_L1_error)
+      if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 875, __pyx_L1_error)
     }
+    __pyx_t_15 = 0;
+    __pyx_v_parents64 = ((PyArrayObject *)__pyx_t_14);
     __pyx_t_14 = 0;
-    __pyx_v_parents64 = ((PyArrayObject *)__pyx_t_13);
-    __pyx_t_13 = 0;
 
     /* "dijkstra3d.pyx":874
  *   cdef cnp.ndarray[uint64_t, ndim=3] parents64
@@ -12889,70 +12892,70 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *   dtype = data.dtype
  */
   /*else*/ {
-    __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_zeros); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_t_14 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __pyx_t_11 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 877, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __pyx_t_13 = PyTuple_New(3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_10 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_GIVEREF(__pyx_t_14);
+    PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_14);
+    __Pyx_GIVEREF(__pyx_t_11);
+    PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_11);
+    __Pyx_GIVEREF(__pyx_t_8);
+    PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_8);
+    __pyx_t_14 = 0;
+    __pyx_t_11 = 0;
+    __pyx_t_8 = 0;
+    __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
     __Pyx_GIVEREF(__pyx_t_13);
-    PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_13);
-    __Pyx_GIVEREF(__pyx_t_10);
-    PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_10);
-    __Pyx_GIVEREF(__pyx_t_7);
-    PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_t_7);
+    PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_13);
     __pyx_t_13 = 0;
-    __pyx_t_10 = 0;
-    __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_GIVEREF(__pyx_t_12);
-    PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_12);
-    __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_uint32); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_13) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
-    __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_8, __pyx_t_7, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 877, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_11);
+    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_uint32); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_dtype, __pyx_t_14) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
+    __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_8, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 877, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (!(likely(((__pyx_t_13) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_13, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 877, __pyx_L1_error)
-    __pyx_t_18 = ((PyArrayObject *)__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    if (!(likely(((__pyx_t_14) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_14, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 877, __pyx_L1_error)
+    __pyx_t_19 = ((PyArrayObject *)__pyx_t_14);
     {
       __Pyx_BufFmt_StackElem __pyx_stack[1];
       __Pyx_SafeReleaseBuffer(&__pyx_pybuffernd_parents32.rcbuffer->pybuffer);
-      __pyx_t_6 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents32.rcbuffer->pybuffer, (PyObject*)__pyx_t_18, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack);
-      if (unlikely(__pyx_t_6 < 0)) {
-        PyErr_Fetch(&__pyx_t_17, &__pyx_t_16, &__pyx_t_15);
+      __pyx_t_7 = __Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents32.rcbuffer->pybuffer, (PyObject*)__pyx_t_19, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack);
+      if (unlikely(__pyx_t_7 < 0)) {
+        PyErr_Fetch(&__pyx_t_18, &__pyx_t_17, &__pyx_t_16);
         if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_parents32.rcbuffer->pybuffer, (PyObject*)__pyx_v_parents32, &__Pyx_TypeInfo_nn_uint32_t, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) {
-          Py_XDECREF(__pyx_t_17); Py_XDECREF(__pyx_t_16); Py_XDECREF(__pyx_t_15);
+          Py_XDECREF(__pyx_t_18); Py_XDECREF(__pyx_t_17); Py_XDECREF(__pyx_t_16);
           __Pyx_RaiseBufferFallbackError();
         } else {
-          PyErr_Restore(__pyx_t_17, __pyx_t_16, __pyx_t_15);
+          PyErr_Restore(__pyx_t_18, __pyx_t_17, __pyx_t_16);
         }
-        __pyx_t_17 = __pyx_t_16 = __pyx_t_15 = 0;
+        __pyx_t_18 = __pyx_t_17 = __pyx_t_16 = 0;
       }
       __pyx_pybuffernd_parents32.diminfo[0].strides = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_parents32.diminfo[0].shape = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_parents32.diminfo[1].strides = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_parents32.diminfo[1].shape = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_parents32.diminfo[2].strides = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_parents32.diminfo[2].shape = __pyx_pybuffernd_parents32.rcbuffer->pybuffer.shape[2];
-      if (unlikely(__pyx_t_6 < 0)) __PYX_ERR(0, 877, __pyx_L1_error)
+      if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 877, __pyx_L1_error)
     }
-    __pyx_t_18 = 0;
-    __pyx_v_parents32 = ((PyArrayObject *)__pyx_t_13);
-    __pyx_t_13 = 0;
+    __pyx_t_19 = 0;
+    __pyx_v_parents32 = ((PyArrayObject *)__pyx_t_14);
+    __pyx_t_14 = 0;
   }
   __pyx_L4:;
 
@@ -12963,10 +12966,10 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  * 
  *   if dtype == np.float32:
  */
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 879, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_v_dtype = __pyx_t_13;
-  __pyx_t_13 = 0;
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 879, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_v_dtype = __pyx_t_14;
+  __pyx_t_14 = 0;
 
   /* "dijkstra3d.pyx":881
  *   dtype = data.dtype
@@ -12975,16 +12978,16 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     arr_memviewfloat = data
  *     if sixtyfourbit:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 881, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 881, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_float32); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 881, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_float32); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 881, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 881, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_12, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 881, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 881, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 881, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":882
  * 
@@ -12993,10 +12996,10 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[float,uint64_t](
  */
-    __pyx_t_19 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_19.memview)) __PYX_ERR(0, 882, __pyx_L1_error)
-    __pyx_v_arr_memviewfloat = __pyx_t_19;
-    __pyx_t_19.memview = NULL;
-    __pyx_t_19.data = NULL;
+    __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_float(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 882, __pyx_L1_error)
+    __pyx_v_arr_memviewfloat = __pyx_t_20;
+    __pyx_t_20.memview = NULL;
+    __pyx_t_20.data = NULL;
 
     /* "dijkstra3d.pyx":883
  *   if dtype == np.float32:
@@ -13005,8 +13008,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[float,uint64_t](
  *         &arr_memviewfloat[0,0,0],
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 883, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 883, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":885
  *     if sixtyfourbit:
@@ -13015,24 +13018,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memviewfloat.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memviewfloat.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memviewfloat.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memviewfloat.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 885, __pyx_L1_error)
       }
 
@@ -13043,24 +13046,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 887, __pyx_L1_error)
       }
 
@@ -13071,7 +13074,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 888, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 888, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":884
  *     arr_memviewfloat = data
@@ -13080,7 +13083,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memviewfloat[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<float,uint64_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_6 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":883
  *   if dtype == np.float32:
@@ -13108,24 +13111,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memviewfloat.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memviewfloat.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memviewfloat.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memviewfloat.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memviewfloat.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memviewfloat.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memviewfloat.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memviewfloat.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memviewfloat.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 893, __pyx_L1_error)
       }
 
@@ -13136,24 +13139,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 895, __pyx_L1_error)
       }
 
@@ -13164,7 +13167,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 896, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 896, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":892
  *       )
@@ -13173,7 +13176,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memviewfloat[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_22 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<float,uint32_t>((&(*((float *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewfloat.data + __pyx_t_23 * __pyx_v_arr_memviewfloat.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memviewfloat.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memviewfloat.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L6:;
 
@@ -13194,16 +13197,16 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     arr_memviewdouble = data
  *     if sixtyfourbit:
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 899, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 899, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_float64); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 899, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_float64); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 899, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_13, Py_EQ); __Pyx_XGOTREF(__pyx_t_14); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 899, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyObject_RichCompare(__pyx_v_dtype, __pyx_t_12, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 899, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 899, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_14); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 899, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":900
  *       )
@@ -13212,10 +13215,10 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[double,uint64_t](
  */
-    __pyx_t_23 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_23.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
-    __pyx_v_arr_memviewdouble = __pyx_t_23;
-    __pyx_t_23.memview = NULL;
-    __pyx_t_23.data = NULL;
+    __pyx_t_24 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(__pyx_v_data, PyBUF_WRITABLE); if (unlikely(!__pyx_t_24.memview)) __PYX_ERR(0, 900, __pyx_L1_error)
+    __pyx_v_arr_memviewdouble = __pyx_t_24;
+    __pyx_t_24.memview = NULL;
+    __pyx_t_24.data = NULL;
 
     /* "dijkstra3d.pyx":901
  *   elif dtype == np.float64:
@@ -13224,8 +13227,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[double,uint64_t](
  *         &arr_memviewdouble[0,0,0],
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 901, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 901, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":903
  *     if sixtyfourbit:
@@ -13234,24 +13237,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memviewdouble.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memviewdouble.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memviewdouble.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memviewdouble.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 903, __pyx_L1_error)
       }
 
@@ -13262,24 +13265,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 905, __pyx_L1_error)
       }
 
@@ -13290,7 +13293,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 906, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 906, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":902
  *     arr_memviewdouble = data
@@ -13299,7 +13302,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memviewdouble[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<double,uint64_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_6 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":901
  *   elif dtype == np.float64:
@@ -13327,24 +13330,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memviewdouble.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memviewdouble.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memviewdouble.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memviewdouble.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memviewdouble.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memviewdouble.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memviewdouble.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memviewdouble.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memviewdouble.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 911, __pyx_L1_error)
       }
 
@@ -13355,24 +13358,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 913, __pyx_L1_error)
       }
 
@@ -13383,7 +13386,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 914, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 914, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":910
  *       )
@@ -13392,7 +13395,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memviewdouble[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_22 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<double,uint32_t>((&(*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memviewdouble.data + __pyx_t_23 * __pyx_v_arr_memviewdouble.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memviewdouble.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memviewdouble.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L7:;
 
@@ -13414,35 +13417,35 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_13 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_int64); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (!__pyx_t_24) {
+  __pyx_t_14 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_24;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L8_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint64); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 917, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = __pyx_t_24;
-  __pyx_L8_bool_binop_done:;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_24 = (__pyx_t_1 != 0);
-  if (__pyx_t_24) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 917, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_2 = __pyx_t_1;
+  __pyx_L8_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":918
  *       )
@@ -13451,31 +13454,31 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[uint64_t,uint64_t](
  */
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 918, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 918, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_uint64); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 918, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_12);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint64); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 918, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_25 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_25.memview)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __pyx_t_14 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_25 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint64_t(__pyx_t_14, PyBUF_WRITABLE); if (unlikely(!__pyx_t_25.memview)) __PYX_ERR(0, 918, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __pyx_v_arr_memview64 = __pyx_t_25;
     __pyx_t_25.memview = NULL;
     __pyx_t_25.data = NULL;
@@ -13487,8 +13490,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[uint64_t,uint64_t](
  *         &arr_memview64[0,0,0],
  */
-    __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 919, __pyx_L1_error)
-    if (__pyx_t_24) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 919, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":921
  *     if sixtyfourbit:
@@ -13497,24 +13500,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memview64.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memview64.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memview64.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memview64.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memview64.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memview64.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 921, __pyx_L1_error)
       }
 
@@ -13525,24 +13528,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 923, __pyx_L1_error)
       }
 
@@ -13553,7 +13556,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 924, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 924, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":920
  *     arr_memview64 = data.astype(np.uint64)
@@ -13562,7 +13565,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview64[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_5 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint64_t,uint64_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_6 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":919
  *   elif dtype in (np.int64, np.uint64):
@@ -13590,24 +13593,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memview64.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memview64.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview64.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memview64.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memview64.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview64.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memview64.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memview64.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview64.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 929, __pyx_L1_error)
       }
 
@@ -13618,24 +13621,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 931, __pyx_L1_error)
       }
 
@@ -13646,7 +13649,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 932, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 932, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":928
  *       )
@@ -13655,7 +13658,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview64[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_22 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint64_t,uint32_t>((&(*((uint64_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview64.data + __pyx_t_23 * __pyx_v_arr_memview64.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memview64.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memview64.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L10:;
 
@@ -13677,35 +13680,35 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_13 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (!__pyx_t_1) {
+  __pyx_t_14 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (!__pyx_t_2) {
   } else {
-    __pyx_t_24 = __pyx_t_1;
+    __pyx_t_1 = __pyx_t_2;
     goto __pyx_L11_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_int32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 935, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_24 = __pyx_t_1;
-  __pyx_L11_bool_binop_done:;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int32); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = (__pyx_t_24 != 0);
-  if (__pyx_t_1) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 935, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L11_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":936
  *       )
@@ -13714,34 +13717,34 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[uint32_t,uint64_t](
  */
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 936, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint32); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 936, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint32); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 936, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_12);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
-        __Pyx_INCREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_7);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 936, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __pyx_t_14 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_9, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_v_arr_memview32 = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_t_14, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 936, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __pyx_v_arr_memview32 = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":937
  *   elif dtype in (np.uint32, np.int32):
@@ -13750,8 +13753,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[uint32_t,uint64_t](
  *         &arr_memview32[0,0,0],
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 937, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 937, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":939
  *     if sixtyfourbit:
@@ -13760,24 +13763,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memview32.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memview32.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memview32.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memview32.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memview32.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memview32.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 939, __pyx_L1_error)
       }
 
@@ -13788,24 +13791,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 941, __pyx_L1_error)
       }
 
@@ -13816,7 +13819,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 942, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 942, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":938
  *     arr_memview32 = data.astype(np.uint32)
@@ -13825,7 +13828,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview32[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_5 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint32_t,uint64_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_6 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":937
  *   elif dtype in (np.uint32, np.int32):
@@ -13853,24 +13856,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memview32.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memview32.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview32.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memview32.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memview32.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview32.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memview32.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memview32.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview32.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 947, __pyx_L1_error)
       }
 
@@ -13881,24 +13884,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 949, __pyx_L1_error)
       }
 
@@ -13909,7 +13912,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 950, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 950, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":946
  *       )
@@ -13918,7 +13921,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview32[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_22 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint32_t,uint32_t>((&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview32.data + __pyx_t_23 * __pyx_v_arr_memview32.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memview32.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memview32.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L13:;
 
@@ -13940,35 +13943,35 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_13 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_int16); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (!__pyx_t_24) {
+  __pyx_t_14 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_24;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L14_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint16); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 953, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_1 = __pyx_t_24;
-  __pyx_L14_bool_binop_done:;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_24 = (__pyx_t_1 != 0);
-  if (__pyx_t_24) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 953, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_2 = __pyx_t_1;
+  __pyx_L14_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (__pyx_t_1) {
 
     /* "dijkstra3d.pyx":954
  *       )
@@ -13977,31 +13980,31 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[uint16_t,uint64_t](
  */
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 954, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 954, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_uint16); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 954, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_12);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint16); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_7, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_8);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 954, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_26 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_26.memview)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __pyx_t_14 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_9);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_26 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint16_t(__pyx_t_14, PyBUF_WRITABLE); if (unlikely(!__pyx_t_26.memview)) __PYX_ERR(0, 954, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __pyx_v_arr_memview16 = __pyx_t_26;
     __pyx_t_26.memview = NULL;
     __pyx_t_26.data = NULL;
@@ -14013,8 +14016,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[uint16_t,uint64_t](
  *         &arr_memview16[0,0,0],
  */
-    __pyx_t_24 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_24 < 0)) __PYX_ERR(0, 955, __pyx_L1_error)
-    if (__pyx_t_24) {
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 955, __pyx_L1_error)
+    if (__pyx_t_1) {
 
       /* "dijkstra3d.pyx":957
  *     if sixtyfourbit:
@@ -14023,24 +14026,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memview16.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memview16.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memview16.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memview16.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memview16.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memview16.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 957, __pyx_L1_error)
       }
 
@@ -14051,24 +14054,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 959, __pyx_L1_error)
       }
 
@@ -14079,7 +14082,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 960, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 960, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":956
  *     arr_memview16 = data.astype(np.uint16)
@@ -14088,7 +14091,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview16[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_5 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint16_t,uint64_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_6 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":955
  *   elif dtype in (np.int16, np.uint16):
@@ -14116,24 +14119,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memview16.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memview16.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview16.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memview16.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memview16.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview16.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memview16.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memview16.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview16.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 965, __pyx_L1_error)
       }
 
@@ -14144,24 +14147,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 967, __pyx_L1_error)
       }
 
@@ -14172,7 +14175,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 968, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 968, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":964
  *       )
@@ -14181,7 +14184,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview16[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_22 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint16_t,uint32_t>((&(*((uint16_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview16.data + __pyx_t_23 * __pyx_v_arr_memview16.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memview16.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memview16.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L16:;
 
@@ -14203,43 +14206,43 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_13 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_int8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (!__pyx_t_1) {
-  } else {
-    __pyx_t_24 = __pyx_t_1;
-    goto __pyx_L17_bool_binop_done;
-  }
-  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  if (!__pyx_t_1) {
-  } else {
-    __pyx_t_24 = __pyx_t_1;
-    goto __pyx_L17_bool_binop_done;
-  }
-  __pyx_t_12 = PyObject_RichCompare(__pyx_t_13, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __pyx_t_24 = __pyx_t_1;
-  __pyx_L17_bool_binop_done:;
+  __pyx_t_14 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_int8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_1 = (__pyx_t_24 != 0);
-  if (likely(__pyx_t_1)) {
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L17_bool_binop_done;
+  }
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_uint8); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, __pyx_t_9, Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L17_bool_binop_done;
+  }
+  __pyx_t_13 = PyObject_RichCompare(__pyx_t_14, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_13); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_t_13); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 971, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L17_bool_binop_done:;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (likely(__pyx_t_2)) {
 
     /* "dijkstra3d.pyx":972
  *       )
@@ -14248,31 +14251,31 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     if sixtyfourbit:
  *       parental_field3d[uint8_t,uint64_t](
  */
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 972, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 972, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 972, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_8 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
-      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_12);
-      if (likely(__pyx_t_8)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
-        __Pyx_INCREF(__pyx_t_8);
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __pyx_t_9 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_9 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_9)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_7);
-    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 972, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_27 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_27.memview)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __pyx_t_14 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_9, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_8);
+    __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __pyx_t_27 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_14, PyBUF_WRITABLE); if (unlikely(!__pyx_t_27.memview)) __PYX_ERR(0, 972, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
     __pyx_v_arr_memview8 = __pyx_t_27;
     __pyx_t_27.memview = NULL;
     __pyx_t_27.data = NULL;
@@ -14284,8 +14287,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *       parental_field3d[uint8_t,uint64_t](
  *         &arr_memview8[0,0,0],
  */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 973, __pyx_L1_error)
-    if (__pyx_t_1) {
+    __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 973, __pyx_L1_error)
+    if (__pyx_t_2) {
 
       /* "dijkstra3d.pyx":975
  *     if sixtyfourbit:
@@ -14294,24 +14297,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents64[0,0,0],
  */
+      __pyx_t_6 = 0;
       __pyx_t_5 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_3 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_v_arr_memview8.shape[0];
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_v_arr_memview8.shape[0];
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_v_arr_memview8.shape[2];
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_4 += __pyx_v_arr_memview8.shape[2];
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 975, __pyx_L1_error)
       }
 
@@ -14322,24 +14325,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_20 = 0;
       __pyx_t_21 = 0;
       __pyx_t_22 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_pybuffernd_parents64.diminfo[0].shape;
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_23 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[1].shape;
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_21 += __pyx_pybuffernd_parents64.diminfo[0].shape;
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_21 >= __pyx_pybuffernd_parents64.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[2].shape;
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_22 += __pyx_pybuffernd_parents64.diminfo[1].shape;
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_pybuffernd_parents64.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_pybuffernd_parents64.diminfo[2].shape;
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_23 >= __pyx_pybuffernd_parents64.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 977, __pyx_L1_error)
       }
 
@@ -14350,7 +14353,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 978, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 978, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":974
  *     arr_memview8 = data.astype(np.uint8)
@@ -14359,7 +14362,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview8[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_20, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint8_t,uint64_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_6 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint64_t *, __pyx_pybuffernd_parents64.rcbuffer->pybuffer.buf, __pyx_t_21, __pyx_pybuffernd_parents64.diminfo[0].strides, __pyx_t_22, __pyx_pybuffernd_parents64.diminfo[1].strides, __pyx_t_23, __pyx_pybuffernd_parents64.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
 
       /* "dijkstra3d.pyx":973
  *   elif dtype in (np.int8, np.uint8, bool):
@@ -14387,24 +14390,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         sx, sy, sz,
  *         src, &parents32[0,0,0],
  */
+      __pyx_t_23 = 0;
       __pyx_t_22 = 0;
       __pyx_t_21 = 0;
-      __pyx_t_20 = 0;
-      __pyx_t_6 = -1;
+      __pyx_t_7 = -1;
+      if (__pyx_t_23 < 0) {
+        __pyx_t_23 += __pyx_v_arr_memview8.shape[0];
+        if (unlikely(__pyx_t_23 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_23 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
       if (__pyx_t_22 < 0) {
-        __pyx_t_22 += __pyx_v_arr_memview8.shape[0];
-        if (unlikely(__pyx_t_22 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+        __pyx_t_22 += __pyx_v_arr_memview8.shape[1];
+        if (unlikely(__pyx_t_22 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_22 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
       if (__pyx_t_21 < 0) {
-        __pyx_t_21 += __pyx_v_arr_memview8.shape[1];
-        if (unlikely(__pyx_t_21 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-      if (__pyx_t_20 < 0) {
-        __pyx_t_20 += __pyx_v_arr_memview8.shape[2];
-        if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_20 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_21 += __pyx_v_arr_memview8.shape[2];
+        if (unlikely(__pyx_t_21 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_21 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 983, __pyx_L1_error)
       }
 
@@ -14415,24 +14418,24 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         connectivity,
  *         voxel_graph_ptr
  */
-      __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_6 = -1;
-      if (__pyx_t_3 < 0) {
-        __pyx_t_3 += __pyx_pybuffernd_parents32.diminfo[0].shape;
-        if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-      } else if (unlikely(__pyx_t_3 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_6 = 0;
+      __pyx_t_6 = 0;
+      __pyx_t_7 = -1;
       if (__pyx_t_4 < 0) {
-        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[1].shape;
-        if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_6 = 1;
+        __pyx_t_4 += __pyx_pybuffernd_parents32.diminfo[0].shape;
+        if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+      } else if (unlikely(__pyx_t_4 >= __pyx_pybuffernd_parents32.diminfo[0].shape)) __pyx_t_7 = 0;
       if (__pyx_t_5 < 0) {
-        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[2].shape;
-        if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_6 = 2;
-      if (unlikely(__pyx_t_6 != -1)) {
-        __Pyx_RaiseBufferIndexError(__pyx_t_6);
+        __pyx_t_5 += __pyx_pybuffernd_parents32.diminfo[1].shape;
+        if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+      } else if (unlikely(__pyx_t_5 >= __pyx_pybuffernd_parents32.diminfo[1].shape)) __pyx_t_7 = 1;
+      if (__pyx_t_6 < 0) {
+        __pyx_t_6 += __pyx_pybuffernd_parents32.diminfo[2].shape;
+        if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+      } else if (unlikely(__pyx_t_6 >= __pyx_pybuffernd_parents32.diminfo[2].shape)) __pyx_t_7 = 2;
+      if (unlikely(__pyx_t_7 != -1)) {
+        __Pyx_RaiseBufferIndexError(__pyx_t_7);
         __PYX_ERR(0, 985, __pyx_L1_error)
       }
 
@@ -14443,7 +14446,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         voxel_graph_ptr
  *       )
  */
-      __pyx_t_6 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_6 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 986, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_connectivity); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 986, __pyx_L1_error)
 
       /* "dijkstra3d.pyx":982
  *       )
@@ -14452,7 +14455,7 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *         &arr_memview8[0,0,0],
  *         sx, sy, sz,
  */
-      (void)(dijkstra::parental_field3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_22 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_21 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_20 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_3, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_6, __pyx_v_voxel_graph_ptr));
+      (void)(dijkstra::parental_field3d<uint8_t,uint32_t>((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_23 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_22 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_21 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_src, (&(*__Pyx_BufPtrStrided3d(uint32_t *, __pyx_pybuffernd_parents32.rcbuffer->pybuffer.buf, __pyx_t_4, __pyx_pybuffernd_parents32.diminfo[0].strides, __pyx_t_5, __pyx_pybuffernd_parents32.diminfo[1].strides, __pyx_t_6, __pyx_pybuffernd_parents32.diminfo[2].strides))), __pyx_t_7, __pyx_v_voxel_graph_ptr));
     }
     __pyx_L20:;
 
@@ -14474,28 +14477,28 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *   if sixtyfourbit:
  */
   /*else*/ {
-    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 990, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_12);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 990, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_13);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_12, function);
+        __Pyx_DECREF_SET(__pyx_t_13, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_7, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_dtype);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 990, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_13); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 990, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_14 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_8, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_v_dtype);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 990, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __Pyx_Raise(__pyx_t_12, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_13 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 990, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_13);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_Raise(__pyx_t_13, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __PYX_ERR(0, 990, __pyx_L1_error)
   }
   __pyx_L5:;
@@ -14507,8 +14510,8 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
  *     return parents64
  *   else:
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 992, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_2 = __Pyx_PyObject_IsTrue(__pyx_v_sixtyfourbit); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 992, __pyx_L1_error)
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":993
  * 
@@ -14555,15 +14558,15 @@ static PyObject *__pyx_pf_10dijkstra3d_18_execute_parental_field(CYTHON_UNUSED P
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
-  __Pyx_XDECREF(__pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 1);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_11);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_19, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_23, 1);
+  __Pyx_XDECREF(__pyx_t_14);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_24, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_25, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_26, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_t_27, 1);
@@ -14746,21 +14749,21 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
-  __Pyx_memviewslice __pyx_t_2 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_3;
+  int __pyx_t_2;
+  __Pyx_memviewslice __pyx_t_3 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  Py_ssize_t __pyx_t_6;
+  int __pyx_t_7;
   PyObject *__pyx_t_8 = NULL;
-  size_t __pyx_t_9;
-  float __pyx_t_10;
-  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  size_t __pyx_t_10;
+  float __pyx_t_11;
   PyObject *__pyx_t_12 = NULL;
   PyObject *__pyx_t_13 = NULL;
   PyObject *__pyx_t_14 = NULL;
-  PyArrayObject *__pyx_t_15 = NULL;
-  int __pyx_t_16;
+  PyObject *__pyx_t_15 = NULL;
+  PyArrayObject *__pyx_t_16 = NULL;
   __Pyx_memviewslice __pyx_t_17 = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_t_18;
   Py_ssize_t __pyx_t_19;
@@ -14778,7 +14781,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL             # <<<<<<<<<<<<<<
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  */
   __pyx_v_voxel_graph_ptr = NULL;
@@ -14786,58 +14789,59 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
   /* "dijkstra3d.pyx":1005
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
-  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_voxel_graph); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1005, __pyx_L1_error)
-  if (__pyx_t_1) {
+  __pyx_t_1 = (__pyx_v_voxel_graph != Py_None);
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (__pyx_t_2) {
 
     /* "dijkstra3d.pyx":1006
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph             # <<<<<<<<<<<<<<
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  * 
  */
-    __pyx_t_2 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_2.memview)) __PYX_ERR(0, 1006, __pyx_L1_error)
-    __pyx_v_voxel_graph_memview = __pyx_t_2;
-    __pyx_t_2.memview = NULL;
-    __pyx_t_2.data = NULL;
+    __pyx_t_3 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint32_t(__pyx_v_voxel_graph, PyBUF_WRITABLE); if (unlikely(!__pyx_t_3.memview)) __PYX_ERR(0, 1006, __pyx_L1_error)
+    __pyx_v_voxel_graph_memview = __pyx_t_3;
+    __pyx_t_3.memview = NULL;
+    __pyx_t_3.data = NULL;
 
     /* "dijkstra3d.pyx":1007
- *   if voxel_graph:
+ *   if voxel_graph is not None:
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]             # <<<<<<<<<<<<<<
  * 
  *   cdef size_t sx = data.shape[0]
  */
-    __pyx_t_3 = 0;
     __pyx_t_4 = 0;
     __pyx_t_5 = 0;
-    __pyx_t_6 = -1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_voxel_graph_memview.shape[0];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_6 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = -1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_6 = 1;
+      __pyx_t_4 += __pyx_v_voxel_graph_memview.shape[0];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_voxel_graph_memview.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[2];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_5 += __pyx_v_voxel_graph_memview.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_voxel_graph_memview.shape[1])) __pyx_t_7 = 1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_voxel_graph_memview.shape[2];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_voxel_graph_memview.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 1007, __pyx_L1_error)
     }
-    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_3 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[2]) )))));
+    __pyx_v_voxel_graph_ptr = ((uint32_t *)(&(*((uint32_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_voxel_graph_memview.data + __pyx_t_4 * __pyx_v_voxel_graph_memview.strides[0]) ) + __pyx_t_5 * __pyx_v_voxel_graph_memview.strides[1]) ) + __pyx_t_6 * __pyx_v_voxel_graph_memview.strides[2]) )))));
 
     /* "dijkstra3d.pyx":1005
  *   cdef uint32_t[:,:,:] voxel_graph_memview
  *   cdef uint32_t* voxel_graph_ptr = NULL
- *   if voxel_graph:             # <<<<<<<<<<<<<<
+ *   if voxel_graph is not None:             # <<<<<<<<<<<<<<
  *     voxel_graph_memview = voxel_graph
  *     voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
  */
@@ -14850,14 +14854,14 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *   cdef size_t sy = data.shape[1]
  *   cdef size_t sz = data.shape[2]
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1009, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1009, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1009, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1009, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sx = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1009, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sx = __pyx_t_10;
 
   /* "dijkstra3d.pyx":1010
  * 
@@ -14866,14 +14870,14 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *   cdef size_t sz = data.shape[2]
  * 
  */
-  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1010, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1010, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_9, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1010, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_8, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1010, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1010, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_7); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1010, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_v_sy = __pyx_t_9;
+  __pyx_v_sy = __pyx_t_10;
 
   /* "dijkstra3d.pyx":1011
  *   cdef size_t sx = data.shape[0]
@@ -14882,14 +14886,14 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   cdef float wx = anisotropy[0]
  */
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1011, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_t_7, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1011, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_shape); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1011, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_8); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1011, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_t_8, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1011, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_sz = __pyx_t_9;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_9); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1011, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_sz = __pyx_t_10;
 
   /* "dijkstra3d.pyx":1013
  *   cdef size_t sz = data.shape[2]
@@ -14898,11 +14902,11 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *   cdef float wy = anisotropy[1]
  *   cdef float wz = anisotropy[2]
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_anisotropy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1013, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_8); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1013, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_wx = __pyx_t_10;
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_anisotropy, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1013, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1013, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_wx = __pyx_t_11;
 
   /* "dijkstra3d.pyx":1014
  * 
@@ -14911,11 +14915,11 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *   cdef float wz = anisotropy[2]
  * 
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_anisotropy, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1014, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_8); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1014, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_wy = __pyx_t_10;
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_anisotropy, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1014, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1014, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_wy = __pyx_t_11;
 
   /* "dijkstra3d.pyx":1015
  *   cdef float wx = anisotropy[0]
@@ -14924,11 +14928,11 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_anisotropy, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1015, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_10 = __pyx_PyFloat_AsFloat(__pyx_t_8); if (unlikely((__pyx_t_10 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1015, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  __pyx_v_wz = __pyx_t_10;
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_anisotropy, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1015, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_11 = __pyx_PyFloat_AsFloat(__pyx_t_9); if (unlikely((__pyx_t_11 == (float)-1) && PyErr_Occurred())) __PYX_ERR(0, 1015, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_wz = __pyx_t_11;
 
   /* "dijkstra3d.pyx":1017
  *   cdef float wz = anisotropy[2]
@@ -14937,35 +14941,35 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
  */
-  __pyx_t_8 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_source, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1017, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_11 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_12 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_source, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1017, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
-  __pyx_t_13 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1017, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = PyNumber_Multiply(__pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_GetItemInt(__pyx_v_source, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_15 = PyNumber_Multiply(__pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyNumber_Add(__pyx_t_12, __pyx_t_15); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1017, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Add(__pyx_t_11, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = PyNumber_Multiply(__pyx_t_7, __pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_14);
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = PyNumber_Add(__pyx_t_8, __pyx_t_14); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = PyNumber_Multiply(__pyx_t_8, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_9 = __Pyx_PyInt_As_size_t(__pyx_t_13); if (unlikely((__pyx_t_9 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1017, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_v_src = __pyx_t_9;
+  __pyx_t_14 = PyNumber_Add(__pyx_t_9, __pyx_t_15); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_10 = __Pyx_PyInt_As_size_t(__pyx_t_14); if (unlikely((__pyx_t_10 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 1017, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_v_src = __pyx_t_10;
 
   /* "dijkstra3d.pyx":1019
  *   cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
@@ -14974,61 +14978,61 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   dtype = data.dtype
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1019, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_13 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_7 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_GIVEREF(__pyx_t_13);
-  PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_13);
-  __Pyx_GIVEREF(__pyx_t_8);
-  PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_8);
-  __Pyx_GIVEREF(__pyx_t_7);
-  PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_t_7);
-  __pyx_t_13 = 0;
-  __pyx_t_8 = 0;
-  __pyx_t_7 = 0;
-  __pyx_t_7 = PyTuple_New(1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_GIVEREF(__pyx_t_11);
-  PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_11);
-  __pyx_t_11 = 0;
-  __pyx_t_11 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_float32); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_dtype, __pyx_t_13) < 0) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  if (PyDict_SetItem(__pyx_t_11, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_7, __pyx_t_11); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_zeros); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (!(likely(((__pyx_t_13) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_13, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 1019, __pyx_L1_error)
-  __pyx_t_15 = ((PyArrayObject *)__pyx_t_13);
+  __pyx_t_14 = __Pyx_PyInt_FromSize_t(__pyx_v_sx); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_9 = __Pyx_PyInt_FromSize_t(__pyx_v_sy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_8 = __Pyx_PyInt_FromSize_t(__pyx_v_sz); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_GIVEREF(__pyx_t_14);
+  PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_14);
+  __Pyx_GIVEREF(__pyx_t_9);
+  PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_9);
+  __Pyx_GIVEREF(__pyx_t_8);
+  PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_t_8);
+  __pyx_t_14 = 0;
+  __pyx_t_9 = 0;
+  __pyx_t_8 = 0;
+  __pyx_t_8 = PyTuple_New(1); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_GIVEREF(__pyx_t_12);
+  PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_12);
+  __pyx_t_12 = 0;
+  __pyx_t_12 = __Pyx_PyDict_NewPresized(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_float32); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_dtype, __pyx_t_14) < 0) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_order, __pyx_n_u_F) < 0) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_Call(__pyx_t_15, __pyx_t_8, __pyx_t_12); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  if (!(likely(((__pyx_t_14) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_14, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 1019, __pyx_L1_error)
+  __pyx_t_16 = ((PyArrayObject *)__pyx_t_14);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
-    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dist.rcbuffer->pybuffer, (PyObject*)__pyx_t_15, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) {
+    if (unlikely(__Pyx_GetBufferAndValidate(&__pyx_pybuffernd_dist.rcbuffer->pybuffer, (PyObject*)__pyx_t_16, &__Pyx_TypeInfo_float, PyBUF_FORMAT| PyBUF_STRIDES, 3, 0, __pyx_stack) == -1)) {
       __pyx_v_dist = ((PyArrayObject *)Py_None); __Pyx_INCREF(Py_None); __pyx_pybuffernd_dist.rcbuffer->pybuffer.buf = NULL;
       __PYX_ERR(0, 1019, __pyx_L1_error)
     } else {__pyx_pybuffernd_dist.diminfo[0].strides = __pyx_pybuffernd_dist.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_dist.diminfo[0].shape = __pyx_pybuffernd_dist.rcbuffer->pybuffer.shape[0]; __pyx_pybuffernd_dist.diminfo[1].strides = __pyx_pybuffernd_dist.rcbuffer->pybuffer.strides[1]; __pyx_pybuffernd_dist.diminfo[1].shape = __pyx_pybuffernd_dist.rcbuffer->pybuffer.shape[1]; __pyx_pybuffernd_dist.diminfo[2].strides = __pyx_pybuffernd_dist.rcbuffer->pybuffer.strides[2]; __pyx_pybuffernd_dist.diminfo[2].shape = __pyx_pybuffernd_dist.rcbuffer->pybuffer.shape[2];
     }
   }
-  __pyx_t_15 = 0;
-  __pyx_v_dist = ((PyArrayObject *)__pyx_t_13);
-  __pyx_t_13 = 0;
+  __pyx_t_16 = 0;
+  __pyx_v_dist = ((PyArrayObject *)__pyx_t_14);
+  __pyx_t_14 = 0;
 
   /* "dijkstra3d.pyx":1021
  *   cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
@@ -15037,10 +15041,10 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  * 
  *   if dtype in (np.int8, np.uint8, bool):
  */
-  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1021, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_13);
-  __pyx_v_dtype = __pyx_t_13;
-  __pyx_t_13 = 0;
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_dtype); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1021, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_v_dtype = __pyx_t_14;
+  __pyx_t_14 = 0;
 
   /* "dijkstra3d.pyx":1023
  *   dtype = data.dtype
@@ -15050,43 +15054,43 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *     euclidean_distance_field3d(
  */
   __Pyx_INCREF(__pyx_v_dtype);
-  __pyx_t_13 = __pyx_v_dtype;
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_int8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (!__pyx_t_16) {
+  __pyx_t_14 = __pyx_v_dtype;
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_int8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L5_bool_binop_done;
   }
-  __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_np); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_11, __pyx_n_s_uint8); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_7);
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_13, __pyx_t_7, Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  if (!__pyx_t_16) {
+  __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_8 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_uint8); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_t_14, __pyx_t_8, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  if (!__pyx_t_1) {
   } else {
-    __pyx_t_1 = __pyx_t_16;
+    __pyx_t_2 = __pyx_t_1;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = PyObject_RichCompare(__pyx_t_13, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_11); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __pyx_t_16 = __Pyx_PyObject_IsTrue(__pyx_t_11); if (unlikely(__pyx_t_16 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-  __pyx_t_1 = __pyx_t_16;
+  __pyx_t_12 = PyObject_RichCompare(__pyx_t_14, ((PyObject*)&PyBool_Type), Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 1023, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+  __pyx_t_2 = __pyx_t_1;
   __pyx_L5_bool_binop_done:;
-  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-  __pyx_t_16 = (__pyx_t_1 != 0);
-  if (likely(__pyx_t_16)) {
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (likely(__pyx_t_1)) {
 
     /* "dijkstra3d.pyx":1024
  * 
@@ -15095,31 +15099,31 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *     euclidean_distance_field3d(
  *       &arr_memview8[0,0,0],
  */
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1024, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_GetModuleGlobalName(__pyx_t_7, __pyx_n_s_np); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 1024, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_7, __pyx_n_s_uint8); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1024, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_14);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_11))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_11);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-        __Pyx_INCREF(__pyx_t_7);
+    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_astype); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_GetModuleGlobalName(__pyx_t_8, __pyx_n_s_np); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
+    __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_8, __pyx_n_s_uint8); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_15);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
+      __pyx_t_8 = PyMethod_GET_SELF(__pyx_t_12);
+      if (likely(__pyx_t_8)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
+        __Pyx_INCREF(__pyx_t_8);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_11, function);
+        __Pyx_DECREF_SET(__pyx_t_12, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_7, __pyx_t_14) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_14);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_14 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_8, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_15);
+    __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_14, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 1024, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1024, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_17 = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_nn_uint8_t(__pyx_t_13, PyBUF_WRITABLE); if (unlikely(!__pyx_t_17.memview)) __PYX_ERR(0, 1024, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __pyx_v_arr_memview8 = __pyx_t_17;
     __pyx_t_17.memview = NULL;
     __pyx_t_17.data = NULL;
@@ -15131,24 +15135,24 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *       sx, sy, sz,
  *       wx, wy, wz,
  */
+    __pyx_t_6 = 0;
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_3 = 0;
-    __pyx_t_6 = -1;
+    __pyx_t_7 = -1;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_arr_memview8.shape[0];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_7 = 0;
     if (__pyx_t_5 < 0) {
-      __pyx_t_5 += __pyx_v_arr_memview8.shape[0];
-      if (unlikely(__pyx_t_5 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[0])) __pyx_t_6 = 0;
+      __pyx_t_5 += __pyx_v_arr_memview8.shape[1];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_7 = 1;
     if (__pyx_t_4 < 0) {
-      __pyx_t_4 += __pyx_v_arr_memview8.shape[1];
-      if (unlikely(__pyx_t_4 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[1])) __pyx_t_6 = 1;
-    if (__pyx_t_3 < 0) {
-      __pyx_t_3 += __pyx_v_arr_memview8.shape[2];
-      if (unlikely(__pyx_t_3 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_3 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      __pyx_t_4 += __pyx_v_arr_memview8.shape[2];
+      if (unlikely(__pyx_t_4 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_4 >= __pyx_v_arr_memview8.shape[2])) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 1026, __pyx_L1_error)
     }
 
@@ -15162,21 +15166,21 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
     __pyx_t_18 = 0;
     __pyx_t_19 = 0;
     __pyx_t_20 = 0;
-    __pyx_t_6 = -1;
+    __pyx_t_7 = -1;
     if (__pyx_t_18 < 0) {
       __pyx_t_18 += __pyx_pybuffernd_dist.diminfo[0].shape;
-      if (unlikely(__pyx_t_18 < 0)) __pyx_t_6 = 0;
-    } else if (unlikely(__pyx_t_18 >= __pyx_pybuffernd_dist.diminfo[0].shape)) __pyx_t_6 = 0;
+      if (unlikely(__pyx_t_18 < 0)) __pyx_t_7 = 0;
+    } else if (unlikely(__pyx_t_18 >= __pyx_pybuffernd_dist.diminfo[0].shape)) __pyx_t_7 = 0;
     if (__pyx_t_19 < 0) {
       __pyx_t_19 += __pyx_pybuffernd_dist.diminfo[1].shape;
-      if (unlikely(__pyx_t_19 < 0)) __pyx_t_6 = 1;
-    } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_dist.diminfo[1].shape)) __pyx_t_6 = 1;
+      if (unlikely(__pyx_t_19 < 0)) __pyx_t_7 = 1;
+    } else if (unlikely(__pyx_t_19 >= __pyx_pybuffernd_dist.diminfo[1].shape)) __pyx_t_7 = 1;
     if (__pyx_t_20 < 0) {
       __pyx_t_20 += __pyx_pybuffernd_dist.diminfo[2].shape;
-      if (unlikely(__pyx_t_20 < 0)) __pyx_t_6 = 2;
-    } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_dist.diminfo[2].shape)) __pyx_t_6 = 2;
-    if (unlikely(__pyx_t_6 != -1)) {
-      __Pyx_RaiseBufferIndexError(__pyx_t_6);
+      if (unlikely(__pyx_t_20 < 0)) __pyx_t_7 = 2;
+    } else if (unlikely(__pyx_t_20 >= __pyx_pybuffernd_dist.diminfo[2].shape)) __pyx_t_7 = 2;
+    if (unlikely(__pyx_t_7 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_7);
       __PYX_ERR(0, 1030, __pyx_L1_error)
     }
 
@@ -15187,7 +15191,7 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *       &arr_memview8[0,0,0],
  *       sx, sy, sz,
  */
-    (void)(dijkstra::euclidean_distance_field3d((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_5 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_3 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_wx, __pyx_v_wy, __pyx_v_wz, __pyx_v_src, __pyx_v_free_space_radius, (&(*__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_dist.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_dist.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_dist.diminfo[1].strides, __pyx_t_20, __pyx_pybuffernd_dist.diminfo[2].strides))), __pyx_v_voxel_graph_ptr));
+    (void)(dijkstra::euclidean_distance_field3d((&(*((uint8_t *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_arr_memview8.data + __pyx_t_6 * __pyx_v_arr_memview8.strides[0]) ) + __pyx_t_5 * __pyx_v_arr_memview8.strides[1]) ) + __pyx_t_4 * __pyx_v_arr_memview8.strides[2]) )))), __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_wx, __pyx_v_wy, __pyx_v_wz, __pyx_v_src, __pyx_v_free_space_radius, (&(*__Pyx_BufPtrStrided3d(float *, __pyx_pybuffernd_dist.rcbuffer->pybuffer.buf, __pyx_t_18, __pyx_pybuffernd_dist.diminfo[0].strides, __pyx_t_19, __pyx_pybuffernd_dist.diminfo[1].strides, __pyx_t_20, __pyx_pybuffernd_dist.diminfo[2].strides))), __pyx_v_voxel_graph_ptr));
 
     /* "dijkstra3d.pyx":1023
  *   dtype = data.dtype
@@ -15207,28 +15211,28 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
  *   return dist
  */
   /*else*/ {
-    __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1034, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_14 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_11))) {
-      __pyx_t_14 = PyMethod_GET_SELF(__pyx_t_11);
-      if (likely(__pyx_t_14)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_11);
-        __Pyx_INCREF(__pyx_t_14);
+    __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_kp_u_Type_not_currently_supported, __pyx_n_s_format); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1034, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __pyx_t_15 = NULL;
+    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
+      __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_12);
+      if (likely(__pyx_t_15)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_12);
+        __Pyx_INCREF(__pyx_t_15);
         __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_11, function);
+        __Pyx_DECREF_SET(__pyx_t_12, function);
       }
     }
-    __pyx_t_13 = (__pyx_t_14) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_14, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_v_dtype);
-    __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
-    if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1034, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_13);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1034, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_11);
-    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __Pyx_Raise(__pyx_t_11, 0, 0, 0);
-    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __pyx_t_14 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_15, __pyx_v_dtype) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_dtype);
+    __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+    if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 1034, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_14);
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __pyx_t_12 = __Pyx_PyObject_CallOneArg(__pyx_builtin_TypeError, __pyx_t_14); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1034, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_12);
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_Raise(__pyx_t_12, 0, 0, 0);
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __PYX_ERR(0, 1034, __pyx_L1_error)
   }
   __pyx_L4:;
@@ -15253,13 +15257,13 @@ static PyObject *__pyx_pf_10dijkstra3d_20_execute_euclidean_distance_field(CYTHO
 
   /* function exit code */
   __pyx_L1_error:;
-  __PYX_XDEC_MEMVIEW(&__pyx_t_2, 1);
-  __Pyx_XDECREF(__pyx_t_7);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_3, 1);
   __Pyx_XDECREF(__pyx_t_8);
-  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_12);
   __Pyx_XDECREF(__pyx_t_13);
   __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
   __PYX_XDEC_MEMVIEW(&__pyx_t_17, 1);
   { PyObject *__pyx_type, *__pyx_value, *__pyx_tb;
     __Pyx_PyThreadState_declare
