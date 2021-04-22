@@ -4,9 +4,8 @@ on:
   push:
     tags:
       - '*'
-
 env:
-  CIBW_SKIP: cp27-* cp33-* cp34-* cp35-* 
+  CIBW_SKIP: cp27-* cp33-* cp34-* cp35-* pp36-mac* pp37-mac*
 
 jobs:
   build_wheels:
