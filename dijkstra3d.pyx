@@ -85,6 +85,15 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     T* parents, T target
   ) 
   
+def format_voxel_graph(voxel_graph):
+  while voxel_graph.ndim < 3:
+    voxel_graph = voxel_graph[..., np.newaxis]
+
+  if not np.issubdtype(voxel_graph.dtype, np.uint32):
+    voxel_graph = voxel_graph.astype(np.uint32, order="F")
+  
+  return np.asfortranarray(voxel_graph)
+
 def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
@@ -158,6 +167,9 @@ def dijkstra(
     source = list(source) + [ 0 ]
     target = list(target) + [ 0 ]
 
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
+
   data = np.asfortranarray(data)
 
   cdef size_t cols = data.shape[0]
@@ -218,6 +230,9 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
   if dims == 2:
     data = data[:, :, np.newaxis]
     source = ( source[0], source[1], 0 )
+
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
 
   _validate_coord(data, source)
 
@@ -312,6 +327,9 @@ def parental_field(data, source, connectivity=26, voxel_graph=None):
     data = data[:, :, np.newaxis]
     source = ( source[0], source[1], 0 )
 
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
+
   _validate_coord(data, source)
 
   data = np.asfortranarray(data)
@@ -355,7 +373,8 @@ def euclidean_distance_field(
     containing its distance from the source voxel.
   """
   dims = len(data.shape)
-  assert dims <= 3
+  if dims > 3:
+    raise DimensionError(f"Only 2D and 3D image sources are supported. Got: {dims}")
 
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.float32)
@@ -366,6 +385,9 @@ def euclidean_distance_field(
   if dims == 2:
     data = data[:, :, np.newaxis]
     source = ( source[0], source[1], 0 )
+
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
 
   _validate_coord(data, source)
 
