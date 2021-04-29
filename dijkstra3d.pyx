@@ -769,11 +769,15 @@ def _execute_dijkstra(
 
   if sixtyfourbit:
     output_ptr64 = <uint64_t*>&output64[0]
+    if output64.size() == 0:
+      return np.zeros((0,), dtype=np.uint64)
     vec_view64 = <uint64_t[:output64.size()]>output_ptr64
     buf = bytearray(vec_view64[:])
     output = np.frombuffer(buf, dtype=np.uint64)
   else:
     output_ptr32 = <uint32_t*>&output32[0]
+    if output32.size() == 0:
+      return np.zeros((0,), dtype=np.uint32)
     vec_view32 = <uint32_t[:output32.size()]>output_ptr32
     buf = bytearray(vec_view32[:])
     output = np.frombuffer(buf, dtype=np.uint32)

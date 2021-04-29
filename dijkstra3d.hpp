@@ -272,6 +272,7 @@ std::vector<OUT> dijkstra3d(
   size_t neighboridx;
 
   int x, y, z;
+  bool target_reached = false;
 
   while (!queue.empty()) {
     loc = queue.top().value;
@@ -318,6 +319,7 @@ std::vector<OUT> dijkstra3d(
         // Dijkstra, Edgar. "Go To Statement Considered Harmful".
         // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
         if (neighboridx == target) {
+          target_reached = true;
           goto OUTSIDE;
         }
 
@@ -331,7 +333,12 @@ std::vector<OUT> dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
+  std::vector<OUT> path;
+  // if voxel graph supplied, it's possible 
+  // to never reach target.
+  if (target_reached) { 
+    path = query_shortest_path<OUT>(parents, target);
+  }
   delete [] parents;
 
   return path;
