@@ -506,6 +506,8 @@ std::vector<OUT> bidirectional_dijkstra3d(
     }
   }
 
+  bool target_reached = (dist_fwd[final_loc] < INFINITY) && (dist_rev[final_loc] < INFINITY);
+
   delete [] dist_fwd;
   delete [] dist_rev;
 
@@ -516,13 +518,18 @@ std::vector<OUT> bidirectional_dijkstra3d(
 
   std::vector<OUT> path_fwd, path_rev;
 
-  path_rev = query_shortest_path<OUT>(parents_rev, final_loc);
-  delete [] parents_rev;
-  path_fwd = query_shortest_path<OUT>(parents_fwd, final_loc);
-  delete [] parents_fwd;
-
-  std::reverse(path_fwd.begin(), path_fwd.end());
-  path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+  if (target_reached) {
+    path_rev = query_shortest_path<OUT>(parents_rev, final_loc);
+    delete [] parents_rev;
+    path_fwd = query_shortest_path<OUT>(parents_fwd, final_loc);
+    delete [] parents_fwd;
+    std::reverse(path_fwd.begin(), path_fwd.end());
+    path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+  }
+  else {
+    delete [] parents_rev;
+    delete [] parents_fwd;
+  }
 
   return path_fwd;
 }
