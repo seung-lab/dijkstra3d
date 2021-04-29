@@ -585,6 +585,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
   int x, y, z;
   int tx, ty, tz;
   float heuristic_cost;
+  bool target_reached = false;
 
   tz = target / fast_sxy;
   ty = (target - (tz * sxy)) / fast_sx;
@@ -634,6 +635,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
         if (neighboridx == target) {
+          target_reached = true;
           goto OUTSIDE;
         }
 
@@ -674,7 +676,10 @@ std::vector<OUT> compass_guided_dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
+  std::vector<OUT> path;
+  if (target_reached) {
+    path = query_shortest_path<OUT>(parents, target);
+  }
   delete [] parents;
 
   return path;
