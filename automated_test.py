@@ -822,8 +822,47 @@ def test_voxel_connectivity_graph():
 
   assert len(path) == 528
 
-  
 
+@pytest.mark.parametrize('bidirectional', (True, False))
+@pytest.mark.parametrize('compass', (True, False))
+def test_impossible_target_2d_6(bidirectional, compass):  
+  img = np.ones((100, 100), dtype=np.uint8, order="F")
 
+  def dijk(src, target, graph):
+    return dijkstra3d.dijkstra(
+      img, src, target, 
+      connectivity=6, voxel_graph=graph, 
+      bidirectional=bidirectional, compass=compass
+    )  
+
+  path = dijk((0,0), (99,99), None)
+  assert len(path) > 0
+
+  mkgraph = lambda: np.zeros(img.shape, dtype=np.uint32, order="F") + 0b1111
+ 
+  graph = mkgraph()
+  path = dijk((0,0), (99,99), graph)
+  assert len(path) > 0
+  path = dijk((99,99), (0,0), graph)
+  assert len(path) > 0
+
+  graph = mkgraph()
+  graph[50,:] = 0b1110
+  graph[51,:] = 0b1101
+  path = dijk((0,0), (99,99), graph)
+  assert len(path) == 0
+
+  path = dijk((99,99), (0,0), graph)
+  assert len(path) == 0
+
+  graph = mkgraph()
+  graph[:,50] = 0b1011
+  graph[:,51] = 0b0111
+
+  path = dijk((0,0), (99,99), graph)
+  assert len(path) == 0
+
+  path = dijk((99,99), (0,0), graph)
+  assert len(path) == 0  
 
 
