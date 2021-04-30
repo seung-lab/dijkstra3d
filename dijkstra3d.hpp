@@ -143,10 +143,10 @@ inline void compute_neighborhood(
   neighborhood[9] *= ((graph & 0b0001000000) > 0); // down-right +x,+y
 
   // yz diagonals
-  neighborhood[10] *= ((graph & 0b100000000000000000) > 0); // up-left
-  neighborhood[11] *= ((graph & 0b010000000000000000) > 0); // up-right
-  neighborhood[12] *= ((graph & 0b000010000000000000) > 0); // down-left
-  neighborhood[13] *= ((graph & 0b000001000000000000) > 0); // down-right
+  neighborhood[10] *= ((graph & 0b100000000000000000) > 0); // up-left -y,-z
+  neighborhood[11] *= ((graph & 0b000010000000000000) > 0); // up-right -y,+z
+  neighborhood[12] *= ((graph & 0b010000000000000000) > 0); // down-left +y,-z
+  neighborhood[13] *= ((graph & 0b000001000000000000) > 0); // down-right +y,+z
 
   // xz diagonals
   neighborhood[14] *= ((graph & 0b001000000000000000) > 0); // up-left
