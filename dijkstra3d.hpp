@@ -137,34 +137,34 @@ inline void compute_neighborhood(
   // 18-hood
 
   // xy diagonals
-  neighborhood[6] *= ((graph & 0b1000000000) > 0); // up-left
-  neighborhood[7] *= ((graph & 0b0100000000) > 0); // up-right
-  neighborhood[8] *= ((graph & 0b0010000000) > 0); // down-left
-  neighborhood[9] *= ((graph & 0b0001000000) > 0); // down-right
+  neighborhood[6] *= ((graph & 0b1000000000) > 0); // up-left -x,-y
+  neighborhood[7] *= ((graph & 0b0010000000) > 0); // up-right -x,+y
+  neighborhood[8] *= ((graph & 0b0100000000) > 0); // down-left +x,-y
+  neighborhood[9] *= ((graph & 0b0001000000) > 0); // down-right +x,+y
 
   // yz diagonals
-  neighborhood[10] *= ((graph & 0b100000000000000000) > 0); // up-left
-  neighborhood[11] *= ((graph & 0b010000000000000000) > 0); // up-right
-  neighborhood[12] *= ((graph & 0b000010000000000000) > 0); // down-left
-  neighborhood[13] *= ((graph & 0b000001000000000000) > 0); // down-right
+  neighborhood[10] *= ((graph & 0b100000000000000000) > 0); // up-left -y,-z
+  neighborhood[11] *= ((graph & 0b000010000000000000) > 0); // up-right -y,+z
+  neighborhood[12] *= ((graph & 0b010000000000000000) > 0); // down-left +y,-z
+  neighborhood[13] *= ((graph & 0b000001000000000000) > 0); // down-right +y,+z
 
   // xz diagonals
-  neighborhood[14] *= ((graph & 0b001000000000000000) > 0); // up-left
-  neighborhood[15] *= ((graph & 0b000100000000000000) > 0); // up-right
-  neighborhood[16] *= ((graph & 0b000000100000000000) > 0); // down-left
-  neighborhood[17] *= ((graph & 0b000000010000000000) > 0); // down-right
+  neighborhood[14] *= ((graph & 0b001000000000000000) > 0); // up-left, -x,-z
+  neighborhood[15] *= ((graph & 0b000000100000000000) > 0); // up-right, -x,+z
+  neighborhood[16] *= ((graph & 0b000100000000000000) > 0); // down-left +x,-z
+  neighborhood[17] *= ((graph & 0b000000010000000000) > 0); // down-right +x,+z
 
   // 26-hood
 
   // Now the eight corners of the cube
-  neighborhood[18] *= ((graph & 0b10000000000000000000000000) > 0);
-  neighborhood[19] *= ((graph & 0b01000000000000000000000000) > 0);
-  neighborhood[20] *= ((graph & 0b00100000000000000000000000) > 0);
-  neighborhood[21] *= ((graph & 0b00001000000000000000000000) > 0);
-  neighborhood[22] *= ((graph & 0b00010000000000000000000000) > 0);
-  neighborhood[23] *= ((graph & 0b00000100000000000000000000) > 0);
-  neighborhood[24] *= ((graph & 0b00000010000000000000000000) > 0);
-  neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0);
+  neighborhood[18] *= ((graph & 0b10000000000000000000000000) > 0); // -x,-y,-z
+  neighborhood[19] *= ((graph & 0b01000000000000000000000000) > 0); // +x,-y,-z
+  neighborhood[20] *= ((graph & 0b00100000000000000000000000) > 0); // -x,+y,-z
+  neighborhood[21] *= ((graph & 0b00001000000000000000000000) > 0); // -x,-y,+z
+  neighborhood[22] *= ((graph & 0b00010000000000000000000000) > 0); // +x,+y,-z
+  neighborhood[23] *= ((graph & 0b00000100000000000000000000) > 0); // +x,-y,+z
+  neighborhood[24] *= ((graph & 0b00000010000000000000000000) > 0); // -x,+y,+z
+  neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0); // +x,+y,+z
 }
 
 
@@ -272,6 +272,7 @@ std::vector<OUT> dijkstra3d(
   size_t neighboridx;
 
   int x, y, z;
+  bool target_reached = false;
 
   while (!queue.empty()) {
     loc = queue.top().value;
@@ -318,6 +319,7 @@ std::vector<OUT> dijkstra3d(
         // Dijkstra, Edgar. "Go To Statement Considered Harmful".
         // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
         if (neighboridx == target) {
+          target_reached = true;
           goto OUTSIDE;
         }
 
@@ -331,7 +333,12 @@ std::vector<OUT> dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
+  std::vector<OUT> path;
+  // if voxel graph supplied, it's possible 
+  // to never reach target.
+  if (target_reached) { 
+    path = query_shortest_path<OUT>(parents, target);
+  }
   delete [] parents;
 
   return path;
@@ -499,6 +506,8 @@ std::vector<OUT> bidirectional_dijkstra3d(
     }
   }
 
+  bool target_reached = (dist_fwd[final_loc] < INFINITY) && (dist_rev[final_loc] < INFINITY);
+
   delete [] dist_fwd;
   delete [] dist_rev;
 
@@ -509,13 +518,18 @@ std::vector<OUT> bidirectional_dijkstra3d(
 
   std::vector<OUT> path_fwd, path_rev;
 
-  path_rev = query_shortest_path<OUT>(parents_rev, final_loc);
-  delete [] parents_rev;
-  path_fwd = query_shortest_path<OUT>(parents_fwd, final_loc);
-  delete [] parents_fwd;
-
-  std::reverse(path_fwd.begin(), path_fwd.end());
-  path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+  if (target_reached) {
+    path_rev = query_shortest_path<OUT>(parents_rev, final_loc);
+    delete [] parents_rev;
+    path_fwd = query_shortest_path<OUT>(parents_fwd, final_loc);
+    delete [] parents_fwd;
+    std::reverse(path_fwd.begin(), path_fwd.end());
+    path_fwd.insert(path_fwd.end(), path_rev.begin() + 1, path_rev.end());
+  }
+  else {
+    delete [] parents_rev;
+    delete [] parents_fwd;
+  }
 
   return path_fwd;
 }
@@ -578,6 +592,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
   int x, y, z;
   int tx, ty, tz;
   float heuristic_cost;
+  bool target_reached = false;
 
   tz = target / fast_sxy;
   ty = (target - (tz * sxy)) / fast_sx;
@@ -627,6 +642,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
         if (neighboridx == target) {
+          target_reached = true;
           goto OUTSIDE;
         }
 
@@ -667,7 +683,10 @@ std::vector<OUT> compass_guided_dijkstra3d(
   OUTSIDE:
   delete []dist;
 
-  std::vector<OUT> path = query_shortest_path<OUT>(parents, target);
+  std::vector<OUT> path;
+  if (target_reached) {
+    path = query_shortest_path<OUT>(parents, target);
+  }
   delete [] parents;
 
   return path;
