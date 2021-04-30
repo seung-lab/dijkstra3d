@@ -157,14 +157,14 @@ inline void compute_neighborhood(
   // 26-hood
 
   // Now the eight corners of the cube
-  neighborhood[18] *= ((graph & 0b10000000000000000000000000) > 0);
-  neighborhood[19] *= ((graph & 0b01000000000000000000000000) > 0);
-  neighborhood[20] *= ((graph & 0b00100000000000000000000000) > 0);
-  neighborhood[21] *= ((graph & 0b00001000000000000000000000) > 0);
-  neighborhood[22] *= ((graph & 0b00010000000000000000000000) > 0);
-  neighborhood[23] *= ((graph & 0b00000100000000000000000000) > 0);
-  neighborhood[24] *= ((graph & 0b00000010000000000000000000) > 0);
-  neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0);
+  neighborhood[18] *= ((graph & 0b10000000000000000000000000) > 0); // -x,-y,-z
+  neighborhood[19] *= ((graph & 0b01000000000000000000000000) > 0); // +x,-y,-z
+  neighborhood[20] *= ((graph & 0b00100000000000000000000000) > 0); // -x,+y,-z
+  neighborhood[21] *= ((graph & 0b00001000000000000000000000) > 0); // -x,-y,+z
+  neighborhood[22] *= ((graph & 0b00010000000000000000000000) > 0); // +x,+y,-z
+  neighborhood[23] *= ((graph & 0b00000100000000000000000000) > 0); // +x,-y,+z
+  neighborhood[24] *= ((graph & 0b00000010000000000000000000) > 0); // -x,+y,+z
+  neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0); // +x,+y,+z
 }
 
 
