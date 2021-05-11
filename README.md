@@ -69,7 +69,9 @@ Perform dijkstra's shortest path algorithm on a 3D image grid. Vertices are voxe
 
 This package was developed in the course of exploring TEASAR skeletonization of 3D image volumes (now available in [Kimimaro](https://github.com/seung-lab/kimimaro)). Other commonly available packages implementing Dijkstra used matricies or object graphs as their underlying implementation. In either case, these generic graph packages necessitate explicitly creating the graph's edges and vertices, which turned out to be a significant computational cost compared with the search time. Additionally, some implementations required memory quadratic in the number of vertices (e.g. an NxN matrix for N nodes) which becomes prohibitive for large arrays. In some cases, a compressed sparse matrix representation was used to remain within memory limits.  
 
-Neither of graph construction nor quadratic memory pressure are necessary for an image analysis application. The edges between voxels (3D pixels) are regular and implicit in the rectangular structure of the image. Additionally, the cost of each edge can be stored a single time instead of 26 times in contiguous uncompressed memory regions for faster performance.  
+Neither graph construction nor quadratic memory pressure are necessary for an image analysis application. The edges between voxels (3D pixels) are regular and implicit in the rectangular structure of the image. Additionally, the cost of each edge can be stored a single time instead of 26 times in contiguous uncompressed memory regions for faster performance.  
+
+Previous rationals aside, the most recent version of dijkstra3d also includes an optional method for specifying the voxel connectivity graph for each voxel via a bitfield. We found that in order to solve a problem of label self-contacts, we needed to specify impermissible directions of travel for some voxels. This is still a rather compact and fast way to process the graph, so it doesn't really invalidate our previous contention. 
 
 ## C++ Use 
 
@@ -209,6 +211,32 @@ trial(True, False)
 print("Compass")
 trial(False, True)
 ```
+
+## Voxel Connectivity Graph
+
+You may optionally provide a unsigned 32-bit integer image that specifies the allowed directions of travel per voxel as a directed graph. Each voxel in the graph contains a bitfield of which only the lower 26 bits are used to specify allowed directions. The top 6 bits have no assigned meaning. It is possible to use smaller width bitfields for 2D images (uint8) or for undirected graphs (uint16), but they are not currently supported. Please open an Issue or Pull Request if you need this functionality.
+
+The specification below shows the meaning assigned to each bit. Bit 32 is the MSB, bit 1 is the LSB. Ones are allowed directions and zeros are disallowed directions.
+
+```
+    32     31     30     29     28     27     26     25     24     23     
+------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+unused unused unused unused unused unused -x-y-z  x-y-z -x+y-z +x+y-z
+
+    22     21     20     19     18     17     16     15     14     13
+------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+-x-y+z +x-y+z -x+y+z    xyz   -y-z    y-z   -x-z    x-z    -yz     yz
+
+    12     11     10      9      8      7      6      5      4      3
+------ ------ ------ ------ ------ ------ ------ ------ ------ ------
+   -xz     xz   -x-y    x-y    -xy     xy     -z     +z     -y     +y  
+     2      1
+------ ------
+    -x     +x
+```
+
+There is an assistive tool available for producing these graphs from adjacent labels in the [cc3d library](https://github.com/seung-lab/connected-components-3d).
+
 
 ### What is that pairing_heap.hpp?
 
