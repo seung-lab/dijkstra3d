@@ -273,14 +273,19 @@ def _path_from_parents_helper(cnp.ndarray[UINT, ndim=3] parents, target):
   return np.frombuffer(buf, dtype=parents.dtype)[::-1]
 
 def path_from_parents(parents, target):
+  ndim = parents.ndim
   while parents.ndim < 3:
     parents = parents[..., np.newaxis]
+
+  while len(target) < 3:
+    target += (0,)
 
   cdef size_t sx = parents.shape[0]
   cdef size_t sy = parents.shape[1]
 
   numpy_path = _path_from_parents_helper(parents, target)
-  return _path_to_point_cloud(numpy_path, 3, sy, sx)
+  ptlist = _path_to_point_cloud(numpy_path, 3, sy, sx)
+  return ptlist[:, :ndim]
 
 def parental_field(data, source, connectivity=26, voxel_graph=None):
   """
