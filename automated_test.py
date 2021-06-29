@@ -729,7 +729,7 @@ def test_dijkstra_parental(dtype, compass):
   values = np.ones((10,10), dtype=dtype, order='F')
   parents = dijkstra3d.parental_field(values, (0,0))
   path = dijkstra3d.path_from_parents(parents, (3,0))
-  print(path)
+  
   assert len(path) == 4
   assert np.all(path == np.array([
     [0,0],
