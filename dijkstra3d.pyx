@@ -37,6 +37,12 @@ import numpy as np
 
 __VERSION__ = '1.9.1'
 
+ctypedef fused UINT:
+  uint8_t
+  uint16_t
+  uint32_t
+  uint64_t
+
 class DimensionError(Exception):
   pass
 
@@ -246,39 +252,40 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
 
   return field
 
-def path_from_parents(parents, target):
+# parents is either uint32 or uint64
+def _path_from_parents_helper(cnp.ndarray[UINT, ndim=3] parents, target):
+  cdef UINT[:,:,:] arr_memview
+  cdef vector[UINT] path
+  cdef UINT* path_ptr
+  cdef UINT[:] vec_view
+
   cdef size_t sx = parents.shape[0]
   cdef size_t sy = parents.shape[1]
   cdef size_t sz = parents.shape[2]
 
-  cdef size_t targ = target[0] + sx * (target[1] + sy * target[2])
+  cdef UINT targ = target[0] + sx * (target[1] + sy * target[2])
 
-  cdef uint32_t[:,:,:] arr_memview32
-  cdef vector[uint32_t] path32
-  cdef uint32_t* path_ptr32
-  cdef uint32_t[:] vec_view32
+  arr_memview = parents
+  path = query_shortest_path(&arr_memview[0,0,0], targ)
+  path_ptr = <UINT*>&path[0]
+  vec_view = <UINT[:path.size()]>path_ptr
+  buf = bytearray(vec_view[:])
+  return np.frombuffer(buf, dtype=parents.dtype)[::-1]
 
-  cdef uint64_t[:,:,:] arr_memview64
-  cdef vector[uint64_t] path64
-  cdef uint64_t* path_ptr64
-  cdef uint64_t[:] vec_view64
+def path_from_parents(parents, target):
+  ndim = parents.ndim
+  while parents.ndim < 3:
+    parents = parents[..., np.newaxis]
 
-  if parents.dtype == np.uint64:
-    arr_memview64 = parents
-    path64 = query_shortest_path[uint64_t](&arr_memview64[0,0,0], targ)
-    path_ptr64 = <uint64_t*>&path64[0]
-    vec_view64 = <uint64_t[:path64.size()]>path_ptr64
-    buf = bytearray(vec_view64[:])
-    numpy_path = np.frombuffer(buf, dtype=np.uint64)[::-1]
-  else:
-    arr_memview32 = parents
-    path32 = query_shortest_path[uint32_t](&arr_memview32[0,0,0], targ)
-    path_ptr32 = <uint32_t*>&path32[0]
-    vec_view32 = <uint32_t[:path32.size()]>path_ptr32
-    buf = bytearray(vec_view32[:])
-    numpy_path = np.frombuffer(buf, dtype=np.uint32)[::-1]
+  while len(target) < 3:
+    target += (0,)
 
-  return _path_to_point_cloud(numpy_path, 3, sy, sx)
+  cdef size_t sx = parents.shape[0]
+  cdef size_t sy = parents.shape[1]
+
+  numpy_path = _path_from_parents_helper(parents, target)
+  ptlist = _path_to_point_cloud(numpy_path, 3, sy, sx)
+  return ptlist[:, :ndim]
 
 def parental_field(data, source, connectivity=26, voxel_graph=None):
   """
@@ -421,6 +428,7 @@ def _path_to_point_cloud(path, dims, rows, cols):
   ptlist = np.zeros((path.shape[0], dims), dtype=np.uint32)
 
   cdef size_t sxy = rows * cols
+  cdef size_t i = 0
 
   if dims == 3:
     for i, pt in enumerate(path):
