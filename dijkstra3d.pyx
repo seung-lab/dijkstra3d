@@ -35,7 +35,7 @@ from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-__VERSION__ = '1.9.1'
+__VERSION__ = '1.9.2'
 
 ctypedef fused UINT:
   uint8_t
