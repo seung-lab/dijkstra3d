@@ -117,6 +117,7 @@ float* field = dijkstra::euclidean_distance_field3d<float>(
   source, /*free_space_radius=*/0 // set to > 0 to switch on
 );
 
+// source can be a size_t (single source) or a std::vector<size_t> (multi-source)
 float* field = dijkstra::distance_field3d<float>(labels, /*sx=*/512, /*sy=*/512, /*sz=*/512, source);
 ```
 
