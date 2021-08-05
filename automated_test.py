@@ -706,6 +706,18 @@ def test_euclidean_distance_field_2d(free_space_radius):
 
   assert np.all(np.abs(field - answer) < 0.00001)   
 
+  # Multi-source
+  values = np.ones((4,4), dtype=bool)
+  field = dijkstra3d.euclidean_distance_field(values, [ (0,0), (3,3) ], free_space_radius=free_space_radius)
+
+  answer = np.array([
+    [0, 1,        2,        3],
+    [1, sq2,      (1+sq2),  2],
+    [2, (1+sq2),  sq2,      1],
+    [3, 2,        1,        0],
+  ])
+  assert np.all(np.isclose(field, answer))
+
 @pytest.mark.parametrize('point', (np.random.randint(0,256, size=(3,)),))
 def test_euclidean_distance_field_3d_free_space_eqn(point):
   point = tuple(point)
