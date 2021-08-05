@@ -463,6 +463,30 @@ def test_distance_field_2d(dtype):
     ]
   ]))
 
+  field = dijkstra3d.distance_field(values, [ (0,0), (4,4) ])
+
+  assert np.all(field == np.array([
+    [
+      [0, 1, 2, 3, 4],
+      [1, 1, 2, 3, 3],
+      [2, 2, 2, 2, 2],
+      [3, 3, 2, 1, 1],
+      [4, 3, 2, 1, 0],
+    ]
+  ]))
+
+  field = dijkstra3d.distance_field(values, [ (0,0), (2,2), (4,4) ])
+
+  assert np.all(field == np.array([
+    [
+      [0, 1, 2, 2, 2],
+      [1, 1, 1, 1, 2],
+      [2, 1, 0, 1, 2],
+      [2, 1, 1, 1, 1],
+      [2, 2, 2, 1, 0],
+    ]
+  ]))
+
   field = dijkstra3d.distance_field(values, (4,4))
 
   assert np.all(field == np.array([
@@ -499,6 +523,8 @@ def test_distance_field_2d(dtype):
       [4, 4, 4, 4, 4],
     ]
   ]))
+
+
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 def test_distance_field_2d_symmetric_26(dtype):
@@ -679,6 +705,18 @@ def test_euclidean_distance_field_2d(free_space_radius):
   ], dtype=np.float32)  
 
   assert np.all(np.abs(field - answer) < 0.00001)   
+
+  # Multi-source
+  values = np.ones((4,4), dtype=bool)
+  field = dijkstra3d.euclidean_distance_field(values, [ (0,0), (3,3) ], free_space_radius=free_space_radius)
+
+  answer = np.array([
+    [0, 1,        2,        3],
+    [1, sq2,      (1+sq2),  2],
+    [2, (1+sq2),  sq2,      1],
+    [3, 2,        1,        0],
+  ])
+  assert np.all(np.isclose(field, answer))
 
 @pytest.mark.parametrize('point', (np.random.randint(0,256, size=(3,)),))
 def test_euclidean_distance_field_3d_free_space_eqn(point):
