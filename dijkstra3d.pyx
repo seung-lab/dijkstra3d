@@ -69,7 +69,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
   cdef float* distance_field3d[T](
     T* field,
     size_t sx, size_t sy, size_t sz,
-    size_t source, size_t connectivity,
+    vector[size_t] source, size_t connectivity,
     uint32_t* voxel_graph
   )
   cdef OUT* parental_field3d[T,OUT](
@@ -194,7 +194,7 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
-  distance field from a source voxel. Vertices are 
+  distance field from one or more source voxels. Vertices are 
   voxels and edges are the 26 nearest neighbors 
   (except for the edges of the image where 
   the number of edges is reduced).
@@ -206,7 +206,8 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
   
   Parameters:
    data: Input weights in a 2D or 3D numpy array. 
-   source: (x,y,z) coordinate of starting voxel
+   source: (x,y,z) coordinate or list of coordinates 
+    of starting voxels.
    connectivity: 26, 18, or 6 connected.
   
   Returns: 2D or 3D numpy array with each index
@@ -230,17 +231,23 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.float32)
 
-  if dims == 1:
-    data = data[:, np.newaxis, np.newaxis]
-    source = ( source[0], 0, 0 )
-  if dims == 2:
-    data = data[:, :, np.newaxis]
-    source = ( source[0], source[1], 0 )
+  source = np.array(source, dtype=np.uint64)
+  if source.ndim == 1:
+    source = source[np.newaxis, :]
+
+  for src in source:
+    _validate_coord(data, src)
+
+  if source.shape[1] < 3:
+    tmp = np.zeros((source.shape[0], 3), dtype=np.uint64)
+    tmp[:, :source.shape[1]] = source[:,:]
+    source = tmp
+
+  while data.ndim < 3:
+    data = data[..., np.newaxis]
 
   if voxel_graph is not None:
     voxel_graph = format_voxel_graph(voxel_graph)
-
-  _validate_coord(data, source)
 
   data = np.asfortranarray(data)
 
@@ -795,7 +802,7 @@ def _execute_dijkstra(
   else:
     return output[::-1]
 
-def _execute_distance_field(data, source, connectivity, voxel_graph):
+def _execute_distance_field(data, sources, connectivity, voxel_graph):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
   cdef uint32_t[:,:,:] arr_memview32
@@ -813,7 +820,9 @@ def _execute_distance_field(data, source, connectivity, voxel_graph):
   cdef size_t sy = data.shape[1]
   cdef size_t sz = data.shape[2]
 
-  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+  cdef vector[size_t] src
+  for source in sources:
+    src.push_back(source[0] + sx * (source[1] + sy * source[2]))
 
   cdef float* dist
 
