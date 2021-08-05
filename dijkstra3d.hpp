@@ -804,12 +804,11 @@ OUT* parental_field3d(
   return parents;
 }
 
-
 template <typename T>
 float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source, const size_t connectivity=26,
+    const std::vector<size_t> &sources, const size_t connectivity=26,
     const uint32_t* voxel_connectivity_graph = NULL
   ) {
 
@@ -827,12 +826,15 @@ float* distance_field3d(
 
   float *dist = new float[voxels]();
   fill(dist, +INFINITY, voxels);
-  dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE];
 
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
-  queue.emplace(0.0, source);
+
+  for (size_t source : sources) {
+    dist[source] = -0;
+    queue.emplace(0.0, source);
+  }
 
   size_t loc, next_loc;
   float delta;
@@ -898,6 +900,22 @@ float* distance_field3d(
   }
 
   return dist;
+}
+
+template <typename T>
+float* distance_field3d(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t connectivity=26,
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  const std::vector<size_t> sources = { source };
+  return distance_field3d<T>(
+    field, 
+    sx, sy, sz, 
+    sources, connectivity, voxel_connectivity_graph
+  );
 }
 
 /*  For the euclidean distance field calculation, it is 
