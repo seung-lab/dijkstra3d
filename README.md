@@ -33,8 +33,12 @@ path = dijkstra3d.path_from_parents(parents, target=(511, 511, 511))
 print(path.shape)
 
 # Given a boolean label "field" and a source vertex, compute 
-# the anisotropic euclidean distance from the source to all labeled vertices.
+# the anisotropic euclidean chamfer distance from the source to all labeled vertices.
+# Source can be a single point or a list of points.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
+dist_field = dijkstra3d.euclidean_distance_field(
+  field, source=[ (0,0,0), (10, 40, 232) ], anisotropy=(4,4,40)
+)
 
 # To make the EDF go faster add the free_space_radius parameter. It's only
 # safe to use if you know that some distance around the source point
@@ -110,6 +114,8 @@ uint32_t* parents = dijkstra::parental_field3d<float>(
 vector<unsigned int> path = dijkstra::query_shortest_path(parents, target);
 
 
+// Really a chamfer distance.
+// source can be a size_t (single source) or a std::vector<size_t> (multi-source)
 float* field = dijkstra::euclidean_distance_field3d<float>(
   labels, 
   /*sx=*/512, /*sy=*/512, /*sz=*/512, 
