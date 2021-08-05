@@ -1040,11 +1040,12 @@ inline float _c(const float wa, const float wb, const float wc) {
   return std::sqrt(wa * wa + wb * wb + wc * wc);
 }
 
+// really a chamfer distance
 float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
     const size_t sx, const size_t sy, const size_t sz, 
     const float wx, const float wy, const float wz, 
-    const size_t source, 
+    const std::vector<size_t> &sources, 
     const float free_space_radius = 0,
     float* dist = NULL,
     const uint32_t* voxel_connectivity_graph = NULL
@@ -1065,7 +1066,6 @@ float* euclidean_distance_field3d(
   }
 
   fill(dist, +INFINITY, voxels);
-  dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE];
 
@@ -1083,12 +1083,16 @@ float* euclidean_distance_field3d(
   };
 
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
-  queue.emplace(0.0, source);
 
-  if (free_space_radius > 0) {
+  for (size_t source : sources) {
+    dist[source] = -0;
+    queue.emplace(0.0, source);
+  }
+
+  if (free_space_radius > 0 && sources.size() == 1) {
     edf_free_space(
       field, dist, queue, 
-      source, free_space_radius,
+      sources[0], free_space_radius,
       sx, sy, sz,
       wx, wy, wz
     );
@@ -1163,6 +1167,27 @@ float* euclidean_distance_field3d(
 
   return dist;
 }
+
+float* euclidean_distance_field3d(
+    uint8_t* field, // really a boolean field
+    const size_t sx, const size_t sy, const size_t sz, 
+    const float wx, const float wy, const float wz, 
+    const size_t source, 
+    const float free_space_radius = 0,
+    float* dist = NULL,
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  const std::vector<size_t> sources = { source };
+  return euclidean_distance_field3d(
+    field, 
+    sx, sy, sz,
+    wx, wy, wz,
+    sources, free_space_radius, 
+    dist, voxel_connectivity_graph
+  );
+}
+
 
 #undef DIJKSTRA_3D_PREFETCH_26WAY
 
