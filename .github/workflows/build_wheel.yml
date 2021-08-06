@@ -22,7 +22,7 @@ jobs:
         uses: joerick/cibuildwheel@v1.10.0
         # to supply options, put them in 'env', like:
         env:
-          CIBW_BEFORE_BUILD: pip install numpy
+          CIBW_BEFORE_BUILD: pip install oldest-supported-numpy
 
       - uses: actions/upload-artifact@v2
         with:
