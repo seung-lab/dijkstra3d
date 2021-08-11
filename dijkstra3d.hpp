@@ -350,17 +350,15 @@ std::vector<OUT> dijkstra3d(
 // for many use cases might be the hillclimbing distance 
 // between the two with adjustable parameters alpha and beta:
 // sqrt(alpha^2 ||Xs - Xf||^2 + beta^2 (Is - If)^2)
+// only supports 26 connectivity for now
 template <typename T, typename OUT = uint32_t>
 std::vector<OUT> distance_metric_dijkstra3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
-    const int connectivity = 26, 
     const float alpha = 1,
     const float beta = 1
   ) {
-
-  connectivity_check(connectivity);
 
   if (source == target) {
     return std::vector<OUT>{ static_cast<OUT>(source) };
