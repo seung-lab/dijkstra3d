@@ -419,8 +419,6 @@ std::vector<OUT> distance_metric_dijkstra3d(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
-
     for (int dz = -1; dz <= 1; dz++) {
       nz = z + dz;
       if (nz < 0 || nz >= sz) {
