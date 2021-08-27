@@ -55,6 +55,7 @@ dist_field, max_loc = dijkstra3d.euclidean_distance_field(field, source=(0,0,0),
 # point for all finite voxels. 
 dist_field = dijkstra3d.distance_field(field, source=(0,0,0)) # single source
 dist_field = dijkstra3d.distance_field(field, source=[ (0,0,0), (52, 55, 23) ]) # multi-source
+dist_field, max_loc = dijkstra3d.distance_field(field, source=(0,0,0), return_max_location=True) # get the location of one of the maxima
 
 # You can also provide a voxel connectivity graph to provide customized
 # constraints on the permissible directions of travel. The graph is a

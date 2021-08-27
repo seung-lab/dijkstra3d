@@ -810,7 +810,8 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const std::vector<size_t> &sources, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   connectivity_check(connectivity);
@@ -832,7 +833,9 @@ float* distance_field3d(
 
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
 
+  float max_dist = -1;
   for (size_t source : sources) {
+    max_loc = source;
     dist[source] = -0;
     queue.emplace(0.0, source);
   }
@@ -846,6 +849,11 @@ float* distance_field3d(
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
+
+    if (max_dist < std::abs(dist[loc])) {
+      max_dist = std::abs(dist[loc]);
+      max_loc = loc;
+    }
 
     if (std::signbit(dist[loc])) {
       continue;
@@ -908,14 +916,16 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   const std::vector<size_t> sources = { source };
   return distance_field3d<T>(
     field, 
     sx, sy, sz, 
-    sources, connectivity, voxel_connectivity_graph
+    sources, connectivity, 
+    voxel_connectivity_graph, max_loc
   );
 }
 
