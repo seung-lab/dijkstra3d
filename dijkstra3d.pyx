@@ -85,7 +85,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     vector[size_t] source,  
     float free_space_radius,
     float* dist, 
-    uint32_t* voxel_graph
+    uint32_t* voxel_graph,
+    size_t &max_loc
   )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
@@ -358,7 +359,8 @@ def parental_field(data, source, connectivity=26, voxel_graph=None):
 
 def euclidean_distance_field(
   data, source, anisotropy=(1,1,1), 
-  free_space_radius=0, voxel_graph=None
+  free_space_radius=0, voxel_graph=None,
+  return_max_location=False
 ):
   """
   Use dijkstra's shortest path algorithm
@@ -382,9 +384,17 @@ def euclidean_distance_field(
     region surrounding the source is free space, we can use
     a much faster algorithm to fill in that volume. Value
     is physical radius (can get this from the EDT). 
+   return_max_location: returns the coordinates of one
+     of the possibly multiple maxima.
   
-  Returns: 2D or 3D numpy array with each index
-    containing its distance from the source voxel.
+  Returns: 
+    let field = 2D or 3D numpy array with each index
+      containing its distance from the source voxel.
+
+    if return_max_location:
+      return (field, (x,y,z) of max distance)
+    else:
+      return field
   """
   dims = len(data.shape)
   if dims > 3:
@@ -413,7 +423,7 @@ def euclidean_distance_field(
 
   data = np.asfortranarray(data)
 
-  field = _execute_euclidean_distance_field(
+  field, max_loc = _execute_euclidean_distance_field(
     data, source, anisotropy, 
     free_space_radius, voxel_graph
   )
@@ -422,7 +432,10 @@ def euclidean_distance_field(
   if dims < 2:
     field = np.squeeze(field, axis=1)
 
-  return field
+  if return_max_location:
+    return field, np.unravel_index(max_loc, data.shape, order="F")
+  else:
+    return field
 
 def _validate_coord(data, coord):
   dims = len(data.shape)
@@ -1070,6 +1083,7 @@ def _execute_euclidean_distance_field(
   cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
 
   dtype = data.dtype
+  cdef size_t max_loc = data.size + 1
 
   if dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
@@ -1079,9 +1093,13 @@ def _execute_euclidean_distance_field(
       wx, wy, wz,
       src, free_space_radius,
       &dist[0,0,0],
-      voxel_graph_ptr
+      voxel_graph_ptr,
+      max_loc
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  return dist
+  if max_loc == data.size + 1:
+    raise ValueError(f"Something went wrong during processing. max_loc: {max_loc}")
+
+  return dist, max_loc

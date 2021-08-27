@@ -670,10 +670,13 @@ def test_euclidean_distance_field_2d(free_space_radius):
      [4,        4.4142137 , 4.8284273, 5.2426405 , 5.656854 ]], 
   dtype=np.float32)
 
-  field = dijkstra3d.euclidean_distance_field(
-    values, (0,0,0), (1,1,1), free_space_radius=free_space_radius
+  field, max_loc = dijkstra3d.euclidean_distance_field(
+    values, (0,0,0), (1,1,1), 
+    free_space_radius=free_space_radius,
+    return_max_location=True
   )
   assert np.all(np.abs(field - answer) < 0.00001) 
+  assert max_loc == (4,4,0)
 
   answer = np.array([
     [
@@ -687,8 +690,12 @@ def test_euclidean_distance_field_2d(free_space_radius):
   ], dtype=np.float32)
 
   values = np.ones((2, 2, 2), dtype=bool)
-  field = dijkstra3d.euclidean_distance_field(values, (0,0,0), (1,1,1), free_space_radius=free_space_radius)
-  assert np.all(np.abs(field - answer) < 0.00001)   
+  field, max_loc = dijkstra3d.euclidean_distance_field(
+    values, (0,0,0), (1,1,1), 
+    free_space_radius=free_space_radius, return_max_location=True
+  )
+  assert np.all(np.abs(field - answer) < 0.00001)
+  assert max_loc == (1,1,1)   
 
   values = np.ones((2, 2, 2), dtype=bool)
   field = dijkstra3d.euclidean_distance_field(values, (1,1,1), (1,1,1), free_space_radius=free_space_radius)
