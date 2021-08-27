@@ -524,6 +524,8 @@ def test_distance_field_2d(dtype):
     ]
   ]))
 
+  field, max_loc = dijkstra3d.distance_field(values * 2, (2,2), return_max_location=True)
+  assert field[max_loc] == np.max(field)
 
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
@@ -676,7 +678,7 @@ def test_euclidean_distance_field_2d(free_space_radius):
     return_max_location=True
   )
   assert np.all(np.abs(field - answer) < 0.00001) 
-  assert max_loc == (4,4,0)
+  assert max_loc == (4,4)
 
   answer = np.array([
     [

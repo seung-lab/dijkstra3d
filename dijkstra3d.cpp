@@ -1634,6 +1634,12 @@ static CYTHON_INLINE int __Pyx_IterFinish(void);
 /* UnpackItemEndCheck.proto */
 static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
 
+/* SliceObject.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(
+        PyObject* obj, Py_ssize_t cstart, Py_ssize_t cstop,
+        PyObject** py_start, PyObject** py_stop, PyObject** py_slice,
+        int has_cstart, int has_cstop, int wraparound);
+
 /* PyDictContains.proto */
 static CYTHON_INLINE int __Pyx_PyDict_ContainsTF(PyObject* item, PyObject* dict, int eq) {
     int result = PyDict_Contains(dict, item);
@@ -5735,7 +5741,7 @@ static PyObject *__pyx_pf_10dijkstra3d_4distance_field(CYTHON_UNUSED PyObject *_
  *     field = np.squeeze(field, axis=1)
  * 
  *   if return_max_location:             # <<<<<<<<<<<<<<
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  */
   __pyx_t_5 = __Pyx_PyObject_IsTrue(__pyx_v_return_max_location); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 272, __pyx_L1_error)
@@ -5744,7 +5750,7 @@ static PyObject *__pyx_pf_10dijkstra3d_4distance_field(CYTHON_UNUSED PyObject *_
     /* "dijkstra3d.pyx":273
  * 
  *   if return_max_location:
- *     return field, np.unravel_index(max_loc, data.shape, order="F")             # <<<<<<<<<<<<<<
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]             # <<<<<<<<<<<<<<
  *   else:
  *     return field
  */
@@ -5772,29 +5778,32 @@ static PyObject *__pyx_pf_10dijkstra3d_4distance_field(CYTHON_UNUSED PyObject *_
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyTuple_New(2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetSlice(__pyx_t_8, 0, 0, NULL, &__pyx_v_dims, NULL, 0, 0, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 273, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __pyx_t_8 = PyTuple_New(2); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 273, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_8);
     __Pyx_INCREF(__pyx_v_field);
     __Pyx_GIVEREF(__pyx_v_field);
-    PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_field);
-    __Pyx_GIVEREF(__pyx_t_8);
-    PyTuple_SET_ITEM(__pyx_t_1, 1, __pyx_t_8);
-    __pyx_t_8 = 0;
-    __pyx_r = __pyx_t_1;
+    PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_v_field);
+    __Pyx_GIVEREF(__pyx_t_1);
+    PyTuple_SET_ITEM(__pyx_t_8, 1, __pyx_t_1);
     __pyx_t_1 = 0;
+    __pyx_r = __pyx_t_8;
+    __pyx_t_8 = 0;
     goto __pyx_L0;
 
     /* "dijkstra3d.pyx":272
  *     field = np.squeeze(field, axis=1)
  * 
  *   if return_max_location:             # <<<<<<<<<<<<<<
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  */
   }
 
   /* "dijkstra3d.pyx":275
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  *     return field             # <<<<<<<<<<<<<<
  * 
@@ -10137,7 +10146,7 @@ static PyObject *__pyx_pf_10dijkstra3d_12euclidean_distance_field(CYTHON_UNUSED 
  *     field = np.squeeze(field, axis=1)
  * 
  *   if return_max_location:             # <<<<<<<<<<<<<<
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  */
   __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_v_return_max_location); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 449, __pyx_L1_error)
@@ -10146,7 +10155,7 @@ static PyObject *__pyx_pf_10dijkstra3d_12euclidean_distance_field(CYTHON_UNUSED 
     /* "dijkstra3d.pyx":450
  * 
  *   if return_max_location:
- *     return field, np.unravel_index(max_loc, data.shape, order="F")             # <<<<<<<<<<<<<<
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]             # <<<<<<<<<<<<<<
  *   else:
  *     return field
  */
@@ -10174,29 +10183,32 @@ static PyObject *__pyx_pf_10dijkstra3d_12euclidean_distance_field(CYTHON_UNUSED 
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetSlice(__pyx_t_7, 0, __pyx_v_dims, NULL, NULL, NULL, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 450, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 450, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_v_field);
     __Pyx_GIVEREF(__pyx_v_field);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_field);
-    __Pyx_GIVEREF(__pyx_t_7);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_7);
-    __pyx_t_7 = 0;
-    __pyx_r = __pyx_t_4;
+    PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_field);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_4);
     __pyx_t_4 = 0;
+    __pyx_r = __pyx_t_7;
+    __pyx_t_7 = 0;
     goto __pyx_L0;
 
     /* "dijkstra3d.pyx":449
  *     field = np.squeeze(field, axis=1)
  * 
  *   if return_max_location:             # <<<<<<<<<<<<<<
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  */
   }
 
   /* "dijkstra3d.pyx":452
- *     return field, np.unravel_index(max_loc, data.shape, order="F")
+ *     return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
  *   else:
  *     return field             # <<<<<<<<<<<<<<
  * 
@@ -37050,6 +37062,103 @@ static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
         return __Pyx_IterFinish();
     }
     return 0;
+}
+
+/* SliceObject */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_GetSlice(PyObject* obj,
+        Py_ssize_t cstart, Py_ssize_t cstop,
+        PyObject** _py_start, PyObject** _py_stop, PyObject** _py_slice,
+        int has_cstart, int has_cstop, CYTHON_UNUSED int wraparound) {
+#if CYTHON_USE_TYPE_SLOTS
+    PyMappingMethods* mp;
+#if PY_MAJOR_VERSION < 3
+    PySequenceMethods* ms = Py_TYPE(obj)->tp_as_sequence;
+    if (likely(ms && ms->sq_slice)) {
+        if (!has_cstart) {
+            if (_py_start && (*_py_start != Py_None)) {
+                cstart = __Pyx_PyIndex_AsSsize_t(*_py_start);
+                if ((cstart == (Py_ssize_t)-1) && PyErr_Occurred()) goto bad;
+            } else
+                cstart = 0;
+        }
+        if (!has_cstop) {
+            if (_py_stop && (*_py_stop != Py_None)) {
+                cstop = __Pyx_PyIndex_AsSsize_t(*_py_stop);
+                if ((cstop == (Py_ssize_t)-1) && PyErr_Occurred()) goto bad;
+            } else
+                cstop = PY_SSIZE_T_MAX;
+        }
+        if (wraparound && unlikely((cstart < 0) | (cstop < 0)) && likely(ms->sq_length)) {
+            Py_ssize_t l = ms->sq_length(obj);
+            if (likely(l >= 0)) {
+                if (cstop < 0) {
+                    cstop += l;
+                    if (cstop < 0) cstop = 0;
+                }
+                if (cstart < 0) {
+                    cstart += l;
+                    if (cstart < 0) cstart = 0;
+                }
+            } else {
+                if (!PyErr_ExceptionMatches(PyExc_OverflowError))
+                    goto bad;
+                PyErr_Clear();
+            }
+        }
+        return ms->sq_slice(obj, cstart, cstop);
+    }
+#endif
+    mp = Py_TYPE(obj)->tp_as_mapping;
+    if (likely(mp && mp->mp_subscript))
+#endif
+    {
+        PyObject* result;
+        PyObject *py_slice, *py_start, *py_stop;
+        if (_py_slice) {
+            py_slice = *_py_slice;
+        } else {
+            PyObject* owned_start = NULL;
+            PyObject* owned_stop = NULL;
+            if (_py_start) {
+                py_start = *_py_start;
+            } else {
+                if (has_cstart) {
+                    owned_start = py_start = PyInt_FromSsize_t(cstart);
+                    if (unlikely(!py_start)) goto bad;
+                } else
+                    py_start = Py_None;
+            }
+            if (_py_stop) {
+                py_stop = *_py_stop;
+            } else {
+                if (has_cstop) {
+                    owned_stop = py_stop = PyInt_FromSsize_t(cstop);
+                    if (unlikely(!py_stop)) {
+                        Py_XDECREF(owned_start);
+                        goto bad;
+                    }
+                } else
+                    py_stop = Py_None;
+            }
+            py_slice = PySlice_New(py_start, py_stop, Py_None);
+            Py_XDECREF(owned_start);
+            Py_XDECREF(owned_stop);
+            if (unlikely(!py_slice)) goto bad;
+        }
+#if CYTHON_USE_TYPE_SLOTS
+        result = mp->mp_subscript(obj, py_slice);
+#else
+        result = PyObject_GetItem(obj, py_slice);
+#endif
+        if (!_py_slice) {
+            Py_DECREF(py_slice);
+        }
+        return result;
+    }
+    PyErr_Format(PyExc_TypeError,
+        "'%.200s' object is unsliceable", Py_TYPE(obj)->tp_name);
+bad:
+    return NULL;
 }
 
 /* DictGetItem */

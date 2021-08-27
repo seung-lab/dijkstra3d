@@ -270,7 +270,7 @@ def distance_field(
     field = np.squeeze(field, axis=1)
 
   if return_max_location:
-    return field, np.unravel_index(max_loc, data.shape, order="F")
+    return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
   else:
     return field
 
@@ -447,7 +447,7 @@ def euclidean_distance_field(
     field = np.squeeze(field, axis=1)
 
   if return_max_location:
-    return field, np.unravel_index(max_loc, data.shape, order="F")
+    return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
   else:
     return field
 
