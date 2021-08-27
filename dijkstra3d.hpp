@@ -32,6 +32,7 @@
 namespace dijkstra {
 
 #define sq(x) ((x) * (x))
+static size_t _dummy_max_loc;
 
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
@@ -809,7 +810,8 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const std::vector<size_t> &sources, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   connectivity_check(connectivity);
@@ -831,7 +833,9 @@ float* distance_field3d(
 
   std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> queue;
 
+  float max_dist = -1;
   for (size_t source : sources) {
+    max_loc = source;
     dist[source] = -0;
     queue.emplace(0.0, source);
   }
@@ -845,6 +849,11 @@ float* distance_field3d(
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
+
+    if (max_dist < std::abs(dist[loc])) {
+      max_dist = std::abs(dist[loc]);
+      max_loc = loc;
+    }
 
     if (std::signbit(dist[loc])) {
       continue;
@@ -907,14 +916,16 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   const std::vector<size_t> sources = { source };
   return distance_field3d<T>(
     field, 
     sx, sy, sz, 
-    sources, connectivity, voxel_connectivity_graph
+    sources, connectivity, 
+    voxel_connectivity_graph, max_loc
   );
 }
 
@@ -968,8 +979,10 @@ float* distance_field3d(
     maximum distance from the boundary, the timing improved from 20 sec to
     10 sec, so a 2x overall performance increase for a single use of the 
     free space eqn.
+
+    Returns: a maximum value location computed (there may be ties)
  */
-float* edf_free_space(
+size_t edf_free_space(
     uint8_t* field, float* dist,
     std::priority_queue<HeapNode<size_t>, std::vector<HeapNode<size_t>>, HeapNodeCompare<size_t>> &queue,
     const int64_t source, const float safe_radius,
@@ -987,9 +1000,21 @@ float* edf_free_space(
   float radius = 0;
   float corner_increment = std::sqrt(sq(wx) + sq(wy) + sq(wz));
 
-  for (int64_t z = 0; z < sz; z++) {
-    for (int64_t y = 0; y < sy; y++) {
-      for (int64_t x = 0; x < sx; x++) {
+  const int64_t ZERO = 0; // set type of zero in a cross compiler friendly way
+  int64_t xstart = std::max(ZERO, src_x - static_cast<int64_t>(safe_radius) - 1);
+  int64_t ystart = std::max(ZERO, src_y - static_cast<int64_t>(safe_radius) - 1);
+  int64_t zstart = std::max(ZERO, src_z - static_cast<int64_t>(safe_radius) - 1);
+
+  int64_t xend = std::min(sx, src_x + static_cast<int64_t>(safe_radius) + 2);
+  int64_t yend = std::min(sy, src_y + static_cast<int64_t>(safe_radius) + 2);
+  int64_t zend = std::min(sz, src_z + static_cast<int64_t>(safe_radius) + 2);
+
+  float max_dist = -1;
+  size_t max_loc = sx * sy * sz + 1;
+
+  for (int64_t z = zstart; z < zend; z++) {
+    for (int64_t y = ystart; y < yend; y++) {
+      for (int64_t x = xstart; x < xend; x++) {
         loc = x + sx * (y + sy * z);
 
         if (field[loc] == 0) {
@@ -1017,6 +1042,11 @@ float* edf_free_space(
            + (dyz - dxyz) * (std::sqrt(wy * wy + wz * wz) - wy - wz)
         );
 
+        if (dist[loc] > max_dist) {
+          max_dist = dist[loc];
+          max_loc = loc;
+        }
+
         if (radius + corner_increment > safe_radius) {
           queue.emplace(dist[loc], loc);  
         }
@@ -1027,7 +1057,7 @@ float* edf_free_space(
     }
   }
 
-  return dist;
+  return max_loc;
 }
 
 // helper function to compute 2D anisotropy ("_s" = "square")
@@ -1048,7 +1078,8 @@ float* euclidean_distance_field3d(
     const std::vector<size_t> &sources, 
     const float free_space_radius = 0,
     float* dist = NULL,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   const size_t voxels = sx * sy * sz;
@@ -1089,13 +1120,18 @@ float* euclidean_distance_field3d(
     queue.emplace(0.0, source);
   }
 
+
+  float max_dist = -1;
+  max_loc = voxels + 1;
+
   if (free_space_radius > 0 && sources.size() == 1) {
-    edf_free_space(
+    max_loc = edf_free_space(
       field, dist, queue, 
       sources[0], free_space_radius,
       sx, sy, sz,
       wx, wy, wz
     );
+    max_dist = std::abs(dist[max_loc]);
   }
 
   size_t loc, next_loc;
@@ -1107,6 +1143,11 @@ float* euclidean_distance_field3d(
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
+
+    if (max_dist < std::abs(dist[loc])) {
+      max_dist = std::abs(dist[loc]);
+      max_loc = loc;
+    }
 
     if (std::signbit(dist[loc])) {
       continue;
@@ -1175,7 +1216,8 @@ float* euclidean_distance_field3d(
     const size_t source, 
     const float free_space_radius = 0,
     float* dist = NULL,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = NULL,
+    size_t &max_loc = _dummy_max_loc
   ) {
 
   const std::vector<size_t> sources = { source };
@@ -1184,7 +1226,8 @@ float* euclidean_distance_field3d(
     sx, sy, sz,
     wx, wy, wz,
     sources, free_space_radius, 
-    dist, voxel_connectivity_graph
+    dist, voxel_connectivity_graph,
+    max_loc
   );
 }
 

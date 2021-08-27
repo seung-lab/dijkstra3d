@@ -47,11 +47,15 @@ dist_field = dijkstra3d.euclidean_distance_field(
 # distance, meaning you must account for anisotropy in setting it.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40), free_space_radius=300) 
 
+# You can also get one of the possibly multiple maxima locations instantly.
+dist_field, max_loc = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), return_max_location=True) 
+
 # Given a numerical field, for each directed edge from adjacent voxels A and B, 
 # use B as the edge weight. In this fashion, compute the distance from a source 
 # point for all finite voxels. 
 dist_field = dijkstra3d.distance_field(field, source=(0,0,0)) # single source
 dist_field = dijkstra3d.distance_field(field, source=[ (0,0,0), (52, 55, 23) ]) # multi-source
+dist_field, max_loc = dijkstra3d.distance_field(field, source=(0,0,0), return_max_location=True) # get the location of one of the maxima
 
 # You can also provide a voxel connectivity graph to provide customized
 # constraints on the permissible directions of travel. The graph is a

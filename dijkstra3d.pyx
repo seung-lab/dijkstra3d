@@ -70,7 +70,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     T* field,
     size_t sx, size_t sy, size_t sz,
     vector[size_t] source, size_t connectivity,
-    uint32_t* voxel_graph
+    uint32_t* voxel_graph, size_t &max_loc
   )
   cdef OUT* parental_field3d[T,OUT](
     T* field, 
@@ -85,7 +85,8 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     vector[size_t] source,  
     float free_space_radius,
     float* dist, 
-    uint32_t* voxel_graph
+    uint32_t* voxel_graph,
+    size_t &max_loc
   )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
@@ -190,7 +191,10 @@ def dijkstra(
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
-def distance_field(data, source, connectivity=26, voxel_graph=None):
+def distance_field(
+  data, source, connectivity=26, 
+  voxel_graph=None, return_max_location=False
+):
   """
   Use dijkstra's shortest path algorithm
   on a 3D image grid to generate a weighted 
@@ -209,9 +213,17 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
    source: (x,y,z) coordinate or list of coordinates 
     of starting voxels.
    connectivity: 26, 18, or 6 connected.
+   return_max_location: returns the coordinates of one
+     of the possibly multiple maxima.
   
-  Returns: 2D or 3D numpy array with each index
-    containing its distance from the source voxel.
+  Returns: 
+    let field = 2D or 3D numpy array with each index
+      containing its distance from the source voxel.
+
+    if return_max_location:
+      return (field, (x,y,z) of max distance)
+    else:
+      return field
   """
   dims = len(data.shape)
   if dims not in (2,3):
@@ -251,13 +263,16 @@ def distance_field(data, source, connectivity=26, voxel_graph=None):
 
   data = np.asfortranarray(data)
 
-  field = _execute_distance_field(data, source, connectivity, voxel_graph)
+  field, max_loc = _execute_distance_field(data, source, connectivity, voxel_graph)
   if dims < 3:
     field = np.squeeze(field, axis=2)
   if dims < 2:
     field = np.squeeze(field, axis=1)
 
-  return field
+  if return_max_location:
+    return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
+  else:
+    return field
 
 # parents is either uint32 or uint64
 def _path_from_parents_helper(cnp.ndarray[UINT, ndim=3] parents, target):
@@ -358,7 +373,8 @@ def parental_field(data, source, connectivity=26, voxel_graph=None):
 
 def euclidean_distance_field(
   data, source, anisotropy=(1,1,1), 
-  free_space_radius=0, voxel_graph=None
+  free_space_radius=0, voxel_graph=None,
+  return_max_location=False
 ):
   """
   Use dijkstra's shortest path algorithm
@@ -382,9 +398,17 @@ def euclidean_distance_field(
     region surrounding the source is free space, we can use
     a much faster algorithm to fill in that volume. Value
     is physical radius (can get this from the EDT). 
+   return_max_location: returns the coordinates of one
+     of the possibly multiple maxima.
   
-  Returns: 2D or 3D numpy array with each index
-    containing its distance from the source voxel.
+  Returns: 
+    let field = 2D or 3D numpy array with each index
+      containing its distance from the source voxel.
+
+    if return_max_location:
+      return (field, (x,y,z) of max distance)
+    else:
+      return field
   """
   dims = len(data.shape)
   if dims > 3:
@@ -413,7 +437,7 @@ def euclidean_distance_field(
 
   data = np.asfortranarray(data)
 
-  field = _execute_euclidean_distance_field(
+  field, max_loc = _execute_euclidean_distance_field(
     data, source, anisotropy, 
     free_space_radius, voxel_graph
   )
@@ -422,7 +446,10 @@ def euclidean_distance_field(
   if dims < 2:
     field = np.squeeze(field, axis=1)
 
-  return field
+  if return_max_location:
+    return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
+  else:
+    return field
 
 def _validate_coord(data, coord):
   dims = len(data.shape)
@@ -831,6 +858,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
     src.push_back(source[0] + sx * (source[1] + sy * source[2]))
 
   cdef float* dist
+  cdef size_t max_loc = data.size + 1
 
   dtype = data.dtype
 
@@ -840,7 +868,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memviewfloat[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   elif dtype == np.float64:
     arr_memviewdouble = data
@@ -848,7 +876,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memviewdouble[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.astype(np.uint64)
@@ -856,7 +884,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memview64[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   elif dtype in (np.uint32, np.int32):
     arr_memview32 = data.astype(np.uint32)
@@ -864,7 +892,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memview32[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.astype(np.uint16)
@@ -872,7 +900,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memview16[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
@@ -880,7 +908,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       &arr_memview8[0,0,0],
       sx, sy, sz,
       src, connectivity,
-      voxel_graph_ptr
+      voxel_graph_ptr, max_loc
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
@@ -892,8 +920,8 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
   # Python 3 can just do np.frombuffer(vec_view, ...)
   buf = bytearray(dist_view[:])
   free(dist)
-  # I don't actually understand why order F works, but it does.
-  return np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
+  buf = np.frombuffer(buf, dtype=np.float32).reshape(data.shape, order='F')
+  return buf, max_loc
 
 def _execute_parental_field(data, source, connectivity, voxel_graph):
   cdef uint8_t[:,:,:] arr_memview8
@@ -1070,6 +1098,7 @@ def _execute_euclidean_distance_field(
   cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
 
   dtype = data.dtype
+  cdef size_t max_loc = data.size + 1
 
   if dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.astype(np.uint8)
@@ -1079,9 +1108,13 @@ def _execute_euclidean_distance_field(
       wx, wy, wz,
       src, free_space_radius,
       &dist[0,0,0],
-      voxel_graph_ptr
+      voxel_graph_ptr,
+      max_loc
     )
   else:
     raise TypeError("Type {} not currently supported.".format(dtype))
 
-  return dist
+  if max_loc == data.size + 1:
+    raise ValueError(f"Something went wrong during processing. max_loc: {max_loc}")
+
+  return dist, max_loc
