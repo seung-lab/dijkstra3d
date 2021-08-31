@@ -59,6 +59,13 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     size_t source, size_t target,
     int connectivity, uint32_t* voxel_graph
   )
+  cdef vector[OUT] value_target_dijkstra3d[T,OUT](
+    T* field, 
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, T target,
+    int connectivity, 
+    uint32_t* voxel_connectivity_graph
+  )
   cdef vector[OUT] compass_guided_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
@@ -187,6 +194,79 @@ def dijkstra(
     data, source, target, connectivity, 
     bidirectional, compass, compass_norm,
     voxel_graph
+  )
+
+  return _path_to_point_cloud(path, dims, rows, cols)
+
+def railroad(
+  data, source, 
+  connectivity=26, voxel_graph=None
+):
+  """
+  A "rail road" (a term defined by us) is the shortest
+  last-mile path (the "road") from a target point to a 
+  "rail network" that includes the source point. A "rail"
+  is a zero weighted path that acts as a strong attractor
+  for the search algorithm. In the context of the 
+  skeletonization problem, such networks are assembled
+  as a matter of course. It becomes more and more efficient
+  to search for the rail network than for the target point.
+
+  For given input voxels A and B, the edge
+  weight from A to B is B and from B to A is
+  A. All weights must be non-negative (incl. 
+  negative zero).
+  
+  Parameters:
+   Data: Input weights in a 2D or 3D numpy array. 
+   source: (x,y,z) coordinate of starting voxel
+   connectivity: 6 (faces), 18 (faces + edges), and 
+    26 (faces + edges + corners) voxel graph connectivities 
+    are supported. For 2D images, 4 gets translated to 6,
+    8 gets translated to 18.
+   voxel_graph: a bitwise representation of the premitted
+    directions of travel between voxels. Generated from
+    cc3d.voxel_connectivity_graph. 
+    (See https://github.com/seung-lab/connected-components-3d)
+  
+  Returns: 1D numpy array containing indices of the path from
+    source to target including source and destination.
+  """
+  dims = len(data.shape)
+  if dims not in (2,3):
+    raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
+
+  if dims == 2:
+    if connectivity == 4:
+      connectivity = 6
+    elif connectivity == 8:
+      connectivity = 18 # or 26 but 18 might be faster
+
+  if connectivity not in (6, 18, 26):
+    raise ValueError(
+      "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
+    )
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.uint32, order='F')
+
+  _validate_coord(data, source)
+
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = list(source) + [ 0 ]
+
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
+
+  data = np.asfortranarray(data)
+
+  cdef size_t cols = data.shape[0]
+  cdef size_t rows = data.shape[1]
+
+  path = _execute_value_target_dijkstra(
+    data, source,
+    connectivity, voxel_graph
   )
 
   return _path_to_point_cloud(path, dims, rows, cols)
@@ -481,6 +561,156 @@ def _path_to_point_cloud(path, dims, rows, cols):
       ptlist[ i, 1 ] = (pt % sxy) / cols
 
   return ptlist
+
+def _execute_value_target_dijkstra(
+  data, source, 
+  int connectivity, voxel_graph=None
+):
+  cdef uint8_t[:,:,:] arr_memview8
+  cdef uint16_t[:,:,:] arr_memview16
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef uint64_t[:,:,:] arr_memview64
+  cdef float[:,:,:] arr_memviewfloat
+  cdef double[:,:,:] arr_memviewdouble
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph is not None:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
+
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
+
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+
+  cdef vector[uint32_t] output32
+  cdef vector[uint64_t] output64
+
+  sixtyfourbit = data.size > np.iinfo(np.uint32).max
+  
+  dtype = data.dtype
+
+  if dtype == np.float32:
+    arr_memviewfloat = data
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[float, uint64_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[float, uint32_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+  elif dtype == np.float64:
+    arr_memviewdouble = data
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[double, uint64_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[double, uint32_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.uint64)
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[uint64_t, uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[uint64_t, uint32_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+  elif dtype in (np.int32, np.uint32):
+    arr_memview32 = data.astype(np.uint32)
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[uint32_t, uint64_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[uint32_t, uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.uint16)
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[uint16_t, uint64_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[uint16_t, uint32_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+  elif dtype in (np.int8, np.uint8, bool):
+    arr_memview8 = data.astype(np.uint8)
+    if sixtyfourbit:
+      output64 = value_target_dijkstra3d[uint8_t, uint64_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+    else:
+      output32 = value_target_dijkstra3d[uint8_t, uint32_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, 0, connectivity,
+        voxel_graph_ptr
+      )
+
+  cdef uint32_t* output_ptr32
+  cdef uint64_t* output_ptr64
+
+  cdef uint32_t[:] vec_view32
+  cdef uint64_t[:] vec_view64
+
+  if sixtyfourbit:
+    output_ptr64 = <uint64_t*>&output64[0]
+    if output64.size() == 0:
+      return np.zeros((0,), dtype=np.uint64)
+    vec_view64 = <uint64_t[:output64.size()]>output_ptr64
+    buf = bytearray(vec_view64[:])
+    output = np.frombuffer(buf, dtype=np.uint64)
+  else:
+    output_ptr32 = <uint32_t*>&output32[0]
+    if output32.size() == 0:
+      return np.zeros((0,), dtype=np.uint32)
+    vec_view32 = <uint32_t[:output32.size()]>output_ptr32
+    buf = bytearray(vec_view32[:])
+    output = np.frombuffer(buf, dtype=np.uint32)
+
+  return output[::-1]
 
 def _execute_dijkstra(
   data, source, target, int connectivity, 

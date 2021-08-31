@@ -345,6 +345,145 @@ std::vector<OUT> dijkstra3d(
   return path;
 }
 
+/* Perform dijkstra's shortest path algorithm
+ * on a 3D image grid where the source is specified
+ * but the target is a value on the grid (typically 0)
+ * rather than a point.
+ * 
+ * Vertices are voxels and edges are the 26 nearest 
+ * neighbors (except for the edges of the image 
+ * where the number of edges is reduced).
+ *
+ * For given input voxels A and B, the edge
+ * weight from A to B is B and from B to A is
+ * A. All weights must be non-negative (incl. 
+ * negative zero).
+ *
+ * I take advantage of negative weights to mean
+ * "visited".
+ *
+ * Parameters:
+ *  T* field: Input weights. T can be be a floating or 
+ *     signed integer type, but not an unsigned int.
+ *  sx, sy, sz: size of the volume along x,y,z axes in voxels.
+ *  source: 1D index of starting voxel
+ *  target: 1D index of target voxel
+ *
+ * Returns: vector containing 1D indices of the path from
+ *   source to target including source and target.
+ */
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> value_target_dijkstra3d(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const T target,
+    const int connectivity = 26, 
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  connectivity_check(connectivity);
+
+  if (field[source] == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
+  }
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  OUT *parents = new OUT[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  int x, y, z;
+  size_t target_loc = voxels;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    // As early as possible, start fetching the
+    // data from RAM b/c the annotated lines below
+    // have 30-50% cache miss.
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]); // high cache miss
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { // high cache miss
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+        if (delta == target) {
+          target_loc = neighboridx;
+          goto OUTSIDE;
+        }
+
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<OUT> path;
+  // if voxel graph supplied, it's possible 
+  // to never reach target.
+  if (target_loc < voxels) { // voxels is an impossible target
+    path = query_shortest_path<OUT>(parents, target_loc);
+  }
+  delete [] parents;
+
+  return path;
+}
+
 // helper function for bidirectional_dijkstra
 template <typename T, typename OUT>
 inline void bidirectional_core(

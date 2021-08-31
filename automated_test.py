@@ -112,6 +112,65 @@ def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity, compass):
     [5,5,0],
   ]))
 
+@pytest.mark.parametrize("dtype", TEST_TYPES)
+@pytest.mark.parametrize("connectivity", [ 18, 26 ])
+def test_value_target_dijkstra2d_10x10_26(dtype, connectivity):
+  values = np.ones((10,10,1), dtype=dtype)
+  values[1,1,0] = 0
+
+  path = dijkstra3d.railroad(
+    values, (1,1,0), connectivity=connectivity,
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,0] ]))
+  
+  path = dijkstra3d.railroad(
+    values, (0,0,0), connectivity=connectivity,
+  )
+
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+  ]))
+
+  values[:,:,:] = 1
+  values[5,5,0] = 0
+
+  path = dijkstra3d.railroad(
+    values, (0,0,0), connectivity=connectivity,
+  )
+
+  assert len(path) == 6
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+  ]))
+
+  values[:,:,:] = 1
+  values[9,9,0] = 0
+  path = dijkstra3d.railroad(
+    values, (0,0,0), connectivity=connectivity,
+  )
+  
+  assert len(path) == 10
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+    [6,6,0],
+    [7,7,0],
+    [8,8,0],
+    [9,9,0]
+  ]))
+
 # There are many more equal distance paths 
 # for 6 connected... so we have to be less specific.
 @pytest.mark.parametrize("dtype", TEST_TYPES)
