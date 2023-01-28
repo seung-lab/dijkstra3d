@@ -61,7 +61,7 @@ inline std::vector<OUT> query_shortest_path(const OUT* parents, const OUT target
 }
 
 inline void compute_neighborhood_helper(
-  int *neighborhood, 
+  int (&neighborhood)[26], 
   const int x, const int y, const int z,
   const uint64_t sx, const uint64_t sy, const uint64_t sz,
   const int connectivity = 26) {
@@ -110,7 +110,7 @@ inline void compute_neighborhood_helper(
 }
 
 inline void compute_neighborhood(
-  int *neighborhood, 
+  int (&neighborhood)[NHOOD_SIZE], 
   const int x, const int y, const int z,
   const uint64_t sx, const uint64_t sy, const uint64_t sz,
   const int connectivity = 26, const uint32_t* voxel_connectivity_graph = NULL) {
@@ -168,6 +168,66 @@ inline void compute_neighborhood(
   neighborhood[25] *= ((graph & 0b00000001000000000000000000) > 0); // +x,+y,+z
 }
 
+// helper function to compute 2D anisotropy ("_s" = "square")
+inline float _s(const float wa, const float wb) {
+  return std::sqrt(wa * wa + wb * wb);
+}
+
+// helper function to compute 3D anisotropy ("_c" = "cube")
+inline float _c(const float wa, const float wb, const float wc) {
+  return std::sqrt(wa * wa + wb * wb + wc * wc);
+}
+
+void compute_eucl_distance(
+  float (&eucl_distance)[NHOOD_SIZE], 
+  const float wx, const float wy, const float wz
+) {
+
+  // 6-hood
+  eucl_distance[0] = sq(wx); // -x
+  eucl_distance[1] = sq(wx); // +x
+  eucl_distance[2] = sq(wy); // -y
+  eucl_distance[3] = sq(wy); // +y
+  eucl_distance[4] = sq(wz); // -z
+  eucl_distance[5] = sq(wz); // +z
+
+  // 18-hood
+
+  // xy diagonals
+  eucl_distance[6] = sq(_s(wx, wy)); // up-left
+  eucl_distance[7] = sq(_s(wx, wy)); // up-right
+  eucl_distance[8] = sq(_s(wx, wy)); // down-left
+  eucl_distance[9] = sq(_s(wx, wy)); // down-right
+
+
+  // yz diagonals
+  eucl_distance[10] = sq(_s(wy, wz)); // up-left
+  eucl_distance[11] = sq(_s(wy, wz)); // up-right
+  eucl_distance[12] = sq(_s(wy, wz)); // down-left
+  eucl_distance[13] = sq(_s(wy, wz)); // down-right
+
+
+
+  // xz diagonals
+  eucl_distance[14] = sq(_s(wx, wz)); // up-left
+  eucl_distance[15] = sq(_s(wx, wz)); // up-right
+  eucl_distance[16] = sq(_s(wx, wz)); // down-left
+  eucl_distance[17] = sq(_s(wx, wz)); // down-right
+
+
+  // 26-hood
+
+  // Now the eight corners of the cube
+  eucl_distance[18] = sq(_c(wx, wy, wz));
+  eucl_distance[19] = sq(_c(wx, wy, wz));
+  eucl_distance[20] = sq(_c(wx, wy, wz));
+  eucl_distance[21] = sq(_c(wx, wy, wz));
+  eucl_distance[22] = sq(_c(wx, wy, wz));
+  eucl_distance[23] = sq(_c(wx, wy, wz));
+  eucl_distance[24] = sq(_c(wx, wy, wz));
+  eucl_distance[25] = sq(_c(wx, wy, wz));
+}
+
 
 template <typename T = uint32_t>
 class HeapNode {
@@ -209,37 +269,14 @@ struct HeapNodeCompare {
   HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) + sx - 1]), 0, 1); \
   HEDLEYX_PREFETCH(reinterpret_cast<char*>(&field[(loc) - sx - 1]), 0, 1);
 
-/* Perform dijkstra's shortest path algorithm
- * on a 3D image grid. Vertices are voxels and
- * edges are the 26 nearest neighbors (except
- * for the edges of the image where the number
- * of edges is reduced).
- *
- * For given input voxels A and B, the edge
- * weight from A to B is B and from B to A is
- * A. All weights must be non-negative (incl. 
- * negative zero).
- *
- * I take advantage of negative weights to mean
- * "visited".
- *
- * Parameters:
- *  T* field: Input weights. T can be be a floating or 
- *     signed integer type, but not an unsigned int.
- *  sx, sy, sz: size of the volume along x,y,z axes in voxels.
- *  source: 1D index of starting voxel
- *  target: 1D index of target voxel
- *
- * Returns: vector containing 1D indices of the path from
- *   source to target including source and target.
- */
-template <typename T, typename OUT = uint32_t>
-std::vector<OUT> dijkstra3d(
+template <typename T, typename OUT, class Fn>
+std::vector<OUT> dijkstra3d_loop(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
-    const int connectivity = 26, 
-    const uint32_t* voxel_connectivity_graph = NULL
+    const int connectivity, 
+    const uint32_t* voxel_connectivity_graph,
+    Fn &&distance_fn
   ) {
 
   connectivity_check(connectivity);
@@ -308,7 +345,7 @@ std::vector<OUT> dijkstra3d(
       }
 
       neighboridx = loc + neighborhood[i];
-      delta = static_cast<float>(field[neighboridx]); // high cache miss
+      delta = distance_fn(i, loc, neighboridx);
 
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
@@ -343,6 +380,116 @@ std::vector<OUT> dijkstra3d(
   delete [] parents;
 
   return path;
+}
+
+/* Perform dijkstra's shortest path algorithm
+ * on a 3D image grid. Vertices are voxels and
+ * edges are the 26 nearest neighbors (except
+ * for the edges of the image where the number
+ * of edges is reduced).
+ *
+ * For given input voxels A and B, the edge
+ * weight from A to B is B and from B to A is
+ * A. All weights must be non-negative (incl. 
+ * negative zero).
+ *
+ * I take advantage of negative weights to mean
+ * "visited".
+ *
+ * Parameters:
+ *  T* field: Input weights. T can be be a floating or 
+ *     signed integer type, but not an unsigned int.
+ *  sx, sy, sz: size of the volume along x,y,z axes in voxels.
+ *  source: 1D index of starting voxel
+ *  target: 1D index of target voxel
+ *
+ * Returns: vector containing 1D indices of the path from
+ *   source to target including source and target.
+ */
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> dijkstra3d(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const T target,
+    const int connectivity = 26, 
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  return dijkstra3d_loop<T,OUT>(
+    field, 
+    sx, sy, sz, 
+    source, target, 
+    connectivity, voxel_connectivity_graph,
+    [&](int i, size_t loc, size_t neighboridx) {
+      return static_cast<float>(field[neighboridx]);
+    }
+  );
+}
+
+/* Perform dijkstra's shortest path algorithm
+ * on a 3D image grid using the difference between
+ * neighbors as the distance function. 
+ * This is the anisotropic euclidean distance with 
+ * field intensity as the fourth variable. 
+ * The weights w_dist and w_intensity are provided
+ * to allow you to emphasize the physical distance
+ * or intensity components (by default they are 
+ * equally weighted).
+ * 
+ * Vertices are voxels and
+ * edges are the 26 nearest neighbors (except
+ * for the edges of the image where the number
+ * of edges is reduced).
+ *
+ * For given input voxels A and B, the edge
+ * weight from A to B is B and from B to A is
+ * A. All weights must be non-negative (incl. 
+ * negative zero).
+ *
+ * I take advantage of negative weights to mean
+ * "visited".
+ *
+ * Parameters:
+ *  T* field: Input weights. T can be be a floating or 
+ *     signed integer type, but not an unsigned int.
+ *  sx, sy, sz: size of the volume along x,y,z axes in voxels.
+ *  wx, wy, wz: anisotropy (distance weights) in x, y, and z
+ *  w_dist, w_intensity: multiplies the distance and intensity
+ *    in the distance function.
+ *  source: 1D index of starting voxel
+ *  target: 1D index of target voxel
+ *  connectivity: 6, 18, or 26 connected
+ *  voxel_connectivity_graph: define impassible directions
+ *    on a voxel.
+ * 
+ * Returns: vector containing 1D indices of the path from
+ *   source to target including source and target.
+ */
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> dijkstra3d_gradient(
+  T* field, 
+  const size_t sx, const size_t sy, const size_t sz, 
+  const float wx, const float wy, const float wz,
+  const size_t source, const size_t target,
+  const float w_dist = 1.0, const float w_intensity = 1.0,
+  const int connectivity = 26, 
+  const uint32_t* voxel_connectivity_graph = NULL
+) {
+
+  float eucl_distance[NHOOD_SIZE];
+  compute_eucl_distance(eucl_distance, wx, wy, wz);
+
+  return dijkstra3d_loop<T,OUT>(
+    field, 
+    sx, sy, sz, 
+    source, target, 
+    connectivity, voxel_connectivity_graph,
+    [&](int i, size_t loc, size_t neighboridx) {
+      float delta = sq(w_dist) * eucl_distance[i];
+      delta += sq(w_intensity) * sq(static_cast<float>(field[neighboridx]) - static_cast<float>(field[loc])); // high cache miss
+      return std::sqrt(delta);
+    }
+  );
 }
 
 /* Perform dijkstra's shortest path algorithm
@@ -1199,16 +1346,6 @@ size_t edf_free_space(
   return max_loc;
 }
 
-// helper function to compute 2D anisotropy ("_s" = "square")
-inline float _s(const float wa, const float wb) {
-  return std::sqrt(wa * wa + wb * wb);
-}
-
-// helper function to compute 3D anisotropy ("_c" = "cube")
-inline float _c(const float wa, const float wb, const float wc) {
-  return std::sqrt(wa * wa + wb * wb + wc * wc);
-}
-
 // really a chamfer distance
 float* euclidean_distance_field3d(
     uint8_t* field, // really a boolean field
@@ -1370,9 +1507,10 @@ float* euclidean_distance_field3d(
   );
 }
 
-
+#undef sq
+#undef NHOOD_SIZE
 #undef DIJKSTRA_3D_PREFETCH_26WAY
 
-}; // namespace dijkstra3d
+}; // namespace dijkstra
 
 #endif

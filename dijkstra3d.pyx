@@ -53,6 +53,14 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     size_t source, size_t target,
     int connectivity, uint32_t* voxel_graph
   )
+  cdef vector[OUT] dijkstra3d_gradient[T,OUT](
+    T* field, 
+    size_t sx, size_t sy, size_t sz, 
+    float wx, float wy, float wz,
+    size_t source, size_t target,
+    float w_dist, float w_intensity,
+    int connectivity, uint32_t* voxel_graph
+  )
   cdef vector[OUT] bidirectional_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
@@ -112,7 +120,9 @@ def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
   compass=False, compass_norm=-1,
-  voxel_graph=None
+  voxel_graph=None, 
+  metric="intensity", metric_args=[],
+  anisotropy=(1,1,1)
 ):
   """
   Perform dijkstra's shortest path algorithm
@@ -151,6 +161,19 @@ def dijkstra(
     directions of travel between voxels. Generated from
     cc3d.voxel_connectivity_graph. 
     (See https://github.com/seung-lab/connected-components-3d)
+   metric: "intensity" or "gradient". 
+    intensity: each field value adds to distance.
+    gradient: 
+      sqrt(w_dist^2 * (dx^2 + dy^2 + dz^2) + w_intensity^2 * dI^2)
+      Use the neighboring gradient as the distance metric. The metric
+      combines anisotropic euclidian distance and field intensity. The 
+      two weights w_dist and w_intensity can be used to toggle or 
+      modify the effect of either the physical distance or field 
+      intensity elements.
+   metric_args: for gradient mode, you can supply distance and
+    intensity weights as floats: [ w_dist, w_intensity ]
+   anisotropy: (only affects gradient mode) weights of each
+    voxel axis.
   
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
@@ -169,6 +192,9 @@ def dijkstra(
     raise ValueError(
       "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
     )
+
+  if metric not in ("intensity", "gradient"):
+    raise ValueError(f"Only intensity and gradient modes are supported. Got: {metric}")
 
   if data.size == 0:
     return np.zeros(shape=(0,), dtype=np.uint32, order='F')
@@ -190,11 +216,22 @@ def dijkstra(
   cdef size_t rows = data.shape[1]
   cdef size_t depth = data.shape[2]
 
-  path = _execute_dijkstra(
-    data, source, target, connectivity, 
-    bidirectional, compass, compass_norm,
-    voxel_graph
-  )
+  if metric == "intensity":
+    path = _execute_dijkstra(
+      data, source, target, connectivity, 
+      bidirectional, compass, compass_norm,
+      voxel_graph
+    )
+  else:
+    w_dist = 1.0 if not metric_args else metric_args[0]
+    w_intensity = 1.0 if not metric_args else metric_args[1]
+
+    path = _execute_gradient_dijkstra(
+      data, source, target,
+      anisotropy[0], anisotropy[1], anisotropy[2],
+      w_dist, w_intensity,
+      connectivity, voxel_graph
+    )
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
@@ -561,6 +598,171 @@ def _path_to_point_cloud(path, dims, rows, cols):
       ptlist[ i, 1 ] = (pt % sxy) / cols
 
   return ptlist
+
+def _execute_gradient_dijkstra(
+  data, source, target,
+  float wx, float wy, float wz,
+  float w_dist, float w_intensity,
+  int connectivity, voxel_graph=None,
+):
+  cdef uint8_t[:,:,:] arr_memview8
+  cdef uint16_t[:,:,:] arr_memview16
+  cdef uint32_t[:,:,:] arr_memview32
+  cdef uint64_t[:,:,:] arr_memview64
+  cdef float[:,:,:] arr_memviewfloat
+  cdef double[:,:,:] arr_memviewdouble
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph is not None:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
+
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
+
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+
+  cdef vector[uint32_t] output32
+  cdef vector[uint64_t] output64
+
+  sixtyfourbit = data.size > np.iinfo(np.uint32).max
+  
+  dtype = data.dtype
+
+  if dtype == np.float32:
+    arr_memviewfloat = data
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[float, uint64_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[float, uint32_t](
+        &arr_memviewfloat[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+  elif dtype == np.float64:
+    arr_memviewdouble = data
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[double, uint64_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[double, uint32_t](
+        &arr_memviewdouble[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+  elif dtype in (np.int64, np.uint64):
+    arr_memview64 = data.astype(np.uint64)
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[uint64_t, uint64_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[uint64_t, uint32_t](
+        &arr_memview64[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+  elif dtype in (np.int32, np.uint32):
+    arr_memview32 = data.astype(np.uint32)
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[uint32_t, uint64_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[uint32_t, uint32_t](
+        &arr_memview32[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+  elif dtype in (np.int16, np.uint16):
+    arr_memview16 = data.astype(np.uint16)
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[uint16_t, uint64_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[uint16_t, uint32_t](
+        &arr_memview16[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+  elif dtype in (np.int8, np.uint8, bool):
+    arr_memview8 = data.astype(np.uint8)
+    if sixtyfourbit:
+      output64 = dijkstra3d_gradient[uint8_t, uint64_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+    else:
+      output32 = dijkstra3d_gradient[uint8_t, uint32_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz, wx, wy, wz,
+        src, target, 
+        w_dist, w_intensity,
+        connectivity, voxel_graph_ptr
+      )
+
+  cdef uint32_t* output_ptr32
+  cdef uint64_t* output_ptr64
+
+  cdef uint32_t[:] vec_view32
+  cdef uint64_t[:] vec_view64
+
+  if sixtyfourbit:
+    output_ptr64 = <uint64_t*>&output64[0]
+    if output64.size() == 0:
+      return np.zeros((0,), dtype=np.uint64)
+    vec_view64 = <uint64_t[:output64.size()]>output_ptr64
+    buf = bytearray(vec_view64[:])
+    output = np.frombuffer(buf, dtype=np.uint64)
+  else:
+    output_ptr32 = <uint32_t*>&output32[0]
+    if output32.size() == 0:
+      return np.zeros((0,), dtype=np.uint32)
+    vec_view32 = <uint32_t[:output32.size()]>output_ptr32
+    buf = bytearray(vec_view32[:])
+    output = np.frombuffer(buf, dtype=np.uint32)
+
+  return output[::-1]
+
 
 def _execute_value_target_dijkstra(
   data, source, 
