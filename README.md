@@ -34,7 +34,7 @@ print(path.shape)
 
 # Given a boolean label "field" and a source vertex, compute 
 # the anisotropic euclidean chamfer distance from the source to all labeled vertices.
-# Source can be a single point or a list of points.
+# Source can be a single point or a list of points. Accepts bool, (u)int8 dtypes.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
 dist_field = dijkstra3d.euclidean_distance_field(
   field, source=[ (0,0,0), (10, 40, 232) ], anisotropy=(4,4,40)
