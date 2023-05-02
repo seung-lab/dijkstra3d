@@ -2,10 +2,13 @@ import os
 import setuptools
 import sys
 
-# NOTE: If dijkstra.cpp does not exist:
-# cython -3 --fast-fail -v --cplus dijkstra.pyx
+class NumpyImport:
+  def __repr__(self):
+    import numpy as np
 
-import numpy as np
+    return np.get_include()
+
+  __fspath__ = __repr__
 
 def read(fname):
   with open(os.path.join(os.path.dirname(__file__), fname), 'rt') as f:
