@@ -20,15 +20,15 @@ if sys.platform == 'darwin':
 
 setuptools.setup(
   name="dijkstra3d",
-  version="1.12.0",
-  python_requires="~=3.6", # >= 3.6 < 4.0
-  setup_requires=['numpy'],
+  version="1.12.1",
+  python_requires=">=3.7,<4.0",
+  setup_requires=['numpy','cython'],
   ext_modules=[
     setuptools.Extension(
       'dijkstra3d',
-      sources=[ 'dijkstra3d.cpp' ],
+      sources=[ 'dijkstra3d.pyx' ],
       language='c++',
-      include_dirs=[ np.get_include() ],
+      include_dirs=[ NumpyImport() ],
       extra_compile_args=extra_compile_args,
     )
   ],
@@ -51,10 +51,11 @@ setuptools.setup(
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Topic :: Scientific/Engineering",
     "Intended Audience :: Science/Research",
     "Operating System :: POSIX",

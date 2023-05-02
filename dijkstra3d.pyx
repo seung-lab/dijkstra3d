@@ -1,3 +1,4 @@
+# cython: language_level=3
 """
 Cython binding for C++ dijkstra's shortest path algorithm
 applied to 3D images. 
