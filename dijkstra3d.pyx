@@ -54,6 +54,16 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     size_t source, size_t target,
     int connectivity, uint32_t* voxel_graph
   )
+  cdef vector[OUT] binary_dijkstra3d[OUT](
+    uint8_t* field, 
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, size_t target,
+    int connectivity, 
+    float wx, float wy, float wz,
+    uint8_t euclidean_metric,
+    uint32_t* voxel_graph,
+    int background_color
+  )
   cdef vector[OUT] bidirectional_dijkstra3d[T,OUT](
     T* field, 
     size_t sx, size_t sy, size_t sz, 
@@ -268,6 +278,95 @@ def railroad(
   path = _execute_value_target_dijkstra(
     data, source,
     connectivity, voxel_graph
+  )
+
+  return _path_to_point_cloud(path, dims, rows, cols)
+
+def binary_dijkstra(
+  data, source, target,
+  connectivity=26,
+  background_color=0,
+  anisotropy=(1.0, 1.0, 1.0),
+  euclidean_metric=True,
+  voxel_graph=None
+):
+  """
+  Perform dijkstra's shortest path algorithm
+  on a 3D image grid. Vertices are voxels and
+  edges are the 26 nearest neighbors (except
+  for the edges of the image where the number
+  of edges is reduced).
+  
+  This version treats the data as a binary image 
+  with the background color set to 0 or 1. Background
+  voxels will not be considered.
+  
+  Parameters:
+   Data: Input weights in a 2D or 3D numpy array. 
+   source: (x,y,z) coordinate of starting voxel
+   target: (x,y,z) coordinate of target voxel
+   anisotropy: (wx,wy,wz) weights for each axial direction.
+   background_color: 1 or 0, pick which color in a binary image
+    will be considered background.
+   connectivity: 6 (faces), 18 (faces + edges), and 
+    26 (faces + edges + corners) voxel graph connectivities 
+    are supported. For 2D images, 4 gets translated to 6,
+    8 gets translated to 18.
+   euclidean_metric: if True, treat the image as a euclidean
+    space weighted by the anisotropy on x, y, and z. Otherwise,
+    each movement in any direction, including diagonals, 
+    are evenly weighted.
+   voxel_graph: a bitwise representation of the premitted
+    directions of travel between voxels. Generated from
+    cc3d.voxel_connectivity_graph. 
+    (See https://github.com/seung-lab/connected-components-3d)
+  
+  Returns: 1D numpy array containing indices of the path from
+    source to target including source and target.
+  """
+  dims = len(data.shape)
+  if dims not in (2,3):
+    raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
+
+  if dims == 2:
+    if connectivity == 4:
+      connectivity = 6
+    elif connectivity == 8:
+      connectivity = 18 # or 26 but 18 might be faster
+
+  if connectivity not in (6, 18, 26):
+    raise ValueError(
+      "Only 6, 18, and 26 connectivities are supported. Got: " + str(connectivity)
+    )
+
+  if not np.issubdtype(data.dtype, bool):
+    raise ValueError(f"This function only accepts boolean type images. Got: {data.dtype}")
+
+  if data.size == 0:
+    return np.zeros(shape=(0,), dtype=np.uint32, order='F')
+
+  _validate_coord(data, source)
+  _validate_coord(data, target)
+
+  if dims == 2:
+    data = data[:, :, np.newaxis]
+    source = list(source) + [ 0 ]
+    target = list(target) + [ 0 ]
+
+  if voxel_graph is not None:
+    voxel_graph = format_voxel_graph(voxel_graph)
+
+  data = np.asfortranarray(data)
+
+  cdef size_t cols = data.shape[0]
+  cdef size_t rows = data.shape[1]
+  cdef size_t depth = data.shape[2]
+
+  path = _execute_binary_dijkstra(
+    data, source, target, connectivity, 
+    anisotropy[0], anisotropy[1], anisotropy[2],
+    euclidean_metric,
+    voxel_graph, background_color
   )
 
   return _path_to_point_cloud(path, dims, rows, cols)
@@ -1065,6 +1164,82 @@ def _execute_dijkstra(
     return output
   else:
     return output[::-1]
+
+def _execute_binary_dijkstra(
+  data, source, target, int connectivity,
+  float wx, float wy, float wz,
+  euclidean_metric = True,
+  voxel_graph=None, background_color=0
+):
+  cdef uint8_t[:,:,:] arr_memview8
+
+  cdef uint32_t[:,:,:] voxel_graph_memview
+  cdef uint32_t* voxel_graph_ptr = NULL
+  if voxel_graph is not None:
+    voxel_graph_memview = voxel_graph
+    voxel_graph_ptr = <uint32_t*>&voxel_graph_memview[0,0,0]
+
+  cdef size_t sx = data.shape[0]
+  cdef size_t sy = data.shape[1]
+  cdef size_t sz = data.shape[2]
+
+  cdef size_t src = source[0] + sx * (source[1] + sy * source[2])
+  cdef size_t sink = target[0] + sx * (target[1] + sy * target[2])
+
+  cdef vector[uint32_t] output32
+  cdef vector[uint64_t] output64
+
+  sixtyfourbit = data.size > np.iinfo(np.uint32).max
+  
+  dtype = data.dtype
+
+  if dtype == bool:
+    arr_memview8 = data.view(np.uint8)
+    if sixtyfourbit:
+      output64 = binary_dijkstra3d[uint64_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink,
+        connectivity,
+        wx, wy, wz,
+        euclidean_metric,
+        voxel_graph_ptr, background_color
+      )
+    else:
+      output32 = binary_dijkstra3d[uint32_t](
+        &arr_memview8[0,0,0],
+        sx, sy, sz,
+        src, sink,
+        connectivity,
+        wx, wy, wz,
+        euclidean_metric,
+        voxel_graph_ptr, background_color
+      )
+  else:
+    raise ValueError("Only bool dtype is supported.")
+
+  cdef uint32_t* output_ptr32
+  cdef uint64_t* output_ptr64
+
+  cdef uint32_t[:] vec_view32
+  cdef uint64_t[:] vec_view64
+
+  if sixtyfourbit:
+    output_ptr64 = <uint64_t*>&output64[0]
+    if output64.size() == 0:
+      return np.zeros((0,), dtype=np.uint64)
+    vec_view64 = <uint64_t[:output64.size()]>output_ptr64
+    buf = bytearray(vec_view64[:])
+    output = np.frombuffer(buf, dtype=np.uint64)
+  else:
+    output_ptr32 = <uint32_t*>&output32[0]
+    if output32.size() == 0:
+      return np.zeros((0,), dtype=np.uint32)
+    vec_view32 = <uint32_t[:output32.size()]>output_ptr32
+    buf = bytearray(vec_view32[:])
+    output = np.frombuffer(buf, dtype=np.uint32)
+
+  return output[::-1]
 
 def _execute_distance_field(data, sources, connectivity, voxel_graph):
   cdef uint8_t[:,:,:] arr_memview8
