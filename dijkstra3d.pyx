@@ -844,7 +844,7 @@ def _execute_dijkstra(
           voxel_graph_ptr
         )
   elif dtype in (np.int64, np.uint64):
-    arr_memview64 = data.astype(np.uint64)
+    arr_memview64 = data.view(np.uint64)
     if bidirectional:
       if sixtyfourbit:
         output64 = bidirectional_dijkstra3d[uint64_t, uint64_t](
@@ -893,7 +893,7 @@ def _execute_dijkstra(
           voxel_graph_ptr
         )
   elif dtype in (np.int32, np.uint32):
-    arr_memview32 = data.astype(np.uint32)
+    arr_memview32 = data.view(np.uint32)
     if bidirectional:
       if sixtyfourbit:
         output64 = bidirectional_dijkstra3d[uint32_t, uint64_t](
@@ -942,7 +942,7 @@ def _execute_dijkstra(
           voxel_graph_ptr
         )
   elif dtype in (np.int16, np.uint16):
-    arr_memview16 = data.astype(np.uint16)
+    arr_memview16 = data.view(np.uint16)
     if bidirectional:
       if sixtyfourbit:
         output64 = bidirectional_dijkstra3d[uint16_t, uint64_t](
@@ -991,7 +991,7 @@ def _execute_dijkstra(
           voxel_graph_ptr
         )
   elif dtype in (np.int8, np.uint8, bool):
-    arr_memview8 = data.astype(np.uint8)
+    arr_memview8 = data.view(np.uint8)
     if bidirectional:
       if sixtyfourbit:
         output64 = bidirectional_dijkstra3d[uint8_t, uint64_t](
