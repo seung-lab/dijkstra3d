@@ -185,7 +185,7 @@ def test_binary_dijkstra2d_10x10_26(connectivity):
     [9,9,0]
   ]))
 
-  path = dijkstra3d.binary_dijkstra(values, (2,1,0), (3,0,0))
+  path = dijkstra3d.binary_dijkstra(values, (2,1,0), (3,0,0), connectivity=connectivity)
 
   assert len(path) == 2
   assert np.all(path == np.array([
@@ -193,7 +193,7 @@ def test_binary_dijkstra2d_10x10_26(connectivity):
     [3,0,0],
   ]))
 
-  path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0))
+  path = dijkstra3d.binary_dijkstra(values, (9,9,0), (5,5,0), connectivity=connectivity)
 
   assert len(path) == 5
   assert np.all(path == np.array([
@@ -203,6 +203,15 @@ def test_binary_dijkstra2d_10x10_26(connectivity):
     [6,6,0],
     [5,5,0],
   ]))
+
+  values[5:,5:] = 0
+  path = dijkstra3d.binary_dijkstra(values, (9,9,0), (5,5,0), connectivity=connectivity)
+  assert path.size == 0
+  path = dijkstra3d.binary_dijkstra(values, (9,9,0), (9,9,0), connectivity=connectivity)
+  assert path.size == 0
+
+  path = dijkstra3d.binary_dijkstra(values, (9,9,0), (9,9,0), connectivity=connectivity, background_color=1)
+  assert np.all(path == np.array([[9,9,0]]))
 
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("connectivity", [ 18, 26 ])
