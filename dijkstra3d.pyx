@@ -410,7 +410,7 @@ def distance_field(
     raise DimensionError("Only 2D and 3D image sources are supported. Got: " + str(dims))
 
   if dims == 2:
-    if connectivity == 4:
+    if connectivity == 4: 
       connectivity = 6
     elif connectivity == 8:
       connectivity = 18 # or 26 but 18 might be faster

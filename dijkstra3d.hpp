@@ -369,11 +369,11 @@ std::vector<OUT> binary_dijkstra3d(
 
   connectivity_check(connectivity);
 
-  if (source == target) {
-    return std::vector<OUT>{ static_cast<OUT>(source) };
-  }
-  else if (field[source] == background_color) {
+  if (field[source] == background_color) {
     return std::vector<OUT>();
+  }
+  else if (source == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
   }
 
   const size_t voxels = sx * sy * sz;
@@ -389,7 +389,7 @@ std::vector<OUT> binary_dijkstra3d(
   float *dist = new float[voxels]();
   OUT *parents = new OUT[voxels]();
   fill(dist, +INFINITY, voxels);
-  dist[source] = -0.0;
+  dist[source] = 0.0;
 
   int neighborhood[NHOOD_SIZE];
 
@@ -414,6 +414,7 @@ std::vector<OUT> binary_dijkstra3d(
 
   size_t loc;
   size_t neighboridx;
+  float new_dist = 0;
 
   int x, y, z;
   bool target_reached = false;
@@ -421,7 +422,7 @@ std::vector<OUT> binary_dijkstra3d(
   while (!queue.empty()) {
     loc = queue.top().value;
     queue.pop();
-    
+
     if (std::signbit(dist[loc])) {
       continue;
     }
@@ -456,11 +457,13 @@ std::vector<OUT> binary_dijkstra3d(
         continue;
       }
 
+      new_dist = dist[loc] + neighbor_multiplier[i];
+
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
-      if (dist[loc] + 1 < dist[neighboridx]) { // high cache miss
-        dist[neighboridx] = dist[loc] + neighbor_multiplier[i];
+      if (new_dist < dist[neighboridx]) { // high cache miss
+        dist[neighboridx] = new_dist;
         parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
 
         // Dijkstra, Edgar. "Go To Statement Considered Harmful".

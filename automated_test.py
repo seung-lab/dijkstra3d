@@ -112,6 +112,98 @@ def test_dijkstra2d_10x10_26(dtype, bidirectional, connectivity, compass):
     [5,5,0],
   ]))
 
+@pytest.mark.parametrize("connectivity", [ 18, 26 ])
+def test_binary_dijkstra2d_10x10_26(connectivity):
+  values = np.ones((10,10,1), dtype=bool)
+
+  path = dijkstra3d.binary_dijkstra(
+    values, (1,1,0), (1,1,0), 
+    connectivity=connectivity,
+  )
+  assert len(path) == 1
+  assert np.all(path == np.array([ [1,1,0] ]))
+  
+  path = dijkstra3d.binary_dijkstra(
+    values, (0,0,0), (3,0,0), 
+    connectivity=connectivity,
+  )
+
+  assert len(path) == 4
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,1,0],
+    [3,0,0],
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,1,0],
+    [3,0,0],    
+  ])) or np.all(path == np.array([
+    [0,0,0],
+    [1,0,0],
+    [2,0,0],
+    [3,0,0],    
+  ])) 
+
+  path = dijkstra3d.binary_dijkstra(
+    values, (0,0,0), (5,5,0), 
+    connectivity=connectivity
+  )
+
+  assert len(path) == 6
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+  ]))
+
+  path = dijkstra3d.binary_dijkstra(
+    values, (0,0,0), (9,9,0), 
+    connectivity=connectivity,
+  )
+  
+  assert len(path) == 10
+  assert np.all(path == np.array([
+    [0,0,0],
+    [1,1,0],
+    [2,2,0],
+    [3,3,0],
+    [4,4,0],
+    [5,5,0],
+    [6,6,0],
+    [7,7,0],
+    [8,8,0],
+    [9,9,0]
+  ]))
+
+  path = dijkstra3d.binary_dijkstra(values, (2,1,0), (3,0,0))
+
+  assert len(path) == 2
+  assert np.all(path == np.array([
+    [2,1,0],
+    [3,0,0],
+  ]))
+
+  path = dijkstra3d.dijkstra(values, (9,9,0), (5,5,0))
+
+  assert len(path) == 5
+  assert np.all(path == np.array([
+    [9,9,0],
+    [8,8,0],
+    [7,7,0],
+    [6,6,0],
+    [5,5,0],
+  ]))
+
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("connectivity", [ 18, 26 ])
 def test_value_target_dijkstra2d_10x10_26(dtype, connectivity):
