@@ -34,6 +34,16 @@ namespace dijkstra {
 #define sq(x) ((x) * (x))
 static size_t _dummy_max_loc;
 
+// helper function to compute 2D anisotropy ("_s" = "square")
+inline float _s(const float wa, const float wb) {
+  return std::sqrt(wa * wa + wb * wb);
+}
+
+// helper function to compute 3D anisotropy ("_c" = "cube")
+inline float _c(const float wa, const float wb, const float wc) {
+  return std::sqrt(wa * wa + wb * wb + wc * wc);
+}
+
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
     arr[i] = value;
@@ -338,6 +348,144 @@ std::vector<OUT> dijkstra3d(
   // if voxel graph supplied, it's possible 
   // to never reach target.
   if (target_reached) { 
+    path = query_shortest_path<OUT>(parents, target);
+  }
+  delete [] parents;
+
+  return path;
+}
+
+template <typename OUT = uint32_t>
+std::vector<OUT> binary_dijkstra3d(
+  uint8_t* field, 
+  const size_t sx, const size_t sy, const size_t sz, 
+  const size_t source, const size_t target,
+  const int connectivity = 26, 
+  const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
+  const bool euclidean_distance = true,
+  const uint32_t* voxel_connectivity_graph = NULL,
+  const uint8_t background_color = 0
+) {
+
+  connectivity_check(connectivity);
+
+  if (field[source] == background_color) {
+    return std::vector<OUT>();
+  }
+  else if (source == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
+  }
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  OUT *parents = new OUT[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = 0.0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+  if (!euclidean_distance) {
+    fill(neighbor_multiplier, 1.0, NHOOD_SIZE);
+  }
+
+  std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  size_t neighboridx;
+  float new_dist = 0;
+
+  int x, y, z;
+  bool target_reached = false;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    // As early as possible, start fetching the
+    // data from RAM b/c the annotated lines below
+    // have 30-50% cache miss.
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      
+      if (field[neighboridx] == background_color) {
+        continue;
+      }
+
+      new_dist = dist[loc] + neighbor_multiplier[i];
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (new_dist < dist[neighboridx]) { // high cache miss
+        dist[neighboridx] = new_dist;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+        if (neighboridx == target) {
+          target_reached = true;
+          goto OUTSIDE;
+        }
+
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<OUT> path;
+  // it's possible to never reach target.
+  if (target_reached) {
     path = query_shortest_path<OUT>(parents, target);
   }
   delete [] parents;
@@ -1197,16 +1345,6 @@ size_t edf_free_space(
   }
 
   return max_loc;
-}
-
-// helper function to compute 2D anisotropy ("_s" = "square")
-inline float _s(const float wa, const float wb) {
-  return std::sqrt(wa * wa + wb * wb);
-}
-
-// helper function to compute 3D anisotropy ("_c" = "cube")
-inline float _c(const float wa, const float wb, const float wc) {
-  return std::sqrt(wa * wa + wb * wb + wc * wc);
 }
 
 // really a chamfer distance

@@ -137,3 +137,5 @@ ENV/
 
 test.py
 test
+
+dijkstra3d.cpp
