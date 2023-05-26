@@ -20,7 +20,7 @@ Contains:
 
 Author: William Silversmith
 Affiliation: Seung Lab, Princeton Neuroscience Institute
-Date: August 2018-February 2020
+Date: August 2018 - May 2023
 """
 
 from libc.stdlib cimport calloc, free
@@ -36,7 +36,7 @@ from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-__VERSION__ = '1.12.0'
+__VERSION__ = '1.13.0'
 
 ctypedef fused UINT:
   uint8_t
