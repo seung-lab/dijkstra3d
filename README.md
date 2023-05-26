@@ -11,6 +11,15 @@ field = np.ones((512, 512, 512), dtype=np.int32)
 source = (0,0,0)
 target = (511, 511, 511)
 
+
+# If you're working with a binary image with one color considered
+# foreground the other background, use this function.
+path = dijkstra3d.binary_dijkstra(field, source, target, background_color=0)
+path = dijkstra3d.binary_dijkstra(
+  field, source, target, 
+  anisotropy=(2.0, 2.0, 1.0),
+)
+
 # path is an [N,3] numpy array i.e. a list of x,y,z coordinates
 # terminates early, default is 26 connected
 path = dijkstra3d.dijkstra(field, source, target, connectivity=26) 
