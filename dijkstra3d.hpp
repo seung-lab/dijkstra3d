@@ -355,6 +355,131 @@ std::vector<OUT> dijkstra3d(
   return path;
 }
 
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> dijkstra3d_anisotropy(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target,
+    const int connectivity = 26, 
+    const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  connectivity_check(connectivity);
+
+  if (source == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
+  }
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  OUT *parents = new OUT[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+
+  std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  int x, y, z;
+  bool target_reached = false;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    // As early as possible, start fetching the
+    // data from RAM b/c the annotated lines below
+    // have 30-50% cache miss.
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]) * neighbor_multiplier[i]; // high cache miss
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { // high cache miss
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+        if (neighboridx == target) {
+          target_reached = true;
+          goto OUTSIDE;
+        }
+
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<OUT> path;
+  // if voxel graph supplied, it's possible 
+  // to never reach target.
+  if (target_reached) { 
+    path = query_shortest_path<OUT>(parents, target);
+  }
+  delete [] parents;
+
+  return path;
+}
+
 template <typename OUT = uint32_t>
 std::vector<OUT> binary_dijkstra3d(
   uint8_t* field, 
