@@ -37,7 +37,7 @@ cimport numpy as cnp
 import numpy as np
 import warnings
 
-__VERSION__ = '1.14.0.dev0'
+__VERSION__ = '1.14.0.dev1'
 
 ctypedef fused UINT:
   uint8_t
@@ -93,6 +93,14 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     int connectivity, float normalizer,
     uint32_t* voxel_graph
   )
+  cdef vector[OUT] compass_guided_dijkstra3d_anisotropy_line_preference[T,OUT](
+    T* field, 
+    size_t sx, size_t sy, size_t sz, 
+    size_t source, size_t target,
+    int connectivity, float normalizer, float line_preference_weight,
+    float wx, float wy, float wz,
+    uint32_t* voxel_graph
+  )
   cdef float* distance_field3d[T](
     T* field,
     size_t sx, size_t sy, size_t sz,
@@ -131,7 +139,7 @@ def format_voxel_graph(voxel_graph):
 def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
-  compass=False, compass_norm=-1,
+  compass=False, compass_norm=-1, line_preference_weight=0,
   voxel_graph=None,
   anisotropy=None
 ):
@@ -218,12 +226,12 @@ def dijkstra(
       voxel_graph
     )
   else:
-    if bidirectional or compass:
-      warnings.warn("bidirectional = True or compass = True is not currently supported by \
+    if bidirectional:
+      warnings.warn("bidirectional = True is not currently supported by \
 anisotropy dijkstra3d. Fall back to vanilla dijkstra algorithm.")
     path = _execute_dijkstra_anisotropy(
-      data, source, target, connectivity,
-      anisotropy, voxel_graph
+      data, source, target, connectivity, 
+      anisotropy, compass, compass_norm, voxel_graph, line_preference_weight
     )
   return _path_to_point_cloud(path, dims, rows, cols)
 
@@ -833,7 +841,7 @@ def _execute_value_target_dijkstra(
 def _execute_dijkstra(
   data, source, target, int connectivity, 
   bidirectional, compass, float compass_norm=-1,
-  voxel_graph=None, anisotropy=None
+  voxel_graph=None
 ):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
@@ -1185,7 +1193,7 @@ def _execute_dijkstra(
 
 def _execute_dijkstra_anisotropy(
   data, source, target, int connectivity, 
-  anisotropy, voxel_graph=None, 
+  anisotropy, compass, float compass_norm=-1, voxel_graph=None, float line_preference_weight=0,
 ):
   cdef uint8_t[:,:,:] arr_memview8
   cdef uint16_t[:,:,:] arr_memview16
@@ -1220,112 +1228,220 @@ def _execute_dijkstra_anisotropy(
 
   if dtype == np.float32:
     arr_memviewfloat = data
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[float, uint64_t](
-        &arr_memviewfloat[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[float, uint64_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[float, uint32_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[float, uint32_t](
-        &arr_memviewfloat[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[float, uint64_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[float, uint32_t](
+          &arr_memviewfloat[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
   elif dtype == np.float64:
     arr_memviewdouble = data
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[double, uint64_t](
-        &arr_memviewdouble[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[double, uint64_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[double, uint32_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[double, uint32_t](
-        &arr_memviewdouble[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[double, uint64_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[double, uint32_t](
+          &arr_memviewdouble[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
   elif dtype in (np.int64, np.uint64):
     arr_memview64 = data.view(np.uint64)
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[uint64_t, uint64_t](
-        &arr_memview64[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[uint64_t, uint64_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[uint64_t, uint32_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[uint64_t, uint32_t](
-        &arr_memview64[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[uint64_t, uint64_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[uint64_t, uint32_t](
+          &arr_memview64[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
   elif dtype in (np.int32, np.uint32):
     arr_memview32 = data.view(np.uint32)
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[uint32_t, uint64_t](
-        &arr_memview32[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[uint32_t, uint64_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[uint32_t, uint32_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[uint32_t, uint32_t](
-        &arr_memview32[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[uint32_t, uint64_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[uint32_t, uint32_t](
+          &arr_memview32[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
   elif dtype in (np.int16, np.uint16):
     arr_memview16 = data.view(np.uint16)
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[uint16_t, uint64_t](
-        &arr_memview16[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[uint16_t, uint64_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[uint16_t, uint32_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[uint16_t, uint32_t](
-        &arr_memview16[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[uint16_t, uint64_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[uint16_t, uint32_t](
+          &arr_memview16[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
   elif dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.view(np.uint8)
-    if sixtyfourbit:
-      output64 = dijkstra3d_anisotropy[uint8_t, uint64_t](
-        &arr_memview8[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+    if compass:
+      if sixtyfourbit:
+        output64 = compass_guided_dijkstra3d_anisotropy_line_preference[uint8_t, uint64_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = compass_guided_dijkstra3d_anisotropy_line_preference[uint8_t, uint32_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity, compass_norm, line_preference_weight,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
     else:
-      output32 = dijkstra3d_anisotropy[uint8_t, uint32_t](
-        &arr_memview8[0,0,0],
-        sx, sy, sz,
-        src, sink, connectivity,
-        wx, wy, wz,
-        voxel_graph_ptr
-      )
+      if sixtyfourbit:
+        output64 = dijkstra3d_anisotropy[uint8_t, uint64_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
+      else:
+        output32 = dijkstra3d_anisotropy[uint8_t, uint32_t](
+          &arr_memview8[0,0,0],
+          sx, sy, sz,
+          src, sink, connectivity,
+          wx, wy, wz,
+          voxel_graph_ptr
+        )
 
   cdef uint32_t* output_ptr32
   cdef uint64_t* output_ptr64
