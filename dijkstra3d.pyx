@@ -18,7 +18,7 @@ Contains:
     the same image, this can be much much faster.
 
 
-Author: William Silversmith
+Authors: William Silversmith, Izzy Turtle (@turtleizzy on Github)
 Affiliation: Seung Lab, Princeton Neuroscience Institute
 Date: August 2018 - May 2023
 """
@@ -150,12 +150,17 @@ def dijkstra(
   on a 3D image grid. Vertices are voxels and
   edges are the 26 nearest neighbors (except
   for the edges of the image where the number
-  of edges is reduced).
+  of edges is reduced). 
   
   For given input voxels A and B, the edge
   weight from A to B is B and from B to A is
   A. All weights must be non-negative (incl. 
   negative zero).
+
+  If anisotropy is provided, the edge weight is
+  multiplied by the euclidean distance from the
+  center of the voxel to the face, edge, or corner
+  depending on the direction.
   
   Parameters:
    Data: Input weights in a 2D or 3D numpy array. 
@@ -182,7 +187,11 @@ def dijkstra(
     directions of travel between voxels. Generated from
     cc3d.voxel_connectivity_graph. 
     (See https://github.com/seung-lab/connected-components-3d)
-  
+   anisotropy: If provided, [x,y,z] relative dimensions of each voxel
+    in the x,y, and z dimensions. This changes the weighting
+    calculation in the search by multiplying by the appropriate
+    euclidean weight for faces, edges, and corners.
+
   Returns: 1D numpy array containing indices of the path from
     source to target including source and target.
   """
