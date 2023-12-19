@@ -237,6 +237,10 @@ def dijkstra(
       voxel_graph
     )
   else:
+    anisotropy = list(anisotropy)
+    while len(anisotropy) < 3:
+      anisotropy.append(float(1))
+
     if bidirectional:
       warnings.warn("bidirectional = True is not currently supported by \
 anisotropy dijkstra3d. Fall back to vanilla dijkstra algorithm.")
