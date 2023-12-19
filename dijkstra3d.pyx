@@ -32,11 +32,12 @@ from cpython cimport array
 import array
 import sys
 
+import cython
 from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-__VERSION__ = '1.13.0'
+__VERSION__ = '1.14.0'
 
 ctypedef fused UINT:
   uint8_t
@@ -119,6 +120,7 @@ def format_voxel_graph(voxel_graph):
   
   return np.asfortranarray(voxel_graph)
 
+@cython.binding(True)
 def dijkstra(
   data, source, target, 
   bidirectional=False, connectivity=26, 
@@ -209,6 +211,7 @@ def dijkstra(
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
+@cython.binding(True)
 def railroad(
   data, source, 
   connectivity=26, voxel_graph=None
@@ -282,6 +285,7 @@ def railroad(
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
+@cython.binding(True)
 def binary_dijkstra(
   data, source, target,
   connectivity=26,
@@ -371,6 +375,7 @@ def binary_dijkstra(
 
   return _path_to_point_cloud(path, dims, rows, cols)
 
+@cython.binding(True)
 def distance_field(
   data, source, connectivity=26, 
   voxel_graph=None, return_max_location=False
@@ -489,6 +494,7 @@ def path_from_parents(parents, target):
   ptlist = _path_to_point_cloud(numpy_path, 3, sy, sx)
   return ptlist[:, :ndim]
 
+@cython.binding(True)
 def parental_field(data, source, connectivity=26, voxel_graph=None):
   """
   Use dijkstra's shortest path algorithm
@@ -551,6 +557,7 @@ def parental_field(data, source, connectivity=26, voxel_graph=None):
 
   return field
 
+@cython.binding(True)
 def euclidean_distance_field(
   data, source, anisotropy=(1,1,1), 
   free_space_radius=0, voxel_graph=None,
