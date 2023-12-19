@@ -23,7 +23,7 @@ if sys.platform == 'darwin':
 
 setuptools.setup(
   name="dijkstra3d",
-  version="1.14.0.dev1",
+  version="1.14.0",
   python_requires=">=3.7,<4.0",
   setup_requires=['numpy','cython'],
   ext_modules=[
