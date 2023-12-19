@@ -21,7 +21,7 @@ jobs:
             arch: aarch64
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up QEMU
         if:  ${{ matrix.arch == 'aarch64' }}
