@@ -44,6 +44,13 @@ inline float _c(const float wa, const float wb, const float wc) {
   return std::sqrt(wa * wa + wb * wb + wc * wc);
 }
 
+// helper function to compute cross product
+inline float _cross(const float sx, const float sy, const float sz, 
+const float tx, const float ty, const float tz) {
+  return std::sqrt((sy*tz - sz*ty) * (sy*tz - sz*ty) + (sz*tx - sx*tz) * (sz*tx - sx*tz) + (sx*ty - sy*tx) * (sx*ty - sy*tx) / 
+          std::sqrt(sx*sx + sy*sy + sz*sz) / std::sqrt(tx*tx + ty*ty + tz*tz));
+}
+
 inline float* fill(float *arr, const float value, const size_t size) {
   for (size_t i = 0; i < size; i++) {
     arr[i] = value;
@@ -320,6 +327,131 @@ std::vector<OUT> dijkstra3d(
       neighboridx = loc + neighborhood[i];
       delta = static_cast<float>(field[neighboridx]); // high cache miss
 
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { // high cache miss
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        // Dijkstra, Edgar. "Go To Statement Considered Harmful".
+        // Communications of the ACM. Vol. 11. No. 3 March 1968. pp. 147-148
+        if (neighboridx == target) {
+          target_reached = true;
+          goto OUTSIDE;
+        }
+
+        queue.emplace(dist[neighboridx], neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<OUT> path;
+  // if voxel graph supplied, it's possible 
+  // to never reach target.
+  if (target_reached) { 
+    path = query_shortest_path<OUT>(parents, target);
+  }
+  delete [] parents;
+
+  return path;
+}
+
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> dijkstra3d_anisotropy(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target,
+    const int connectivity = 26, 
+    const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  connectivity_check(connectivity);
+
+  if (source == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
+  }
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  OUT *parents = new OUT[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = -0;
+
+  int neighborhood[NHOOD_SIZE];
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+
+  std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  int x, y, z;
+  bool target_reached = false;
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    // As early as possible, start fetching the
+    // data from RAM b/c the annotated lines below
+    // have 30-50% cache miss.
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]) * neighbor_multiplier[i]; // high cache miss
       // Visited nodes are negative and thus the current node
       // will always be less than as field is filled with non-negative
       // integers.
@@ -979,6 +1111,183 @@ std::vector<OUT> compass_guided_dijkstra3d(
 
   return path;
 }
+
+template <typename T, typename OUT = uint32_t>
+std::vector<OUT> compass_guided_dijkstra3d_anisotropy_line_preference(
+    T* field, 
+    const size_t sx, const size_t sy, const size_t sz, 
+    const size_t source, const size_t target,
+    const int connectivity = 26, float normalizer = -1,
+    float line_preference_weight = 1.0,
+    const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
+    const uint32_t* voxel_connectivity_graph = NULL
+  ) {
+
+  connectivity_check(connectivity);
+
+  if (source == target) {
+    return std::vector<OUT>{ static_cast<OUT>(source) };
+  }
+
+  const size_t voxels = sx * sy * sz;
+  const size_t sxy = sx * sy;
+  
+  const libdivide::divider<size_t> fast_sx(sx); 
+  const libdivide::divider<size_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  float *dist = new float[voxels]();
+  OUT *parents = new OUT[voxels]();
+  fill(dist, +INFINITY, voxels);
+  dist[source] = 0;
+
+  // Normalizer value must be positive. 
+  // If negative, use min field value.
+  if (normalizer < 0) {
+    normalizer = static_cast<float>(field[0]);
+    for (size_t i = 0; i < voxels; i++) {
+      if (normalizer > static_cast<float>(field[i])) {
+        normalizer = static_cast<float>(field[i]);
+      }
+    }
+  }
+
+  int neighborhood[NHOOD_SIZE];
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+
+  std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
+  queue.emplace(0.0, source);
+
+  size_t loc;
+  float delta;
+  size_t neighboridx;
+
+  int x, y, z;
+  int srcx, srcy, srcz;
+  int tx, ty, tz;
+  float heuristic_cost;
+  bool target_reached = false;
+
+  tz = target / fast_sxy;
+  ty = (target - (tz * sxy)) / fast_sx;
+  tx = target - sx * (ty + tz * sy);
+
+  srcz = source / fast_sxy;
+  srcy = (source - (srcz * sxy)) / fast_sx;
+  srcx = source - sx * (srcy + srcz * sy);
+
+  std::function<void(size_t)> xyzfn = [&x,&y,&z,power_of_two,xshift,yshift,sx,sy,sxy,fast_sx,fast_sxy](size_t l){
+    if (power_of_two) {
+      z = l >> (xshift + yshift);
+      y = (l - (z << (xshift + yshift))) >> xshift;
+      x = l - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = l / fast_sxy;
+      y = (l - (z * sxy)) / fast_sx;
+      x = l - sx * (y + z * sy);
+    }
+  };
+
+  while (!queue.empty()) {
+    loc = queue.top().value;
+    queue.pop();
+    
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    DIJKSTRA_3D_PREFETCH_26WAY(field, loc)
+    DIJKSTRA_3D_PREFETCH_26WAY(dist, loc)
+
+    xyzfn(loc);
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, connectivity, voxel_connectivity_graph);
+
+    for (int i = 0; i < connectivity; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      delta = static_cast<float>(field[neighboridx]) * neighbor_multiplier[i];
+
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (dist[loc] + delta < dist[neighboridx]) { 
+        dist[neighboridx] = dist[loc] + delta;
+        parents[neighboridx] = loc + 1; // +1 to avoid 0 ambiguity
+
+        if (neighboridx == target) {
+          target_reached = true;
+          goto OUTSIDE;
+        }
+
+        xyzfn(neighboridx);
+
+        if (connectivity == 6) { // manhattan (L_1)
+          heuristic_cost = static_cast<float>(
+            abs(tx - x) * wx + abs(ty - y) * wy + abs(tz - z) * wz
+          );
+        }
+        else if (connectivity == 18) {
+          // The faces + edges case is weird... 
+          // It's 8 connected on each plane, but you can't
+          // move diagonally in 3D.
+          heuristic_cost = static_cast<float>(
+            std::min(
+              std::min(
+                std::max(abs(tx - x) * wx, abs(ty - y) * wy) + abs(tz - z) * wz,
+                std::max(abs(tx - x) * wx, abs(tz - z) * wz) + abs(ty - y) * wy
+              ),
+              std::max(abs(ty - y) * wy, abs(tz - z) * wz) + abs(tx - x) * wx
+            )
+          );
+        }
+        else { // chebychev (L_inf)
+          heuristic_cost = static_cast<float>(
+            std::max(std::max(abs(tx - x) * wx, abs(ty - y) * wy), abs(tz - z) * wz)
+          );
+        }
+
+        // weight the heuristic_cost with cross product
+        heuristic_cost += _cross((tx - srcx) * wx, (ty - srcy) * wy, (tz - srcz) * wz, 
+                                 (tx - x) * wx, (ty - y) * wy, (tz - z) * wz) * line_preference_weight;
+        queue.emplace(dist[neighboridx] + normalizer * heuristic_cost, neighboridx);
+      }
+    }
+
+    dist[loc] *= -1;
+  }
+
+  OUTSIDE:
+  delete []dist;
+
+  std::vector<OUT> path;
+  if (target_reached) {
+    path = query_shortest_path<OUT>(parents, target);
+  }
+  delete [] parents;
+
+  return path;
+}
+
 
 
 template <typename T, typename OUT = uint32_t>
