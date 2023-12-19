@@ -213,6 +213,22 @@ def test_binary_dijkstra2d_10x10_26(connectivity):
   path = dijkstra3d.binary_dijkstra(values, (9,9,0), (9,9,0), connectivity=connectivity, background_color=1)
   assert np.all(path == np.array([[9,9,0]]))
 
+
+def test_dijkstra_3d_anisotropy():
+  def arclen(pnts):
+    return np.sum(np.linalg.norm(np.diff(pnts.astype('float'), axis=0), axis=1))
+
+  field = np.ones([50, 50], order="F")
+  source = [0, 0]
+  target = [30, 49]
+  std_path = dijkstra3d.dijkstra(field, source, target, anisotropy=None, connectivity=8)
+  aniso_path = dijkstra3d.dijkstra(field, source, target, anisotropy=(1, 1), connectivity=8)
+  
+  assert std_path.size == aniso_path.size
+  assert np.any(std_path != aniso_path)
+  assert arclen(std_path) > arclen(aniso_path)
+
+
 @pytest.mark.parametrize("dtype", TEST_TYPES)
 @pytest.mark.parametrize("connectivity", [ 18, 26 ])
 def test_value_target_dijkstra2d_10x10_26(dtype, connectivity):
