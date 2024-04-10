@@ -769,14 +769,14 @@ template <typename T, typename OUT>
 inline void bidirectional_core(
     const size_t loc, 
     T* field, float *dist, OUT* parents, 
-    int *neighborhood, 
+    int *neighborhood, int connectivity,
     std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> &queue
   ) {
   
   float delta;
   size_t neighboridx;
 
-  for (int i = 0; i < NHOOD_SIZE; i++) {
+  for (int i = 0; i < connectivity; i++) {
     if (neighborhood[i] == 0) {
       continue;
     }
@@ -915,13 +915,13 @@ std::vector<OUT> bidirectional_dijkstra3d(
     if (forward) {
       bidirectional_core<T,OUT>(
         loc, field, dist_fwd, parents_fwd, 
-        neighborhood, queue_fwd
+        neighborhood, connectivity, queue_fwd
       );
     }
     else {
       bidirectional_core<T,OUT>(
         loc, field, dist_rev, parents_rev, 
-        neighborhood, queue_rev
+        neighborhood, connectivity, queue_rev
       );
     }
   }
