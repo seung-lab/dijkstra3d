@@ -14,10 +14,11 @@
  */
 
 #include <algorithm>
-#include <functional>
 #include <cmath>
 #include <cstdio>
 #include <cstdint>
+#include <functional>
+#include <memory>
 #include <queue>
 #include <vector>
 
@@ -300,9 +301,9 @@ std::vector<OUT> dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -374,15 +375,14 @@ std::vector<OUT> dijkstra3d(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   // if voxel graph supplied, it's possible 
   // to never reach target.
   if (target_reached) { 
-    path = query_shortest_path<OUT>(parents, target);
+    path = query_shortest_path<OUT>(parents.get(), target);
   }
-  delete [] parents;
 
   return path;
 }
@@ -413,9 +413,9 @@ std::vector<OUT> dijkstra3d_anisotropy(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -499,15 +499,14 @@ std::vector<OUT> dijkstra3d_anisotropy(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   // if voxel graph supplied, it's possible 
   // to never reach target.
   if (target_reached) { 
-    path = query_shortest_path<OUT>(parents, target);
+    path = query_shortest_path<OUT>(parents.get(), target);
   }
-  delete [] parents;
 
   return path;
 }
@@ -543,9 +542,9 @@ std::vector<OUT> binary_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = 0.0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -638,15 +637,14 @@ std::vector<OUT> binary_dijkstra3d(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   // it's possible to never reach target.
   if (target_reached) {
-    path = query_shortest_path<OUT>(parents, target);
+    path = query_shortest_path<OUT>(parents.get(), target);
   }
-  delete [] parents;
-
+  
   return path;
 }
 
@@ -702,9 +700,9 @@ std::vector<OUT> value_target_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -776,15 +774,14 @@ std::vector<OUT> value_target_dijkstra3d(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   // if voxel graph supplied, it's possible 
   // to never reach target.
   if (target_loc < voxels) { // voxels is an impossible target
-    path = query_shortest_path<OUT>(parents, target_loc);
+    path = query_shortest_path<OUT>(parents.get(), target_loc);
   }
-  delete [] parents;
 
   return path;
 }
@@ -1009,9 +1006,9 @@ std::vector<OUT> compass_guided_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = 0;
 
   // Normalizer value must be positive. 
@@ -1126,13 +1123,12 @@ std::vector<OUT> compass_guided_dijkstra3d(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   if (target_reached) {
-    path = query_shortest_path<OUT>(parents, target);
+    path = query_shortest_path<OUT>(parents.get(), target);
   }
-  delete [] parents;
 
   return path;
 }
@@ -1164,9 +1160,9 @@ std::vector<OUT> compass_guided_dijkstra3d_anisotropy_line_preference(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  OUT *parents = new OUT[voxels]();
-  fill(dist, +INFINITY, voxels);
+  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<OUT[]> parents(new OUT[voxels]());
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = 0;
 
   // Normalizer value must be positive. 
@@ -1302,13 +1298,12 @@ std::vector<OUT> compass_guided_dijkstra3d_anisotropy_line_preference(
   }
 
   OUTSIDE:
-  delete []dist;
+  dist.reset();
 
   std::vector<OUT> path;
   if (target_reached) {
-    path = query_shortest_path<OUT>(parents, target);
+    path = query_shortest_path<OUT>(parents.get(), target);
   }
-  delete [] parents;
 
   return path;
 }
@@ -1356,13 +1351,13 @@ OUT* parental_field3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
+  std::unique_ptr<float[]> dist(new float[voxels]());
   
   if (parents == NULL) {
     parents = new OUT[voxels]();
   }
 
-  fill(dist, +INFINITY, voxels);
+  fill(dist.get(), +INFINITY, voxels);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -1420,8 +1415,6 @@ OUT* parental_field3d(
 
     dist[loc] *= -1;
   }
-
-  delete [] dist;
 
   return parents;
 }
