@@ -903,6 +903,52 @@ def test_euclidean_distance_field_2d(free_space_radius):
   ])
   assert np.all(np.isclose(field, answer))
 
+def test_euclidean_distance_field_2d_feature_map():
+  values = np.ones((7, 7, 1), dtype=bool)
+  field, max_loc, feature_map = dijkstra3d.euclidean_distance_field(values, [0,0,0], return_max_location=True, return_feature_map=True)
+  
+  assert np.isclose(
+    np.max(field), 
+    np.sqrt((values.shape[0] - 1) ** 2 + (values.shape[1] - 1) ** 2)
+  )
+  assert max_loc == (6,6,0)
+
+  assert np.all(np.unique(feature_map) == 1)
+
+  sources = [
+    [0,0,0],
+    [6,6,0]
+  ]
+  field, max_loc, feature_map = dijkstra3d.euclidean_distance_field(values, sources, return_max_location=True, return_feature_map=True)
+  assert tuple(np.unique(feature_map)) == (1,2)
+
+  sources = [
+    [0,0,0],
+    [6,6,0],
+    [6,6,0]
+  ]
+  field, max_loc, feature_map = dijkstra3d.euclidean_distance_field(values, sources, return_max_location=True, return_feature_map=True)
+  assert tuple(np.unique(feature_map)) == (1,2)
+
+  sources = [
+    [0,0,0],
+    [6,6,0],
+    [3,3,0],
+  ]
+  field, max_loc, feature_map = dijkstra3d.euclidean_distance_field(values, sources, return_max_location=True, return_feature_map=True)
+  assert tuple(np.unique(feature_map)) == (1,2,3)
+  
+  result = np.array(
+    [[[1, 1, 1, 2, 2, 2, 2],
+      [1, 1, 2, 2, 2, 2, 2],
+      [1, 2, 2, 2, 2, 2, 2],
+      [2, 2, 2, 2, 2, 2, 3],
+      [2, 2, 2, 2, 2, 3, 3],
+      [2, 2, 2, 2, 3, 3, 3],
+      [2, 2, 2, 3, 3, 3, 3],]]).T
+
+  assert np.all(feature_map == result)
+
 @pytest.mark.parametrize('point', (np.random.randint(0,256, size=(3,)),))
 def test_euclidean_distance_field_3d_free_space_eqn(point):
   point = tuple(point)
