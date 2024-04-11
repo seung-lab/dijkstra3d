@@ -1868,7 +1868,7 @@ struct HeapFeatureNodeCompare {
 
 // returns a map of the nearest source vertex
 template <typename OUT = uint64_t>
-OUT* source_feature_map(
+OUT* edf_with_feature_map(
   uint8_t* field, // really a boolean field
   const uint64_t sx, const uint64_t sy, const uint64_t sz, 
   const float wx, const float wy, const float wz, 

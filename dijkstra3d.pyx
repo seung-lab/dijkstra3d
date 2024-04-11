@@ -124,7 +124,7 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* voxel_graph,
     size_t &max_loc
   )
-  cdef OUT* source_feature_map[OUT](
+  cdef OUT* edf_with_feature_map[OUT](
     uint8_t* field,
     uint64_t sx, uint64_t sy, uint64_t sz, 
     float wx, float wy, float wz, 
@@ -1907,7 +1907,7 @@ def _execute_euclidean_distance_field_w_feature_map(
 
   if dtype in (np.int8, np.uint8, bool):
     arr_memview8 = data.view(np.uint8)
-    source_feature_map[uint32_t](
+    edf_with_feature_map[uint32_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
       wx, wy, wz,
