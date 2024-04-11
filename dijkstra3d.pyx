@@ -1829,7 +1829,7 @@ def _execute_euclidean_distance_field(
   cdef size_t max_loc = data.size + 1
 
   if dtype in (np.int8, np.uint8, bool):
-    arr_memview8 = data.astype(np.uint8)
+    arr_memview8 = data.view(np.uint8)
     euclidean_distance_field3d(
       &arr_memview8[0,0,0],
       sx, sy, sz,
