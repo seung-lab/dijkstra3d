@@ -45,9 +45,16 @@ print(path.shape)
 # the anisotropic euclidean chamfer distance from the source to all labeled vertices.
 # Source can be a single point or a list of points. Accepts bool, (u)int8 dtypes.
 dist_field = dijkstra3d.euclidean_distance_field(field, source=(0,0,0), anisotropy=(4,4,40))
+
+sources = [ (0,0,0), (10, 40, 232) ]
 dist_field = dijkstra3d.euclidean_distance_field(
-  field, source=[ (0,0,0), (10, 40, 232) ], anisotropy=(4,4,40)
+  field, source=sources, anisotropy=(4,4,40)
 )
+# You can return a map of source vertices to nearest voxels called
+# a feature map.
+dist_field, feature_map = dijkstra3d.euclidean_distance_field(
+  field, source=sources, return_feature_map=True,
+) 
 
 # To make the EDF go faster add the free_space_radius parameter. It's only
 # safe to use if you know that some distance around the source point
