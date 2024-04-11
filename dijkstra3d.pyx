@@ -626,7 +626,7 @@ def euclidean_distance_field(
   negative zero).
   
   Parameters:
-   data: Input weights in a 2D or 3D numpy array. 
+   data: binary image represented as a 2D or 3D numpy array. 
    source: (x,y,z) coordinate or list of coordinates 
     of starting voxels
    anisotropy: (wx,wy,wz) weights for each axial direction.
@@ -634,9 +634,17 @@ def euclidean_distance_field(
     region surrounding the source is free space, we can use
     a much faster algorithm to fill in that volume. Value
     is physical radius (can get this from the EDT). 
+   voxel_graph: a bitwise representation of the premitted
+    directions of travel between voxels. Generated from
+    cc3d.voxel_connectivity_graph. 
+    (See https://github.com/seung-lab/connected-components-3d)
    return_max_location: returns the coordinates of one
      of the possibly multiple maxima.
-   return_feature_map: 
+   return_feature_map: return labeling of the image such
+    that all the voxels nearest a given source point are 
+    a single label. At locations where two labels are 
+    equidistant, the numerically larger label wins (to
+    differences in behavior on different platforms).
   
   Returns: 
     let field = 2D or 3D numpy array with each index
