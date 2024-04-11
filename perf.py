@@ -6,7 +6,7 @@ def edf():
   print("Running edf.")
   N = 1
   sx, sy, sz = 256, 256, 256
-  values = np.ones((sx,sy,sz), dtype=np.bool)
+  values = np.ones((sx,sy,sz), dtype=bool)
   for i in range(5):
     s = time.time()
     dijkstra3d.euclidean_distance_field(values, (100,100,100))
