@@ -1835,6 +1835,182 @@ float* euclidean_distance_field3d(
   );
 }
 
+
+class HeapFeatureNode {
+public:
+  float key;
+  uint64_t value;
+  uint64_t source;
+
+  HeapFeatureNode() {
+    key = 0;
+    value = 0;
+  }
+
+  HeapFeatureNode (float k, uint64_t val, uint64_t src) {
+    key = k;
+    value = val;
+    source = src;
+  }
+
+  HeapFeatureNode (const HeapFeatureNode &h) {
+    key = h.key;
+    value = h.value;
+    source = h.source;
+  }
+};
+
+struct HeapFeatureNodeCompare {
+  bool operator()(const HeapFeatureNode &t1, const HeapFeatureNode &t2) const {
+    return t1.key >= t2.key;
+  }
+};
+
+// returns a map of the nearest source vertex
+template <typename OUT = uint64_t>
+OUT* source_feature_map(
+  uint8_t* field, // really a boolean field
+  const uint64_t sx, const uint64_t sy, const uint64_t sz, 
+  const float wx, const float wy, const float wz, 
+  const std::vector<uint64_t> &sources,
+  float* dist = NULL, OUT* feature_map = NULL,
+  size_t &max_loc = _dummy_max_loc
+) {
+
+  const uint64_t voxels = sx * sy * sz;
+  const uint64_t sxy = sx * sy;
+
+  const libdivide::divider<uint64_t> fast_sx(sx); 
+  const libdivide::divider<uint64_t> fast_sxy(sxy); 
+
+  const bool power_of_two = !((sx & (sx - 1)) || (sy & (sy - 1))); 
+  const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
+  const int yshift = std::log2(sy);
+
+  bool clear_dist = false;
+  if (dist == NULL) {
+    dist = new float[voxels]();
+    clear_dist = true;
+  }
+  if (feature_map == NULL) {
+    feature_map = new OUT[voxels]();
+  }
+
+  fill(dist, +INFINITY, voxels);
+
+  int neighborhood[NHOOD_SIZE] = {};
+
+  float neighbor_multiplier[NHOOD_SIZE] = { 
+    wx, wx, wy, wy, wz, wz, // axial directions (6)
+    
+    // square diagonals (12)
+    _s(wx, wy), _s(wx, wy), _s(wx, wy), _s(wx, wy),  
+    _s(wy, wz), _s(wy, wz), _s(wy, wz), _s(wy, wz),
+    _s(wx, wz), _s(wx, wz), _s(wx, wz), _s(wx, wz),
+
+    // cube diagonals (8)
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), 
+    _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
+  };
+
+  std::priority_queue<
+    HeapFeatureNode, std::vector<HeapFeatureNode>, HeapFeatureNodeCompare
+  > queue;
+
+  uint64_t src = 1;
+  for (uint64_t source : sources) {
+    dist[source] = -0;
+    queue.emplace(0.0, source, src++);
+  }
+
+  uint64_t loc, next_loc;
+  float new_dist;
+  uint64_t neighboridx;
+
+  uint64_t x, y, z;
+
+  float max_dist = -1;
+  max_loc = voxels + 1;
+
+  while (!queue.empty()) {
+    src = queue.top().source;
+    loc = queue.top().value;
+    queue.pop();
+
+    if (max_dist < std::abs(dist[loc])) {
+      max_dist = std::abs(dist[loc]);
+      max_loc = loc;
+    }
+
+    if (std::signbit(dist[loc])) {
+      continue;
+    }
+
+    if (!queue.empty()) {
+      next_loc = queue.top().value;
+      if (!std::signbit(dist[next_loc])) {
+
+        // As early as possible, start fetching the
+        // data from RAM b/c the annotated lines below
+        // have 30-50% cache miss.
+        DIJKSTRA_3D_PREFETCH_26WAY(field, next_loc)
+        DIJKSTRA_3D_PREFETCH_26WAY(dist, next_loc)
+      }
+    }
+
+    if (power_of_two) {
+      z = loc >> (xshift + yshift);
+      y = (loc - (z << (xshift + yshift))) >> xshift;
+      x = loc - ((y + (z << yshift)) << xshift);
+    }
+    else {
+      z = loc / fast_sxy;
+      y = (loc - (z * sxy)) / fast_sx;
+      x = loc - sx * (y + z * sy);
+    }
+
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE, NULL);
+
+    for (int i = 0; i < NHOOD_SIZE; i++) {
+      if (neighborhood[i] == 0) {
+        continue;
+      }
+
+      neighboridx = loc + neighborhood[i];
+      if (field[neighboridx] == 0) {
+        continue;
+      }
+
+      new_dist = dist[loc] + neighbor_multiplier[i];
+      
+      // Visited nodes are negative and thus the current node
+      // will always be less than as field is filled with non-negative
+      // integers.
+      if (new_dist < dist[neighboridx]) { 
+        dist[neighboridx] = new_dist;
+        feature_map[neighboridx] = src;
+        queue.emplace(new_dist, neighboridx, src);
+      }
+      else if (new_dist == dist[neighboridx] && src > feature_map[neighboridx]) {
+        feature_map[neighboridx] = src;
+      }
+    }
+
+    dist[loc] = -dist[loc];
+  }
+
+  if (clear_dist) {
+    delete[] dist;
+  }
+  else {
+    for (size_t i = 0; i < voxels; i++) {
+      dist[i] = std::fabs(dist[i]);
+    }
+  }
+
+  return feature_map;
+}
+
 #undef sq
 #undef NHOOD_SIZE
 #undef DIJKSTRA_3D_PREFETCH_26WAY

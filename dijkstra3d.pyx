@@ -124,6 +124,14 @@ cdef extern from "dijkstra3d.hpp" namespace "dijkstra":
     uint32_t* voxel_graph,
     size_t &max_loc
   )
+  cdef OUT* source_feature_map[OUT](
+    uint8_t* field,
+    uint64_t sx, uint64_t sy, uint64_t sz, 
+    float wx, float wy, float wz, 
+    vector[uint64_t] &sources,
+    float* dist, OUT* feature_map,
+    size_t &max_loc
+  )
   cdef vector[T] query_shortest_path[T](
     T* parents, T target
   ) 
@@ -600,7 +608,8 @@ def parental_field(data, source, connectivity=26, voxel_graph=None):
 def euclidean_distance_field(
   data, source, anisotropy=(1,1,1), 
   free_space_radius=0, voxel_graph=None,
-  return_max_location=False
+  return_max_location=False,
+  return_feature_map=False,
 ):
   """
   Use dijkstra's shortest path algorithm
@@ -627,13 +636,18 @@ def euclidean_distance_field(
     is physical radius (can get this from the EDT). 
    return_max_location: returns the coordinates of one
      of the possibly multiple maxima.
+   return_feature_map: 
   
   Returns: 
     let field = 2D or 3D numpy array with each index
       containing its distance from the source voxel.
 
-    if return_max_location:
+    if return_max_location and return_feature_map:
+      return (field, (x,y,z) of max distance, feature_map)
+    elif return_max_location:
       return (field, (x,y,z) of max distance)
+    elif return_feature_map:
+      return (field, feature_map)
     else:
       return field
   """
@@ -664,19 +678,38 @@ def euclidean_distance_field(
 
   data = np.asfortranarray(data)
 
-  field, max_loc = _execute_euclidean_distance_field(
-    data, source, anisotropy, 
-    free_space_radius, voxel_graph
-  )
+  if return_feature_map:
+    field, feature_map, max_loc = _execute_euclidean_distance_field_w_feature_map(
+      data, source, anisotropy,
+    )
+  else:
+    feature_map = None
+    field, max_loc = _execute_euclidean_distance_field(
+      data, source, anisotropy, 
+      free_space_radius, voxel_graph
+    )
+
   if dims < 3:
     field = np.squeeze(field, axis=2)
+    if feature_map:
+      feature_map = np.squeeze(feature_map, axis=2)
   if dims < 2:
     field = np.squeeze(field, axis=1)
+    if feature_map:
+      feature_map = np.squeeze(feature_map, axis=1)
+
+  ret = [ field ]
 
   if return_max_location:
-    return field, np.unravel_index(max_loc, data.shape, order="F")[:dims]
-  else:
-    return field
+    ret.append(
+      np.unravel_index(max_loc, data.shape, order="F")[:dims]
+    )
+  if return_feature_map:
+    ret.append(feature_map)
+  
+  if len(ret) == 1:
+    return ret[0]
+  return tuple(ret)
 
 def _validate_coord(data, coord):
   dims = len(data.shape)
@@ -1846,3 +1879,48 @@ def _execute_euclidean_distance_field(
     raise ValueError(f"Something went wrong during processing. max_loc: {max_loc}")
 
   return dist, max_loc
+
+def _execute_euclidean_distance_field_w_feature_map(
+  data, sources, anisotropy
+):
+  cdef uint8_t[:,:,:] arr_memview8
+
+  cdef uint64_t sx = data.shape[0]
+  cdef uint64_t sy = data.shape[1]
+  cdef uint64_t sz = data.shape[2]
+
+  cdef float wx = anisotropy[0]
+  cdef float wy = anisotropy[1]
+  cdef float wz = anisotropy[2]
+
+  sources = np.unique(sources, axis=0)
+
+  cdef vector[uint64_t] src
+  for source in sources:
+    src.push_back(source[0] + sx * (source[1] + sy * source[2]))
+
+  cdef cnp.ndarray[float, ndim=3] dist = np.zeros( (sx,sy,sz), dtype=np.float32, order='F' )
+  cdef cnp.ndarray[uint32_t, ndim=3] feature_map = np.zeros( (sx,sy,sz), dtype=np.uint32, order='F' )
+
+  dtype = data.dtype
+  cdef size_t max_loc = data.size + 1
+
+  if dtype in (np.int8, np.uint8, bool):
+    arr_memview8 = data.view(np.uint8)
+    source_feature_map[uint32_t](
+      &arr_memview8[0,0,0],
+      sx, sy, sz,
+      wx, wy, wz,
+      src, 
+      &dist[0,0,0],
+      &feature_map[0,0,0],
+      max_loc
+    )
+  else:
+    raise TypeError(f"Type {dtype} not currently supported.")
+
+  if max_loc == data.size + 1:
+    raise ValueError(f"Something went wrong during processing. max_loc: {max_loc}")
+
+  return dist, feature_map, max_loc
+
