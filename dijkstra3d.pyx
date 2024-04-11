@@ -772,7 +772,7 @@ def _execute_value_target_dijkstra(
         voxel_graph_ptr
       )
   elif dtype in (np.int64, np.uint64):
-    arr_memview64 = data.astype(np.uint64)
+    arr_memview64 = data.view(np.uint64)
     if sixtyfourbit:
       output64 = value_target_dijkstra3d[uint64_t, uint64_t](
         &arr_memview64[0,0,0],
@@ -788,7 +788,7 @@ def _execute_value_target_dijkstra(
         voxel_graph_ptr
       )
   elif dtype in (np.int32, np.uint32):
-    arr_memview32 = data.astype(np.uint32)
+    arr_memview32 = data.view(np.uint32)
     if sixtyfourbit:
       output64 = value_target_dijkstra3d[uint32_t, uint64_t](
         &arr_memview32[0,0,0],
@@ -804,7 +804,7 @@ def _execute_value_target_dijkstra(
         voxel_graph_ptr
       )
   elif dtype in (np.int16, np.uint16):
-    arr_memview16 = data.astype(np.uint16)
+    arr_memview16 = data.view(np.uint16)
     if sixtyfourbit:
       output64 = value_target_dijkstra3d[uint16_t, uint64_t](
         &arr_memview16[0,0,0],
@@ -820,7 +820,7 @@ def _execute_value_target_dijkstra(
         voxel_graph_ptr
       )
   elif dtype in (np.int8, np.uint8, bool):
-    arr_memview8 = data.astype(np.uint8)
+    arr_memview8 = data.view(np.uint8)
     if sixtyfourbit:
       output64 = value_target_dijkstra3d[uint8_t, uint64_t](
         &arr_memview8[0,0,0],
@@ -1607,7 +1607,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int64, np.uint64):
-    arr_memview64 = data.astype(np.uint64)
+    arr_memview64 = data.view(np.uint64)
     dist = distance_field3d[uint64_t](
       &arr_memview64[0,0,0],
       sx, sy, sz,
@@ -1615,7 +1615,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       voxel_graph_ptr, max_loc
     )
   elif dtype in (np.uint32, np.int32):
-    arr_memview32 = data.astype(np.uint32)
+    arr_memview32 = data.view(np.uint32)
     dist = distance_field3d[uint32_t](
       &arr_memview32[0,0,0],
       sx, sy, sz,
@@ -1623,7 +1623,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int16, np.uint16):
-    arr_memview16 = data.astype(np.uint16)
+    arr_memview16 = data.view(np.uint16)
     dist = distance_field3d[uint16_t](
       &arr_memview16[0,0,0],
       sx, sy, sz,
@@ -1631,7 +1631,7 @@ def _execute_distance_field(data, sources, connectivity, voxel_graph):
       voxel_graph_ptr, max_loc
     )
   elif dtype in (np.int8, np.uint8, bool):
-    arr_memview8 = data.astype(np.uint8)
+    arr_memview8 = data.view(np.uint8)
     dist = distance_field3d[uint8_t](
       &arr_memview8[0,0,0],
       sx, sy, sz,
@@ -1720,7 +1720,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
         voxel_graph_ptr
       )
   elif dtype in (np.int64, np.uint64):
-    arr_memview64 = data.astype(np.uint64)
+    arr_memview64 = data.view(np.uint64)
     if sixtyfourbit:
       parental_field3d[uint64_t,uint64_t](
         &arr_memview64[0,0,0],
@@ -1738,7 +1738,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
         voxel_graph_ptr
       )
   elif dtype in (np.uint32, np.int32):
-    arr_memview32 = data.astype(np.uint32)
+    arr_memview32 = data.view(np.uint32)
     if sixtyfourbit:
       parental_field3d[uint32_t,uint64_t](
         &arr_memview32[0,0,0],
@@ -1756,7 +1756,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
         voxel_graph_ptr
       )
   elif dtype in (np.int16, np.uint16):
-    arr_memview16 = data.astype(np.uint16)
+    arr_memview16 = data.view(np.uint16)
     if sixtyfourbit:
       parental_field3d[uint16_t,uint64_t](
         &arr_memview16[0,0,0],
@@ -1774,7 +1774,7 @@ def _execute_parental_field(data, source, connectivity, voxel_graph):
         voxel_graph_ptr
       )
   elif dtype in (np.int8, np.uint8, bool):
-    arr_memview8 = data.astype(np.uint8)
+    arr_memview8 = data.view(np.uint8)
     if sixtyfourbit:
       parental_field3d[uint8_t,uint64_t](
         &arr_memview8[0,0,0],
