@@ -1920,7 +1920,9 @@ OUT* edf_with_feature_map(
   uint64_t src = 1;
   for (uint64_t source : sources) {
     dist[source] = -0;
-    queue.emplace(0.0, source, src++);
+    feature_map[source] = src;
+    queue.emplace(0.0, source, src);
+    src++;
   }
 
   uint64_t loc, next_loc;
