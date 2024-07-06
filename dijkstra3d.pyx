@@ -37,7 +37,7 @@ from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
 
-np.import_array()
+cnp.import_array()
 
 import warnings
 
