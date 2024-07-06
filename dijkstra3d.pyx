@@ -36,6 +36,9 @@ import cython
 from libcpp.vector cimport vector
 cimport numpy as cnp
 import numpy as np
+
+np.import_array()
+
 import warnings
 
 __VERSION__ = '1.14.0'
