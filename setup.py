@@ -15,7 +15,7 @@ def read(fname):
     return f.read()
 
 extra_compile_args = [
-  '-std=c++11', '-O3', '-ffast-math', 
+  '-std=c++11', '-O3',
 ]
 
 if sys.platform == 'darwin':
