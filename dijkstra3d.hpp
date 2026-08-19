@@ -13,6 +13,9 @@
  * Date: August 2018
  */
 
+#ifndef DIJKSTRA3D_HPP
+#define DIJKSTRA3D_HPP
+
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -25,14 +28,13 @@
 #include "./hedly.h"
 #include "./libdivide.h"
 
-#ifndef DIJKSTRA3D_HPP
-#define DIJKSTRA3D_HPP
-
-#define NHOOD_SIZE 26
-
 namespace dijkstra {
 
-#define sq(x) ((x) * (x))
+constexpr size_t NHOOD_SIZE = 26;
+
+template <typename T>
+T sq(T x) { return x * x; }
+
 static size_t _dummy_max_loc;
 
 // helper function to compute 2D anisotropy ("_s" = "square")
@@ -50,13 +52,6 @@ inline float _cross(const float sx, const float sy, const float sz,
 const float tx, const float ty, const float tz) {
   return std::sqrt((sy*tz - sz*ty) * (sy*tz - sz*ty) + (sz*tx - sx*tz) * (sz*tx - sx*tz) + (sx*ty - sy*tx) * (sx*ty - sy*tx) / 
           std::sqrt(sx*sx + sy*sy + sz*sz) / std::sqrt(tx*tx + ty*ty + tz*tz));
-}
-
-inline float* fill(float *arr, const float value, const size_t size) {
-  for (size_t i = 0; i < size; i++) {
-    arr[i] = value;
-  }
-  return arr;
 }
 
 void connectivity_check(int connectivity) {
@@ -413,9 +408,9 @@ std::vector<OUT> dijkstra3d_anisotropy(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -562,7 +557,7 @@ std::vector<OUT> binary_dijkstra3d(
     _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz), _c(wx, wy, wz)
   };
   if (!euclidean_distance) {
-    fill(neighbor_multiplier, 1.0, NHOOD_SIZE);
+    std::fill(neighbor_multiplier, neighbor_multiplier + NHOOD_SIZE, 1.0);
   }
 
   std::priority_queue<HeapNode<OUT>, std::vector<HeapNode<OUT>>, HeapNodeCompare<OUT>> queue;
@@ -1008,9 +1003,9 @@ std::vector<OUT> compass_guided_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = 0;
 
   // Normalizer value must be positive. 
@@ -1162,9 +1157,9 @@ std::vector<OUT> compass_guided_dijkstra3d_anisotropy_line_preference(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = 0;
 
   // Normalizer value must be positive. 
@@ -1353,13 +1348,13 @@ OUT* parental_field3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   
   if (parents == NULL) {
     parents = new OUT[voxels]();
   }
 
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -1442,8 +1437,8 @@ float* distance_field3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist = new float[voxels]();
-  fill(dist, +INFINITY, voxels);
+  float *dist = new float[voxels];
+  std::fill(dist, dist + voxels, +INFINITY);
 
   int neighborhood[NHOOD_SIZE] = {};
 
@@ -1699,10 +1694,10 @@ float* euclidean_distance_field3d(
   const int yshift = std::log2(sy);
 
   if (dist == NULL) {
-    dist = new float[voxels]();
+    dist = new float[voxels];
   }
 
-  fill(dist, +INFINITY, voxels);
+  std::fill(dist, dist + voxels, +INFINITY);
 
   int neighborhood[NHOOD_SIZE] = {};
 
@@ -1891,14 +1886,14 @@ OUT* edf_with_feature_map(
 
   bool clear_dist = false;
   if (dist == NULL) {
-    dist = new float[voxels]();
+    dist = new float[voxels];
     clear_dist = true;
   }
   if (feature_map == NULL) {
     feature_map = new OUT[voxels]();
   }
 
-  fill(dist, +INFINITY, voxels);
+  std::fill(dist, dist + voxels, +INFINITY);
 
   int neighborhood[NHOOD_SIZE] = {};
 
@@ -2016,7 +2011,6 @@ OUT* edf_with_feature_map(
 }
 
 #undef sq
-#undef NHOOD_SIZE
 #undef DIJKSTRA_3D_PREFETCH_26WAY
 
 }; // namespace dijkstra3d
