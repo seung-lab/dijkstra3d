@@ -301,9 +301,9 @@ std::vector<OUT> dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -542,9 +542,9 @@ std::vector<OUT> binary_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
   dist[source] = 0.0;
 
   int neighborhood[NHOOD_SIZE] = {};
@@ -846,14 +846,14 @@ std::vector<OUT> bidirectional_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  float *dist_fwd = new float[voxels]();
+  float *dist_fwd = new float[voxels];
   OUT *parents_fwd = new OUT[voxels]();
 
-  float *dist_rev = new float[voxels]();
+  float *dist_rev = new float[voxels];
   OUT *parents_rev = new OUT[voxels]();
 
-  fill(dist_fwd, +INFINITY, voxels);
-  fill(dist_rev, +INFINITY, voxels);
+  std::fill(dist_fwd, dist_fwd + voxels, +INFINITY);
+  std::fill(dist_rev, dist_rev + voxels, +INFINITY);
   dist_fwd[source] = 0;
   dist_rev[target] = 0;
 
