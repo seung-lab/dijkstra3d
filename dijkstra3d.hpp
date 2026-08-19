@@ -143,7 +143,7 @@ inline void compute_neighborhood(
   int *neighborhood, 
   const int x, const int y, const int z,
   const uint64_t sx, const uint64_t sy, const uint64_t sz,
-  const int connectivity = 26, const uint32_t* voxel_connectivity_graph = NULL) {
+  const int connectivity = 26, const uint32_t* voxel_connectivity_graph = nullptr) {
 
   if (connectivity == 26) {
     compute_neighborhood_helper_26(neighborhood, x, y, z, sx, sy, sz);
@@ -155,7 +155,7 @@ inline void compute_neighborhood(
     compute_neighborhood_helper_6(neighborhood, x, y, z, sx, sy, sz);
   }
 
-  if (voxel_connectivity_graph == NULL) {
+  if (voxel_connectivity_graph == nullptr) {
     return;
   }
 
@@ -277,7 +277,7 @@ std::vector<OUT> dijkstra3d(
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
     const int connectivity = 26, 
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -389,7 +389,7 @@ std::vector<OUT> dijkstra3d_anisotropy(
     const size_t source, const size_t target,
     const int connectivity = 26, 
     const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -514,7 +514,7 @@ std::vector<OUT> binary_dijkstra3d(
   const int connectivity = 26, 
   const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
   const bool euclidean_distance = true,
-  const uint32_t* voxel_connectivity_graph = NULL,
+  const uint32_t* voxel_connectivity_graph = nullptr,
   const uint8_t background_color = 0
 ) {
 
@@ -676,7 +676,7 @@ std::vector<OUT> value_target_dijkstra3d(
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const T target,
     const int connectivity = 26, 
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -822,7 +822,7 @@ std::vector<OUT> bidirectional_dijkstra3d(
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
     const int connectivity = 26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -984,7 +984,7 @@ std::vector<OUT> compass_guided_dijkstra3d(
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t target,
     const int connectivity = 26, float normalizer = -1,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -1138,7 +1138,7 @@ std::vector<OUT> compass_guided_dijkstra3d_anisotropy_line_preference(
     const int connectivity = 26, float normalizer = -1,
     float line_preference_weight = 1.0,
     const float wx = 1.0, const float wy = 1.0, const float wz = 1.0,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -1331,9 +1331,9 @@ template <typename T, typename OUT = uint32_t>
 OUT* parental_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
-    const size_t source, OUT* parents = NULL,
+    const size_t source, OUT* parents = nullptr,
     const int connectivity = 26,
-    const uint32_t* voxel_connectivity_graph = NULL
+    const uint32_t* voxel_connectivity_graph = nullptr
   ) {
 
   connectivity_check(connectivity);
@@ -1350,7 +1350,7 @@ OUT* parental_field3d(
 
   std::unique_ptr<float[]> dist(new float[voxels]);
   
-  if (parents == NULL) {
+  if (parents == nullptr) {
     parents = new OUT[voxels]();
   }
 
@@ -1421,7 +1421,7 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const std::vector<size_t> &sources, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL,
+    const uint32_t* voxel_connectivity_graph = nullptr,
     size_t &max_loc = _dummy_max_loc
   ) {
 
@@ -1527,7 +1527,7 @@ float* distance_field3d(
     T* field, 
     const size_t sx, const size_t sy, const size_t sz, 
     const size_t source, const size_t connectivity=26,
-    const uint32_t* voxel_connectivity_graph = NULL,
+    const uint32_t* voxel_connectivity_graph = nullptr,
     size_t &max_loc = _dummy_max_loc
   ) {
 
@@ -1678,8 +1678,8 @@ float* euclidean_distance_field3d(
     const float wx, const float wy, const float wz, 
     const std::vector<size_t> &sources, 
     const float free_space_radius = 0,
-    float* dist = NULL,
-    const uint32_t* voxel_connectivity_graph = NULL,
+    float* dist = nullptr,
+    const uint32_t* voxel_connectivity_graph = nullptr,
     size_t &max_loc = _dummy_max_loc
   ) {
 
@@ -1693,7 +1693,7 @@ float* euclidean_distance_field3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  if (dist == NULL) {
+  if (dist == nullptr) {
     dist = new float[voxels];
   }
 
@@ -1816,8 +1816,8 @@ float* euclidean_distance_field3d(
     const float wx, const float wy, const float wz, 
     const size_t source, 
     const float free_space_radius = 0,
-    float* dist = NULL,
-    const uint32_t* voxel_connectivity_graph = NULL,
+    float* dist = nullptr,
+    const uint32_t* voxel_connectivity_graph = nullptr,
     size_t &max_loc = _dummy_max_loc
   ) {
 
@@ -1870,7 +1870,7 @@ OUT* edf_with_feature_map(
   const uint64_t sx, const uint64_t sy, const uint64_t sz, 
   const float wx, const float wy, const float wz, 
   const std::vector<uint64_t> &sources,
-  float* dist = NULL, OUT* feature_map = NULL,
+  float* dist = nullptr, OUT* feature_map = nullptr,
   size_t &max_loc = _dummy_max_loc
 ) {
 
@@ -1885,11 +1885,11 @@ OUT* edf_with_feature_map(
   const int yshift = std::log2(sy);
 
   bool clear_dist = false;
-  if (dist == NULL) {
+  if (dist == nullptr) {
     dist = new float[voxels];
     clear_dist = true;
   }
-  if (feature_map == NULL) {
+  if (feature_map == nullptr) {
     feature_map = new OUT[voxels]();
   }
 
@@ -1968,7 +1968,7 @@ OUT* edf_with_feature_map(
       x = loc - sx * (y + z * sy);
     }
 
-    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE, NULL);
+    compute_neighborhood(neighborhood, x, y, z, sx, sy, sz, NHOOD_SIZE, nullptr);
 
     for (int i = 0; i < NHOOD_SIZE; i++) {
       if (neighborhood[i] == 0) {
