@@ -700,9 +700,11 @@ std::vector<OUT> value_target_dijkstra3d(
   const int xshift = std::log2(sx); // must use log2 here, not lg/lg2 to avoid fp errors
   const int yshift = std::log2(sy);
 
-  std::unique_ptr<float[]> dist(new float[voxels]());
+  std::unique_ptr<float[]> dist(new float[voxels]);
   std::unique_ptr<OUT[]> parents(new OUT[voxels]());
-  fill(dist.get(), +INFINITY, voxels);
+
+  std::fill(dist.get(), dist.get() + voxels, +INFINITY);
+
   dist[source] = -0;
 
   int neighborhood[NHOOD_SIZE] = {};
